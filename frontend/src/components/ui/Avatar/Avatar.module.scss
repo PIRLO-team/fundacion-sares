@@ -1,0 +1,40 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  // gap: 0.43rem;
+  object-fit: cover;
+  // cursor: pointer;
+  transition: var(--main-transition);
+
+  &__img {
+    border-radius: 6.25rem;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.43rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &__name {
+      // font-size: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    &__email {
+      // font-size: 0.75rem;
+      font-size: 0.875rem;
+      text-transform: lowercase;
+      color: var(--accents-5);
+    }
+  }
+
+  // &:hover {
+  //   transform: scale(1.05);
+  //   color: var(--color-primary);
+  // }
+}
