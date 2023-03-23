@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpException, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
@@ -8,35 +8,39 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Post('/login')
-  async logIn(
-    @Body() LogInCredentialDto: LogInCredentialDto,
-    @Res() res: Response
+  @Post('register')
+  async register(
+    @Body() CreateAuthDto: CreateAuthDto
   ) {
-    const { message, response, status } = await this.authService.logIn(
-      LogInCredentialDto
-    );
+    const { response, title, message, status } =
+      await this.authService.register(
+        CreateAuthDto
+      );
 
-    throw new HttpException({ message, response }, status);
+    throw new HttpException({ response, title, message, }, status);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('login')
+  async logIn(
+    @Body() LogInCredentialDto: LogInCredentialDto
+  ) {
+    const { response, title, message, status } =
+      await this.authService.logIn(
+        LogInCredentialDto
+      );
+
+    throw new HttpException({ response, title, message, }, status);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
+  @Patch('reset')
+  async findAll(
+    @Query('user') user: number,
+    @Query('code') code: string,
+    @Body() UpdateAuthDto: UpdateAuthDto
+  ) {
+    const { response, title, message, status } =
+      await this.authService.resetPassword(user, code, UpdateAuthDto);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+    throw new HttpException({ response, title, message, }, status);
   }
 }

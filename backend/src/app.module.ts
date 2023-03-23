@@ -16,7 +16,7 @@ import { MainRoutes } from './main.routes';
       autoLoadEntities: true
     }),
     RouterModule.register(MainRoutes),
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

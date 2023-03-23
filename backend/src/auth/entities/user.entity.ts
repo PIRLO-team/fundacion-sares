@@ -67,7 +67,7 @@ export class User extends BaseEntity {
         name: 'code',
         nullable: true
     })
-    code: string;
+    code: number;
     
     @Column({
         type: 'boolean',
@@ -75,7 +75,7 @@ export class User extends BaseEntity {
         default: true,
         nullable: true
     })
-    new_user: string;
+    new_user: boolean;
     
     @Column({
         type: 'bigint',

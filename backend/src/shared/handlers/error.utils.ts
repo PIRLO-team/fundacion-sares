@@ -11,6 +11,7 @@ export class HandlersError {
         }
         return {
             response: error?.response ? error.response : { error: true },
+            title: 'Ocurrio un error!',
             message: error?.message ? error.message : 'INTERNAL_SERVER_ERROR',
             status: error?.status ? error.status : HttpStatus.INTERNAL_SERVER_ERROR,
         };
@@ -25,6 +26,7 @@ export class HandlersError {
             data: error.response,
             logs: {
                 response: error?.response ? error.response : { error: true },
+                title: 'Ocurrio un error!',
                 message: error?.message ? error.message : 'INTERNAL_SERVER_ERROR',
                 status: error?.status ? error.status : HttpStatus.INTERNAL_SERVER_ERROR,
             }
@@ -40,6 +42,7 @@ export class HandlersError {
         }
         return {
             response: error?.response ? error.response : { error: true },
+            title: 'Ocurrio un error!',
             message: `[${className}] => error: ${error}`,
             status: HttpStatus.INTERNAL_SERVER_ERROR,
         };
@@ -59,6 +62,7 @@ export class configReturnRepositoryError {
 
 export class returnErrorDto {
     public response: Type;
+    public title: string;
     public message: string;
     public status: HttpStatus;
 }

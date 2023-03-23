@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthRepository } from './auth.repository';
 import { HandlersError } from '../shared/handlers/error.utils';
+import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
+import { ResetCodeSnippet } from './utils/random.utils';
 
 @Module({
   imports: [AuthModule],
@@ -10,7 +12,9 @@ import { HandlersError } from '../shared/handlers/error.utils';
   providers: [
     AuthService,
     AuthRepository,
-    HandlersError
+    HandlersError,
+    BcryptPasswordEncoder,
+    ResetCodeSnippet
   ],
   exports: [AuthService]
 })

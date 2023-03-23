@@ -1,5 +1,4 @@
 export class LogInCredentialDto {
-    email: string;
-    username: string;
+    user: string;
     password: string;
 }
