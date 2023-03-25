@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpException, Query } from '@nestjs/common';
+import { UserToken } from '../shared/decorators/user-token.decorator';
+import { TokenDto } from '../shared/interfaces/token.dto';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
@@ -10,11 +12,13 @@ export class AuthController {
 
   @Post('register')
   async register(
-    @Body() CreateAuthDto: CreateAuthDto
+    @UserToken() User: TokenDto,
+    @Body() CreateAuthDto: CreateUserDto
   ) {
     const { response, title, message, status } =
-      await this.authService.register(
-        CreateAuthDto
+      await this.authService.registerUser(
+        CreateAuthDto,
+        User
       );
 
     throw new HttpException({ response, title, message, }, status);
