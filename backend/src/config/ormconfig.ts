@@ -12,7 +12,7 @@ export const dataSource: DataSource = new DataSource({
     entities: [
         `${__dirname}/../auth/**/*.entity{.ts,.js}`,
     ],
-    migrations: ["src/migrations/*.ts"],
+    migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
     synchronize: false,
     migrationsRun: false,
     logging: false,
