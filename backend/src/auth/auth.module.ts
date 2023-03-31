@@ -15,7 +15,7 @@ import { PasswordGeneratorService } from './utils/random-password.utils';
   imports: [
     AuthModule,
     JwtModule.register({
-      secret: env.JWT_SKEY,
+      secret: env.JWT_SECRET,
       signOptions: { expiresIn: 28800 },
     }),
   ],

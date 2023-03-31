@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { dataSource } from './config/orm.config';
+import { dataSource } from './config/ormconfig';
 import { MainRoutes } from './main.routes';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from '@nestjs-modules/mailer';
