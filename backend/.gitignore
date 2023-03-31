@@ -5,8 +5,6 @@
 # enviroment
 .env
 
-# ORM config
-/src/config/orm.config.ts
 
 # Logs
 logs
