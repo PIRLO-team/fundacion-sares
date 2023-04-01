@@ -10,7 +10,7 @@ async function bootstrap() {
   await dataSource
     .initialize()
     .then(() => {
-      console.log('🚀 ~ file: main.ts:13 ~ dataSource ~ Connected to MySQL server');
+      console.log(`🚀 ~ file: main.ts:13 ~ dataSource ~ Connected to MySQL server in ${env.DB_HOST}`);
     })
     .catch(e => {
       console.log('🚀 ~ file: main.ts:16 ~ dataSource ~ e:', e)

@@ -52,7 +52,6 @@ export class AuthService {
       const { first_name, last_name, email, profession, user_role } = CreateUserDto;
 
       const emailExist = await this._authRepository.findBy({ email: email, is_active: true });
-      console.log("🚀 ~ file: auth.service.ts:55 ~ AuthService ~ registerUser ~ emailExist:", emailExist)
 
       if (emailExist[0]) {
         return {
@@ -72,7 +71,7 @@ export class AuthService {
         first_name,
         last_name,
         email,
-        username: emailToUsername[0],
+        username: emailToUsername[0].toLocaleLowerCase(),
         profession,
         user_role,
         password: hashPassword,
@@ -86,7 +85,38 @@ export class AuthService {
         to: email,
         subject: `Bienvenido a la Fundación S.A.R.E.S. ${first_name}`,
         text: 'Test',
-        html: `<p>Bienvenido a la Fundación S.A.R.E.S. <b>${first_name + ' ' + last_name}</b> te enviamos la contraseña temporal <b>${newPassword}</b>, esta es de un solo uso.</p>`,
+        html: `<div>
+                  <doctype html/>
+                  <html lang="es">
+                    <body style={{backgroundColor:"#f5f5f5", fontFamily:"Poppins, sans-serif;", fontSize:"16px", lineHeight:"1.6"}}>
+                        <div style={{maxWidth:"600px", margin:"0 auto", padding:"20px"}}>
+                          <table align="center" border="0" cellpadding="0" cellspacing="0" style={{borderCollapse:"collapse", width:"100%", margin:"0"}}>
+                              <tr>
+                                <td align="left">
+                                    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2FFunSARES%2F&psig=AOvVaw06mbjFuKhbQJetocS5trmI&ust=1679844128179000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjBu5Wx9_0CFQAAAAAdAAAAABAE" alt="Logo" style={{display:"block", maxWidth:"150px", height:"auto", margin:"0"}}/>
+                                </td>
+                                <td align="right" style={{verticalAlign:"middle"}}>
+                                    <h1 style={{margin:"0"}}>Fundación S.A.R.E.S.</h1>
+                                </td>
+                              </tr>
+                          </table>
+                          <hr size="1" color="#e0e0e0" style={{margin:"20px 0"}}/>
+                          <p style={{margin:"0"}}>Hola, <b>${newUser.first_name + ' ' + newUser.last_name}</b></p>
+                          <p style={{margin:"0"}}>Te damos la bienvenida a la Fundación S.A.R.E.S. A continuación están las credenciales de acceso y los pasos ingresar al aplicativo.</p>
+                          <p style={{margin:"0"}}><b><i>- Recuerde que la contraseña es de un solo uso, al momento en que ingrese por primera vez, se le pedira que cambie la contraseña -</b></i></p>
+                          <ul style={{lineHeight:"1.6"}}>
+                            <li>Correo:  <b>${newUser.email}</b></li>
+                            <li>Usuario:  <b>${newUser.username}</b></li>
+                            <li>Contraseña(Temporal): <b>${newPassword}</b></li>
+                          </ul>
+                          <p style={{margin:"0"}}>Puedes ingresar al aplicativo utilizando el correo o usuario la contraseña.</p>
+                          <br/>
+                          <p style={{margin:"0"}}>Atentamente,</p>
+                          <p style={{margin:"0"}}>El equipo de la Fundación S.A.R.E.S.</p>
+                        </div>
+                    </body>
+                  </html>
+              </div>`,
       });
 
       return {
@@ -122,26 +152,38 @@ export class AuthService {
         .where('user.email = :user_req OR user.username = :user_req', { user_req })
         .getOne();
 
-      const { user_id, first_name, last_name, password, email, username, new_user, user_role } = userExists;
-
       if (!userExists) {
         return {
           response: { valid: false },
           title: '❌ Datos no validos!',
-          message: `El usuario ingresado <b>${user_req}</b> no coincide, por favor verifica los datos`,
+          message: `El usuario ingresado <b>${user_req}</b> no fue encontrado, por favor verifica los datos`,
           status: HttpStatus.BAD_REQUEST
         }
       }
 
+      const { user_id, first_name, last_name, password, email, username, new_user, user_role } = userExists;
+
       if (new_user === true) {
         const createCode = await this._resetCodeSnippet.randomCode();
-        const insertCode = await this._authRepository.update(user_id, { code: createCode });
+        
+        if(createCode) {
+          await this._authRepository.update(user_id, { code: createCode })
+        } else {
+          return {
+            response: {
+              valid: false,
+            },
+            title: '❌ Ocurrio un error!',
+            message: 'Por favor intentalo más tarde',
+            status: HttpStatus.BAD_REQUEST
+          }
+        }
 
         return {
           response: {
             new_user,
             user_id,
-            code: insertCode,
+            code: createCode,
           },
           title: '👋🏻 Bienvenido a la Fundación S.A.R.E.S!',
           message: 'Por favor cambia tu contraseña',
