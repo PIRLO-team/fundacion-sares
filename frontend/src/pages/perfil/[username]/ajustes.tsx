@@ -12,7 +12,7 @@ function Ajustes() {
   const router = useRouter();
   const username = router.query.username;
 
-  const { user } = useAuthStore();
+  const { currentUser } = useAuthStore();
 
   // if (user.username !== username) {
   //   router.replace('/');

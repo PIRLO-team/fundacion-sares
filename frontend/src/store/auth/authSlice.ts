@@ -7,7 +7,7 @@ import {
 
 interface authState {
   status: string;
-  user: {
+  currentUser: {
     uid: string | undefined;
     name: string | undefined;
     email: string | undefined;
@@ -21,7 +21,7 @@ interface authState {
 
 const initialState: authState = {
   status: 'not-authenticated', // checking, authenticated, not-authenticated
-  user: {
+  currentUser: {
     uid: '1234567890',
     name: 'Kevin Collazos',
     email: 'kevcollazos@gmail.com',
@@ -39,7 +39,7 @@ export const authSlice = createSlice({
   reducers: {
     checkingCredentials: (state) => {
       state.status = 'checking';
-      state.user = {
+      state.currentUser = {
         uid: undefined,
         name: undefined,
         email: undefined,
@@ -53,7 +53,7 @@ export const authSlice = createSlice({
 
     onLogin: (state, { payload }) => {
       state.status = 'authenticated';
-      state.user = payload.user;
+      state.currentUser = payload.currentUser;
       state.errorMessage = undefined;
     },
 
@@ -62,7 +62,7 @@ export const authSlice = createSlice({
       // { payload }
     ) => {
       state.status = 'not-authenticated';
-      state.user = {
+      state.currentUser = {
         uid: undefined,
         name: undefined,
         email: undefined,

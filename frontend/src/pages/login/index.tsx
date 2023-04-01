@@ -17,7 +17,7 @@ import { SEO } from '@/components';
 import s from './styles/Login.module.scss';
 
 function Login() {
-  const { status, user, startLogin } = useAuthStore();
+  const { status, currentUser, startLogin } = useAuthStore();
 
   const router = useRouter();
 
@@ -38,7 +38,7 @@ function Login() {
     if (status === 'authenticated') {
       router.replace('/');
     }
-  }, [user, status, router]);
+  }, [currentUser, status, router]);
 
   return (
     <>

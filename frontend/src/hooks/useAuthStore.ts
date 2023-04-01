@@ -16,7 +16,9 @@ import { toast } from 'sonner';
 export const useAuthStore = () => {
   const dispatch = useAppDispatch();
 
-  const { status, user, errorMessage } = useAppSelector((state) => state.auth);
+  const { status, currentUser, errorMessage } = useAppSelector(
+    (state) => state.auth
+  );
 
   const router = useRouter();
 
@@ -100,7 +102,7 @@ export const useAuthStore = () => {
   return {
     // Properties
     status,
-    user,
+    currentUser,
     errorMessage,
 
     // Methods

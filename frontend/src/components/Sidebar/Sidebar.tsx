@@ -17,7 +17,7 @@ import s from './Sidebar.module.scss';
 export function Sidebar() {
   const router = useRouter();
 
-  const { user } = useAuthStore();
+  const { currentUser } = useAuthStore();
 
   const sideBarLinks = [
     {
@@ -126,7 +126,7 @@ export function Sidebar() {
                   </li>
                 )}
 
-                {user.role === link.role && (
+                {currentUser.role === link.role && (
                   <li
                     className={`${s.sidebar__links__item} ${
                       router.pathname === link.link && `${s.active}`
@@ -146,9 +146,9 @@ export function Sidebar() {
         </div>
 
         <div className={s.sidebar__footer}>
-          <Link href={`/perfil/${user.username}`}>
+          <Link href={`/perfil/${currentUser.username}`}>
             <Avatar
-              src={`https://source.boringavatars.com/marble/50/${user.username}`}
+              src={`https://source.boringavatars.com/marble/50/${currentUser.username}`}
               size={45}
             />
           </Link>

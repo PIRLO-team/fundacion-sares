@@ -26,7 +26,7 @@ function Perfil() {
 
   const username = router.query.username;
 
-  const { user, startLogout } = useAuthStore();
+  const { currentUser, startLogout } = useAuthStore();
 
   const { name, email, id, profession, role, tel, other_tel, onInputChange } =
     useForm({
@@ -46,10 +46,10 @@ function Perfil() {
           <div className={s.profile__info__coverPhoto}>
             <img
               src={
-                user?.coverPhotoURL ||
-                `https://source.boringavatars.com/bauhaus/120/${user.name}?square`
+                currentUser?.coverPhotoURL ||
+                `https://source.boringavatars.com/bauhaus/120/${currentUser.name}?square`
               }
-              alt={user?.name}
+              alt={currentUser?.name}
               width="100%"
               className={s.profile__info__coverPhoto__img}
             />
@@ -57,10 +57,10 @@ function Perfil() {
 
           <div className={s.profile__info__avatar}>
             <Avatar
-              src={user?.photoURL}
-              name={user?.name}
-              username={user?.username}
-              email={user?.email}
+              src={currentUser?.photoURL}
+              name={currentUser?.name}
+              username={currentUser?.username}
+              email={currentUser?.email}
               size={170}
               className={s.profile__info__avatar__item}
               classNameText={s.profile__info__avatar__item__text}
@@ -187,7 +187,7 @@ function Perfil() {
           </form>
 
           <div>
-            {user.username === username && (
+            {currentUser.username === username && (
               <>
                 {/* <Button href={`/perfil/${username}/ajustes`}>Ajustes</Button> */}
                 {/* <Button
