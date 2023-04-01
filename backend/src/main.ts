@@ -9,13 +9,13 @@ async function bootstrap() {
   const port = env.PORT || 3000;
 
   const corsOptions: CorsOptions = {
-    origin: ['http://localhost:4200', 'http://localhost:3400', 'http://localhost:3000', 'http://localhost:4000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     preflightContinue: false,
     optionsSuccessStatus: 204,
   };
 
-  app.use(CorsMiddleware(corsOptions));
+  app.enableCors(corsOptions);
 
   await dataSource
     .initialize()
@@ -31,7 +31,3 @@ async function bootstrap() {
   console.log(`🚀 ~ Server up on port ${port}`)
 }
 bootstrap();
-function CorsMiddleware(corsOptions: CorsOptions): any {
-  throw new Error('Function not implemented.');
-}
-
