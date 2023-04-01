@@ -9,7 +9,7 @@ async function bootstrap() {
   const port = env.PORT || 3000;
 
   const corsOptions: CorsOptions = {
-    origin: ['http://localhost:4200', 'http://localhost:3400'],
+    origin: ['http://localhost:4200', 'http://localhost:3400', 'http://localhost:3000', 'http://localhost:4000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,
