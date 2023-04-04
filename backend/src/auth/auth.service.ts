@@ -165,8 +165,8 @@ export class AuthService {
 
       if (new_user === true) {
         const createCode = await this._resetCodeSnippet.randomCode();
-        
-        if(createCode) {
+
+        if (createCode) {
           await this._authRepository.update(user_id, { code: createCode })
         } else {
           return {
@@ -203,7 +203,8 @@ export class AuthService {
             token: this._jwtService.sign(
               { user_id, email, username, first_name, last_name, user_role },
               { secret: env.JWT_SECRET }
-            )
+            ),
+            userData: { user_id, email, username, first_name, last_name, user_role }
           },
           title: `👋🏻 Hola ${first_name}!`,
           message: 'Bienvenido de vuelta a la Fundación S.A.R.E.S.',

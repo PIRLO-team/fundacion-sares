@@ -20,7 +20,10 @@ import { Role } from './auth/entities/role.entity';
       ...dataSource.options,
       keepConnectionAlive: true,
       autoLoadEntities: true,
-      entities: [User, Role]
+      entities: [
+        User,
+        Role
+      ]
     }),
     RouterModule.register(MainRoutes),
     AuthModule,

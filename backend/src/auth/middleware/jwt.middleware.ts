@@ -19,7 +19,7 @@ export class JwtMiddleware implements NestMiddleware {
         } catch (err) {
             throw new HttpException(
                 {
-                    response: {},
+                    response: { valid: false },
                     title: '❌ Algo salio mal',
                     message: 'Por favor inicia sesión nuevamente',
                 },
