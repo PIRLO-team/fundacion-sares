@@ -26,7 +26,6 @@ async function bootstrap() {
       console.log('🚀 ~ file: main.ts:16 ~ dataSource ~ e:', e)
     });
 
-
   await app.listen(port);
   console.log(`🚀 ~ Server up on port ${port}`)
 }

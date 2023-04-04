@@ -10,6 +10,8 @@ import { MainRoutes } from './main.routes';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from '@nestjs-modules/mailer';
 import { env } from 'process';
+import { User } from './auth/entities/user.entity';
+import { Role } from './auth/entities/role.entity';
 
 @Module({
   imports: [
@@ -17,7 +19,8 @@ import { env } from 'process';
     TypeOrmModule.forRoot({
       ...dataSource.options,
       keepConnectionAlive: true,
-      autoLoadEntities: true
+      autoLoadEntities: true,
+      entities: [User, Role]
     }),
     RouterModule.register(MainRoutes),
     AuthModule,
@@ -34,7 +37,7 @@ import { env } from 'process';
       defaults: {
         from: 'sares@fundacion.com',
       },
-    }),
+    })
   ],
   controllers: [AppController],
   providers: [
@@ -42,4 +45,4 @@ import { env } from 'process';
     JwtService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

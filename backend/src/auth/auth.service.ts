@@ -2,7 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { env } from 'process';
-import { TokenDto } from 'src/shared/interfaces/token.dto';
+import { TokenDto } from '../shared/interfaces/token.dto';
 import { HandlersError } from '../shared/handlers/error.utils';
 import { AuthRepository } from './auth.repository';
 import { CreateUserDto } from './dto/create-auth.dto';
