@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { AuthRepository } from './auth.repository';
+import { AuthRepository } from './repository/auth.repository';
 import { HandlersError } from '../shared/handlers/error.utils';
 import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
 import { ResetCodeSnippet } from './utils/random-code.utils';
@@ -10,6 +10,7 @@ import { env } from 'process';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import { JwtStrategy } from './jwt.strategy';
 import { PasswordGeneratorService } from './utils/random-password.utils';
+import { RoleRepository } from './repository/role.repository';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PasswordGeneratorService } from './utils/random-password.utils';
   providers: [
     AuthService,
     AuthRepository,
+    RoleRepository,
     HandlersError,
     BcryptPasswordEncoder,
     PasswordGeneratorService,

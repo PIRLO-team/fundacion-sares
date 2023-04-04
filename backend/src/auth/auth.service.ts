@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { env } from 'process';
 import { TokenDto } from '../shared/interfaces/token.dto';
 import { HandlersError } from '../shared/handlers/error.utils';
-import { AuthRepository } from './auth.repository';
+import { AuthRepository } from './repository/auth.repository';
 import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -12,11 +12,13 @@ import { User } from './entities/user.entity';
 import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
 import { ResetCodeSnippet } from './utils/random-code.utils';
 import { PasswordGeneratorService } from './utils/random-password.utils';
+import { RoleRepository } from './repository/role.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly _authRepository: AuthRepository,
+    private readonly _roleRepository: RoleRepository,
     private readonly _handlerError: HandlersError,
     private readonly _bcryp: BcryptPasswordEncoder,
     private readonly _resetCodeSnippet: ResetCodeSnippet,
@@ -163,6 +165,8 @@ export class AuthService {
 
       const { user_id, first_name, last_name, password, email, username, new_user, user_role } = userExists;
 
+      const userRole = await this._roleRepository.findOneBy({ role_id: user_role });
+
       if (new_user === true) {
         const createCode = await this._resetCodeSnippet.randomCode();
 
@@ -204,7 +208,8 @@ export class AuthService {
               { user_id, email, username, first_name, last_name, user_role },
               { secret: env.JWT_SECRET }
             ),
-            userData: { user_id, email, username, first_name, last_name, user_role }
+            userData: { user_id, email, username, first_name, last_name },
+            userRole: userRole
           },
           title: `👋🏻 Hola ${first_name}!`,
           message: 'Bienvenido de vuelta a la Fundación S.A.R.E.S.',
