@@ -167,6 +167,20 @@ export class AuthService {
 
       const userRole = await this._roleRepository.findOneBy({ role_id: user_role });
 
+      const valid: boolean = this._bcryp.matches(
+        password,
+        password_req
+      );
+
+      if (!valid) {
+        return {
+          response: { valid: false },
+          title: '❌ Verifa tus datos!',
+          message: 'Autenticación fallida, por favor verifica que los datos sean los correctos',
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
       if (new_user === true) {
         const createCode = await this._resetCodeSnippet.randomCode();
 
@@ -195,33 +209,19 @@ export class AuthService {
         }
       }
 
-      const valid: boolean = this._bcryp.matches(
-        password,
-        password_req
-      );
-
-      if (valid) {
-        return {
-          response: {
-            valid: true,
-            token: this._jwtService.sign(
-              { user_id, email, username, first_name, last_name, user_role },
-              { secret: env.JWT_SECRET }
-            ),
-            userData: { user_id, email, username, first_name, last_name },
-            userRole: userRole
-          },
-          title: `👋🏻 Hola ${first_name}!`,
-          message: 'Bienvenido de vuelta a la Fundación S.A.R.E.S.',
-          status: HttpStatus.OK
-        }
-      } else {
-        return {
-          response: { valid: false },
-          title: '❌ Verifa tus datos!',
-          message: 'Autenticación fallida, por favor verifica que los datos sean los correctos',
-          status: HttpStatus.BAD_REQUEST
-        }
+      return {
+        response: {
+          valid: true,
+          token: this._jwtService.sign(
+            { user_id, email, username, first_name, last_name, user_role },
+            { secret: env.JWT_SECRET }
+          ),
+          userData: { user_id, email, username, first_name, last_name },
+          userRole: userRole
+        },
+        title: `👋🏻 Hola ${first_name}!`,
+        message: 'Bienvenido de vuelta a la Fundación S.A.R.E.S.',
+        status: HttpStatus.OK
       }
 
     } catch (error) {
