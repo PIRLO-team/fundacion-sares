@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { AuthRepository } from './repository/auth.repository';
+import { UserRepository } from './repository/user.repository';
 import { HandlersError } from '../shared/handlers/error.utils';
 import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
 import { ResetCodeSnippet } from './utils/random-code.utils';
@@ -23,7 +23,7 @@ import { RoleRepository } from './repository/role.repository';
   controllers: [AuthController],
   providers: [
     AuthService,
-    AuthRepository,
+    UserRepository,
     RoleRepository,
     HandlersError,
     BcryptPasswordEncoder,

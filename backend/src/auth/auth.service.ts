@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { env } from 'process';
 import { TokenDto } from '../shared/interfaces/token.dto';
 import { HandlersError } from '../shared/handlers/error.utils';
-import { AuthRepository } from './repository/auth.repository';
+import { UserRepository } from './repository/user.repository';
 import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -17,7 +17,7 @@ import { RoleRepository } from './repository/role.repository';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly _authRepository: AuthRepository,
+    private readonly _userRepository: UserRepository,
     private readonly _roleRepository: RoleRepository,
     private readonly _handlerError: HandlersError,
     private readonly _bcryp: BcryptPasswordEncoder,
@@ -30,7 +30,7 @@ export class AuthService {
   async registerUser(CreateUserDto: CreateUserDto, UserData: TokenDto) {
     try {
       const id: number = UserData.user_id;
-      const userExist = await this._authRepository.findOneBy({ user_id: id });
+      const userExist = await this._userRepository.findOneBy({ user_id: id });
       if (!userExist) {
         return {
           response: { valid: false },
@@ -53,7 +53,7 @@ export class AuthService {
 
       const { first_name, last_name, email, profession, user_role } = CreateUserDto;
 
-      const emailExist = await this._authRepository.findBy({ email: email, is_active: true });
+      const emailExist = await this._userRepository.findBy({ email: email, is_active: true });
 
       if (emailExist[0]) {
         return {
@@ -69,7 +69,7 @@ export class AuthService {
 
       const emailToUsername = email.split('@');
 
-      const newUser = await this._authRepository.save({
+      const newUser = await this._userRepository.save({
         first_name,
         last_name,
         email,
@@ -149,7 +149,7 @@ export class AuthService {
         }
       }
 
-      const userExists = await this._authRepository
+      const userExists = await this._userRepository
         .createQueryBuilder('user')
         .where('user.email = :user_req OR user.username = :user_req', { user_req })
         .getOne();
@@ -185,7 +185,7 @@ export class AuthService {
         const createCode = await this._resetCodeSnippet.randomCode();
 
         if (createCode) {
-          await this._authRepository.update(user_id, { code: createCode })
+          await this._userRepository.update(user_id, { code: createCode })
         } else {
           return {
             response: {
@@ -233,7 +233,7 @@ export class AuthService {
     try {
       const password: string = UpdateAuthDto.password;
       const confirmPassword: string = UpdateAuthDto.confirmPassword;
-      const userExists: User = await this._authRepository.findOneBy({ user_id: user });
+      const userExists: User = await this._userRepository.findOneBy({ user_id: user });
 
       if (!userExists) {
         return {
@@ -267,7 +267,7 @@ export class AuthService {
 
         const passwordEncrypt: string = this._bcryp.encode(password);
 
-        await this._authRepository.update(userExists.user_id, {
+        await this._userRepository.update(userExists.user_id, {
           new_user: false,
           password: passwordEncrypt,
           last_updated_date: new Date(),
@@ -275,7 +275,7 @@ export class AuthService {
           code: null
         });
 
-        const updatedUser = await this._authRepository.findOneBy({ user_id: userExists.user_id });
+        const updatedUser = await this._userRepository.findOneBy({ user_id: userExists.user_id });
 
         return {
           response: [
