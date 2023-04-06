@@ -1,16 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpException, Query, UseGuards } from '@nestjs/common';
 import { UserToken } from '../shared/decorators/user-token.decorator';
 import { TokenDto } from '../shared/interfaces/token.dto';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtMiddleware } from './middleware/jwt.middleware';
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
+  @UseGuards(JwtMiddleware)
   async register(
     @UserToken() User: TokenDto,
     @Body() CreateAuthDto: CreateUserDto

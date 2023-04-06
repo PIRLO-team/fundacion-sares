@@ -15,4 +15,4 @@ function processUserToken(headerValue: string): TokenDto {
         JSON.parse(Buffer.from(headerValue.split('.')[1], 'base64').toString())
     );
     return token;
-}
+};
