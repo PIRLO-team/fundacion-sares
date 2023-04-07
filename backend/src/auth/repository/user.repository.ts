@@ -4,7 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import { HandlersError } from '../../shared/handlers/error.utils';
 
 @Injectable()
-export class AuthRepository extends Repository<User>{
+export class UserRepository extends Repository<User>{
     constructor(
         private dataSource: DataSource,
         private readonly _handlersError: HandlersError
