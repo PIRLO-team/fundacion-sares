@@ -22,13 +22,13 @@ interface authState {
 const initialState: authState = {
   status: 'not-authenticated', // checking, authenticated, not-authenticated
   currentUser: {
-    uid: '1234567890',
-    name: 'Kevin Collazos',
-    email: 'kevcollazos@gmail.com',
-    username: 'KevCollazos',
-    role: 'A',
-    photoURL: '',
-    coverPhotoURL: '',
+    uid: undefined,
+    name: undefined,
+    email: undefined,
+    username: undefined,
+    role: undefined,
+    photoURL: undefined,
+    coverPhotoURL: undefined,
   },
   errorMessage: undefined,
 };
@@ -53,7 +53,13 @@ export const authSlice = createSlice({
 
     onLogin: (state, { payload }) => {
       state.status = 'authenticated';
-      state.currentUser = payload.currentUser;
+      state.currentUser.uid = payload.uid;
+      state.currentUser.name = payload.name;
+      state.currentUser.email = payload.email;
+      state.currentUser.username = payload.username;
+      state.currentUser.role = payload.role;
+      state.currentUser.photoURL = payload.photoURL;
+      state.currentUser.coverPhotoURL = payload.coverPhotoURL;
       state.errorMessage = undefined;
     },
 

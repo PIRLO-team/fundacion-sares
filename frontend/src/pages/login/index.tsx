@@ -15,14 +15,16 @@ import { SEO } from '@/components';
 
 // Styles
 import s from './styles/Login.module.scss';
+import { withAuth } from '@/auth/withAuth';
+import LoginLayout from './components/LoginLayout';
 
 function Login() {
   const { status, currentUser, startLogin } = useAuthStore();
 
   const router = useRouter();
 
-  const { email, password, onInputChange } = useForm({
-    email: '',
+  const { user, password, onInputChange, formState } = useForm({
+    user: '',
     password: '',
   });
 
@@ -31,7 +33,8 @@ function Login() {
   const onLogin = (e: FormEvent) => {
     e.preventDefault();
 
-    startLogin({ email, password });
+    startLogin({ user, password });
+    console.log(formState);
   };
 
   useEffect(() => {
@@ -41,95 +44,81 @@ function Login() {
   }, [currentUser, status, router]);
 
   return (
-    <>
-      <SEO pageTitle="Login" />
+    <LoginLayout SEOTitle="Inicio de sesion">
+      <div className={s.login__form__header}>
+        <img
+          src="/logo/sares/Logo.png"
+          alt="logo"
+          className={s.login__form__header__logo}
+          width="100%"
+        />
+      </div>
 
-      <div className={s.login}>
-        <div className={s.login__content}>
-          {/* <img
-            src="/images/login.png"
-            alt="logo"
-            className={s.login__content__img}
-            width="100%"
-          /> */}
-        </div>
-        <div className={s.login__form}>
-          <div className={s.login__form__header}>
-            <img
-              src="/logo/sares/Logo.png"
-              alt="logo"
-              className={s.login__form__header__logo}
-              width="100%"
-            />
-          </div>
+      <form
+        className={s.login__form__group}
+        onSubmit={onLogin}
+        autoComplete="off"
+      >
+        <Input
+          className={s.login__form__group__input}
+          required
+          type="text"
+          name="user"
+          value={user}
+          inputType="secondary"
+          title="Nombre de usuario"
+          placeholder="Nombre de usuario"
+          onChange={onInputChange}
+        />
 
-          <form
-            className={s.login__form__group}
-            onSubmit={onLogin}
-            autoComplete="off"
-          >
-            <Input
-              className={s.login__form__group__input}
-              required
-              type="text"
-              name="email"
-              value={email}
-              inputType="secondary"
-              title="Nombre de usuario"
-              placeholder="Nombre de usuario"
-              onChange={onInputChange}
-            />
+        <Input
+          className={s.login__form__group__input}
+          required
+          type="password"
+          name="password"
+          value={password}
+          inputType="secondary"
+          title="Contraseña"
+          placeholder="Contraseña"
+          onChange={onInputChange}
+        />
 
-            <Input
-              className={s.login__form__group__input}
-              required
-              type="password"
-              name="password"
-              value={password}
-              inputType="secondary"
-              title="Contraseña"
-              placeholder="Contraseña"
-              onChange={onInputChange}
-            />
+        <Button
+          className={s.login__form__group__button}
+          type="submit"
+          disabled={isAuthenticating}
+        >
+          Iniciar sesión
+        </Button>
+      </form>
 
-            <Button
-              className={s.login__form__group__button}
-              type="submit"
-              disabled={isAuthenticating}
-            >
-              Iniciar sesión
-            </Button>
-          </form>
+      <div className={s.login__form__footer}>
+        <p className={s.login__form__footer__text}>
+          Olvidaste la contraseña?{' '}
+          {/* <a
+            href="https://sac.uao.edu.co/"
+            className={s.login__form__footer__link}
+          > */}
+          Restablecer
+          {/* </a> */}
+        </p>
 
-          <div className={s.login__form__footer}>
-            <p className={s.login__form__footer__text}>
-              Olvidaste la contraseña?{' '}
-              <a
-                href="https://sac.uao.edu.co/"
-                className={s.login__form__footer__link}
-              >
-                Restablecer
-              </a>
-            </p>
+        <div className={s.login__form__footer__line} />
 
-            <div className={s.login__form__footer__line} />
-
-            {/* <a
+        {/* <a
               href="https://www.uao.edu.co/wp-content/uploads/2022/01/politica-proteccion-datos-uao-4.pdf"
               target="__blank"
               rel="noreferrer noopener"
             > */}
-            <p className={s.login__form__footer__text__link}>
-              Política de tratamiento de Datos Personales
-            </p>
-            {/* </a> */}
+        <p className={s.login__form__footer__text__link}>
+          Política de tratamiento de Datos Personales
+        </p>
+        {/* </a> */}
 
-            <p className={s.login__form__footer__text}>© 2023 PIRLO 420.</p>
-          </div>
-        </div>
+        <p className={s.login__form__footer__text}>© 2023 PIRLO 420.</p>
       </div>
-    </>
+    </LoginLayout>
   );
 }
 
-export default Login;
+export default withAuth(Login);

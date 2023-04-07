@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router';
 
 // Local Components
-// import { withAuth } from '@/auth/withAuth';
+import { withAuth } from '@/auth/withAuth';
 import { Layout } from '@/components';
 
 // Hooks
@@ -25,4 +25,4 @@ function Ajustes() {
   );
 }
 
-export default Ajustes;
+export default withAuth(Ajustes);

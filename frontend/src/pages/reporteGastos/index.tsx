@@ -1,7 +1,7 @@
 // Next
 
 // Local Components
-// import { withAuth } from '@/auth/withAuth';
+import { withAuth } from '@/auth/withAuth';
 import { Layout } from '@/components';
 
 // Styles
@@ -15,4 +15,4 @@ function ReporteGastos() {
   );
 }
 
-export default ReporteGastos;
+export default withAuth(ReporteGastos);

@@ -1,7 +1,7 @@
 // Next
 
 // Local Components
-// import { withAuth } from '@/auth/withAuth';
+import { withAuth } from '@/auth/withAuth';
 import { Layout } from '@/components';
 
 // UI Components
@@ -18,4 +18,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withAuth(Home);

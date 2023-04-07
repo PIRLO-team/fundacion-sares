@@ -26,75 +26,103 @@ export const useAuthStore = () => {
     localStorage.clear();
     dispatch(onLogout());
 
-    if (router.pathname !== '/auth/login') {
-      router.push('/auth/login');
+    if (router.pathname !== '/login') {
+      router.replace('/login');
     }
   };
 
   const startLogin = async ({
-    email,
+    user,
     password,
   }: {
-    email: string;
+    user: string;
     password: string;
   }) => {
     dispatch(checkingCredentials());
 
     try {
       const { data } = await projectApi.post('/auth/login', {
-        email,
+        user,
         password,
       });
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('token-init-date', new Date().getTime().toString());
+      console.log(data);
+
+      const userData = data.response.userData;
+      const roleData = data.response.userRole;
+
+      localStorage.setItem('Authorization', data.response.token);
+      localStorage.setItem(
+        'Authorization-init-date',
+        new Date().getTime().toString()
+      );
 
       dispatch(
         onLogin({
-          uid: data.uid,
-          name: data.user.name,
-          email: data.user.email,
-          username: data.user.username,
-          role: data.user.role,
-          photoURL: data.user.photoURL,
-          coverPhotoURL: data.user.coverPhotoURL,
+          uid: userData.user_id,
+          name: userData.first_name + ' ' + userData.last_name,
+          email: userData.email,
+          username: userData.username,
+          role: roleData.role_id,
+          photoURL: userData.photoURL,
+          coverPhotoURL: userData.coverPhotoURL,
         })
       );
     } catch (error: any) {
+      const errData = error.response.data;
+
+      if (errData.response.new_user) {
+        router.replace(
+          `/login/reset?user=${errData.response.user_id}&code=${errData.response.code}`,
+          '/login/reset'
+        );
+        toast.message(errData.title, {
+          description: 'Por favor, cambie su contraseña',
+        });
+        startLogout();
+        return;
+      }
+
+      toast.error(errData.title);
       startLogout();
-      toast.error('Credenciales incorrectas');
     }
   };
 
-  const checkAuthToken = async () => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      startLogout();
-      return;
-    }
+  const startResetPassword = async ({
+    user,
+    code,
+    password,
+    confirmPassword,
+  }: {
+    user: string;
+    code: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    dispatch(checkingCredentials());
 
     try {
-      const { data } = await projectApi.get('/auth/renew');
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('token-init-date', new Date().getTime().toString());
-
-      dispatch(
-        onLogin({
-          uid: data.uid,
-          name: data.user.name,
-          email: data.user.email,
-          username: data.user.username,
-          role: data.user.role,
-          photoURL: data.user.photoURL,
-          coverPhotoURL: data.user.coverPhotoURL,
-        })
+      const { data } = await projectApi.patch(
+        `/auth/reset?user=${user}&code=${code}`,
+        {
+          password,
+          confirmPassword,
+        }
       );
-    } catch (error: any) {
-      console.log(error);
-      localStorage.clear();
 
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      router.replace('/login');
+
+      console.log(data);
+    } catch (error: any) {
+      const errData = error.response.data;
+
+      console.log(error);
+
+      toast.error(errData.title);
       startLogout();
     }
   };
@@ -108,6 +136,6 @@ export const useAuthStore = () => {
     // Methods
     startLogin,
     startLogout,
-    checkAuthToken,
+    startResetPassword,
   };
 };

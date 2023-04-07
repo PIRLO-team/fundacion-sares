@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useAuthStore, useForm } from '@/hooks';
 
 // Local Components
-// import { withAuth } from '@/auth/withAuth';
+import { withAuth } from '@/auth/withAuth';
 import { Layout } from '@/components';
 
 // UI Components
@@ -190,13 +190,13 @@ function Perfil() {
             {currentUser.username === username && (
               <>
                 {/* <Button href={`/perfil/${username}/ajustes`}>Ajustes</Button> */}
-                {/* <Button
+                <Button
                   onClick={() => {
                     startLogout();
                   }}
                 >
                   Cerrar sesion
-                </Button> */}
+                </Button>
               </>
             )}
           </div>
@@ -206,4 +206,4 @@ function Perfil() {
   );
 }
 
-export default Perfil;
+export default withAuth(Perfil);
