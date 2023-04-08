@@ -27,113 +27,222 @@ export class AuthService {
     private readonly _mailerService: MailerService,
   ) { }
 
-  async registerUser(CreateUserDto: CreateUserDto, UserData: TokenDto) {
+  async registerUser(newUserDto: CreateUserDto, tokenDto: TokenDto) {
     try {
-      const id: number = UserData.user_id;
-      const userExist = await this._userRepository.findOneBy({ user_id: id });
-      if (!userExist) {
+      const { user_id } = tokenDto;
+      const existingUser = await this._userRepository.findOneBy({ user_id });
+      if (!existingUser) {
         return {
           response: { valid: false },
-          title: '❌ Ocurrio un error!',
-          message: `Por favor inicia sesión nuevamente.`,
+          title: '❌ Error!',
+          message: 'Please log in again.',
           status: HttpStatus.NOT_FOUND
         };
       }
 
-      const role: string = userExist.user_role.toString();
-
+      const role = existingUser.user_role.toString();
       if (role !== '1') {
         return {
           response: { valid: false },
-          title: '👮🏻‍♀️ Ocurrio un error!',
-          message: 'No estas autorizado para realizar esta acción, por favor habla con el administrador',
+          title: '👮🏻‍♀️ Error!',
+          message: 'You are not authorized to perform this action, please contact the administrator',
           status: HttpStatus.UNAUTHORIZED
         }
       }
 
-      const { first_name, last_name, email, profession, user_role } = CreateUserDto;
-
-      const emailExist = await this._userRepository.findBy({ email: email, is_active: true });
-
-      if (emailExist[0]) {
+      const email = newUserDto.email.trim().toLocaleLowerCase();
+      const emailExists = await this._userRepository.findBy({ email, is_active: true });
+      if (emailExists[0]) {
         return {
           response: { valid: false },
-          title: '❌ Ocurrio un error!',
-          message: 'El email que estas intentado guardar ya se encuentra registrado',
+          title: '❌ Error!',
+          message: 'The email you are trying to save is already registered',
           status: HttpStatus.BAD_REQUEST
         }
       }
 
-      const newPassword = this._newPasswordSnippet.generatePassword();
-      const hashPassword: string = this._bcryp.encode(newPassword);
-
+      const password = this._newPasswordSnippet.generatePassword();
+      const hashedPassword = this._bcryp.encode(password);
       const emailToUsername = email.split('@');
-
+      const newUsername = emailToUsername[0].toLocaleLowerCase();
+      const { first_name, last_name, profession, user_role } = newUserDto;
       const newUser = await this._userRepository.save({
         first_name,
         last_name,
         email,
-        username: emailToUsername[0].toLocaleLowerCase(),
+        username: newUsername,
         profession,
         user_role,
-        password: hashPassword,
-        created_by: UserData.user_role,
-        last_updated_by: UserData.user_role,
+        password: hashedPassword,
+        created_by: tokenDto.user_role,
+        last_updated_by: tokenDto.user_role,
         created_date: new Date(),
         last_updated_date: new Date(),
       });
 
-      const sendEmail = await this._mailerService.sendMail({
+      const emailSent = await this._mailerService.sendMail({
         to: email,
-        subject: `Bienvenido a la Fundación S.A.R.E.S. ${first_name}`,
+        subject: `👋 Bienvenido a la Fundación S.A.R.E.S.`,
         text: 'Test',
-        html: `<div>
-                  <doctype html/>
-                  <html lang="es">
-                    <body style={{backgroundColor:"#f5f5f5", fontFamily:"Poppins, sans-serif;", fontSize:"16px", lineHeight:"1.6"}}>
-                        <div style={{maxWidth:"600px", margin:"0 auto", padding:"20px"}}>
-                          <table align="center" border="0" cellpadding="0" cellspacing="0" style={{borderCollapse:"collapse", width:"100%", margin:"0"}}>
-                              <tr>
-                                <td align="left">
-                                    <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2FFunSARES%2F&psig=AOvVaw06mbjFuKhbQJetocS5trmI&ust=1679844128179000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjBu5Wx9_0CFQAAAAAdAAAAABAE" alt="Logo" style={{display:"block", maxWidth:"150px", height:"auto", margin:"0"}}/>
-                                </td>
-                                <td align="right" style={{verticalAlign:"middle"}}>
-                                    <h1 style={{margin:"0"}}>Fundación S.A.R.E.S.</h1>
-                                </td>
-                              </tr>
-                          </table>
-                          <hr size="1" color="#e0e0e0" style={{margin:"20px 0"}}/>
-                          <p style={{margin:"0"}}>Hola, <b>${newUser.first_name + ' ' + newUser.last_name}</b></p>
-                          <p style={{margin:"0"}}>Te damos la bienvenida a la Fundación S.A.R.E.S. A continuación están las credenciales de acceso y los pasos ingresar al aplicativo.</p>
-                          <p style={{margin:"0"}}><b><i>- Recuerde que la contraseña es de un solo uso, al momento en que ingrese por primera vez, se le pedira que cambie la contraseña -</b></i></p>
-                          <ul style={{lineHeight:"1.6"}}>
-                            <li>Correo:  <b>${newUser.email}</b></li>
-                            <li>Usuario:  <b>${newUser.username}</b></li>
-                            <li>Contraseña(Temporal): <b>${newPassword}</b></li>
-                          </ul>
-                          <p style={{margin:"0"}}>Puedes ingresar al aplicativo utilizando el correo o usuario la contraseña.</p>
-                          <br/>
-                          <p style={{margin:"0"}}>Atentamente,</p>
-                          <p style={{margin:"0"}}>El equipo de la Fundación S.A.R.E.S.</p>
-                        </div>
-                    </body>
-                  </html>
-              </div>`,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+        
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Fundacion sares - Email</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+        
+            body {
+              font-family: 'Inter', sans-serif;
+              font-size: 16px;
+              line-height: 1.42857143;
+              background-color: #fff;
+              padding: 2rem 1.5rem;
+              display: flex;
+              justify-content: center;
+              align-items: flex-start;
+              height: 100%;
+              width: 100%;
+            }
+
+            img {
+              width: 60%;
+            }
+        
+            .email {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: 2rem;
+              background-color: #fff;
+              border-radius: 10px;
+              max-width: 700px;
+              width: 100%;
+              box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+            }
+        
+            .email__asset {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding-bottom: 2rem;
+              border-bottom: 2px solid #eaeaea;
+            }
+        
+            .email__asset img {
+              width: 100%;
+              max-width: 100px;
+            }
+        
+            .email__content {
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+            }
+        
+            .email__h1 {
+              font-size: 1.4rem;
+              font-weight: 400;
+              margin: 1.5rem 0;
+            }
+        
+            .email__h2 {
+              font-size: 1.25rem;
+              font-weight: 600;
+              margin: 1rem 0;
+            }
+        
+            .email__footer__text {
+              margin-top: 1.5rem;
+              font-weight: 500;
+            }
+        
+            @media screen and (max-width: 500px) {
+              .email__h1 {
+                font-size: 1rem;
+              }
+        
+              p {
+                font-size: 0.875rem;
+              }
+            }
+          </style>
+        </head>
+        
+        <body>
+          <main class="email">
+            <div class="email__asset">
+              <img src="https://pirlo.s3.us-west-1.amazonaws.com/Access/SARESmod1.0.webp" alt="Logo fundación S.A.R.E.S." />
+            </div>
+        
+            <div class="email__content">
+              <h1 class="email__h1">Hola, <strong>${first_name}</strong></h1>
+              <p>
+                Te damos la bienvenida a la Fundación S.A.R.E.S. A continuación están las credenciales de acceso y los pasos para ingresar al aplicativo.
+              </p>
+        
+              <br />
+        
+              <p class="email__note">
+                <strong>
+                  Nota: Recuerde que la contraseña es de un solo uso, al momento en que ingrese por primera vez, se le pedirá que la cambie.
+                </strong>
+              </p>
+        
+              <h2 class="email__h2">Credenciales de acceso</h2>
+        
+              <p><strong>Correo:</strong> <span>${email}</span></p>
+              <p><strong>Usuario:</strong> <span>${newUsername}</span></p>
+              <p><strong>Contraseña:</strong> <span>${password}</span></p>
+        
+              <h2 class="email__h2">Pasos para ingresar</h2>
+        
+              <p>
+                1. Ingresa a la siguiente dirección:
+                <a href="http://localhost:3000/login">Link fundacion S.A.R.E.S</a>.
+              </p>
+              <p>
+                2. Ingresa tu usuario y contraseña temporal que se encuentran en este
+                correo.
+              </p>
+              <p>3. Ingresa la contraseña que deseas utilizar en el aplicativo.</p>
+              <p>4. Listo, ya puedes iniciar sesión con tu nueva contraseña.</p>
+        
+              <p class="email__footer__text">
+                Saludos, <br />
+                El equipo de la Fundación S.A.R.E.S.
+              </p>
+            </div>
+          </main>
+        </body>
+        
+        </html>`,
       });
 
       return {
         response: {
           newUser,
-          sendEmail
+          emailSent
         },
-        title: '✨ Usuario creado!',
-        message: `Creaste la cuenta para ${first_name}, pronto le llegaran los pasos para ingresar a la app`,
+        title: '✨ Usuario cread0!',
+        message: `Haz creado la cuenta para ${first_name}, le hemos enviado un correo con los pasos para acceder a la plataforma`,
         status: HttpStatus.OK
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
+
 
   async logIn(LogInCredentialDto: LogInCredentialDto): Promise<any> {
     try {
