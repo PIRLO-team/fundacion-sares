@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserRepository } from './repository/user.repository';
@@ -36,4 +36,11 @@ import { RoleRepository } from './repository/role.repository';
     AuthService
   ]
 })
-export class AuthModule { }
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: '/auth/register',
+      method: RequestMethod.POST
+    });
+  }
+}
