@@ -38,7 +38,7 @@ import { Role } from './auth/entities/role.entity';
         },
       },
       defaults: {
-        from: 'sares@fundacion.com',
+        from: 'juan_man.molina@uao.edu.co',
       },
     })
   ],
