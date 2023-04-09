@@ -1,8 +1,6 @@
 // React
-// import { useEffect } from 'react';
 
 // Next
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Hooks
@@ -19,7 +17,6 @@ import { Avatar, Button, Input } from '@/components/ui';
 import s from '../styles/Perfil.module.scss';
 
 // Types
-// import { TActivity } from '@/utils/types';
 
 function Perfil() {
   const router = useRouter();
@@ -42,19 +39,19 @@ function Perfil() {
   return (
     <Layout pageTitle="Perfil">
       <div className={s.profile}>
-        <div className={s.profile__info}>
-          <div className={s.profile__info__coverPhoto}>
-            <img
-              src={
-                currentUser?.coverPhotoURL ||
-                `https://source.boringavatars.com/bauhaus/120/${currentUser.name}?square`
-              }
-              alt={currentUser?.name}
-              width="100%"
-              className={s.profile__info__coverPhoto__img}
-            />
-          </div>
+        <div className={s.profile__info__coverPhoto}>
+          <img
+            src={
+              currentUser?.coverPhotoURL ||
+              `https://source.boringavatars.com/bauhaus/120/${currentUser.name}?square`
+            }
+            alt={currentUser?.name}
+            width="100%"
+            className={s.profile__info__coverPhoto__img}
+          />
+        </div>
 
+        <div className={s.profile__info}>
           <div className={s.profile__info__avatar}>
             <Avatar
               src={currentUser?.photoURL}
@@ -63,7 +60,7 @@ function Perfil() {
               email={currentUser?.email}
               size={170}
               className={s.profile__info__avatar__item}
-              classNameText={s.profile__info__avatar__item__text}
+              classNameText={s.profile__info__avatar__item__name}
               classNameImg={s.profile__info__avatar__item__img}
             />
           </div>

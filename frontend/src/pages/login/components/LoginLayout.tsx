@@ -20,7 +20,7 @@ function LoginLayout({ children, SEOTitle }: TLoginLayout) {
             src="/images/login.png"
             alt="logo"
             className={s.login__content__img}
-            width="100%"
+            width="100%
           /> */}
         </div>
         <div className={s.login__form}>{children}</div>

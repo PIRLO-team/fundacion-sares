@@ -35,6 +35,8 @@
   --animation: fadeIn 0.5s ease-out;
   --animation-dropdown: fadeInDropdown 0.2s ease-out;
 
+  --coverPhotoWidth: clamp(150px, 20vw, 200px);
+
   --max-width: 1200px;
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
     'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
