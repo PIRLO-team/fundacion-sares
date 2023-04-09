@@ -115,8 +115,7 @@ export const useAuthStore = () => {
       });
 
       router.replace('/login');
-
-      console.log(data);
+      startLogout();
     } catch (error: any) {
       const errData = error.response.data;
 
