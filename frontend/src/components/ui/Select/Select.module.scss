@@ -1,0 +1,63 @@
+@mixin Select {
+  border: none;
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  font-weight: 400;
+  outline: none;
+  width: 100%;
+  transition: var(--main-transition);
+
+  &:focus {
+    border: 1px solid var(--accents-3);
+    transition: var(--main-transition);
+
+    &::placeholder {
+      color: transparent;
+      transition: var(--main-transition);
+    }
+  }
+
+  &:disabled {
+    background-color: var(--accents-2);
+    border: 1px solid var(--accents-3);
+    color: var(--accents-5);
+    transition: var(--main-transition);
+  }
+}
+
+.labelTitle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 1.5rem 0 1rem 0;
+  color: var(--accents-6);
+  transition: var(--main-transition);
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.input {
+  &__primary {
+    @include Select;
+    border-bottom: 1px solid var(--accents-3);
+    padding: 0.7rem 0rem;
+
+    &:focus {
+      border: none;
+    }
+  }
+
+  &__secondary {
+    @include Select;
+    border: 1px solid var(--accents-2);
+    padding: 0.7rem 1rem;
+    border-radius: var(--border-radius);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    margin-right: 0.3125rem;
+  }
+}

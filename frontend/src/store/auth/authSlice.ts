@@ -39,16 +39,6 @@ export const authSlice = createSlice({
   reducers: {
     checkingCredentials: (state) => {
       state.status = 'checking';
-      state.currentUser = {
-        uid: undefined,
-        name: undefined,
-        email: undefined,
-        username: undefined,
-        role: undefined,
-        photoURL: undefined,
-        coverPhotoURL: undefined,
-      };
-      state.errorMessage = undefined;
     },
 
     onLogin: (state, { payload }) => {

@@ -37,9 +37,9 @@ export const Avatar = ({
         height={size}
         className={`${s.avatar__img} ${classNameImg}`}
       />
-      {username && (
+      {name && (
         <div className={`${s.avatar__info}`}>
-          {username && (
+          {name && (
             <p className={`${s.avatar__info__name}  ${classNameText}`}>
               {name}
             </p>

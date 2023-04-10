@@ -1,3 +1,6 @@
+// React
+import { useState } from 'react';
+
 // Redux hooks
 import { useAppDispatch, useAppSelector } from '@/store/app/hooks';
 
@@ -14,14 +17,19 @@ import { checkingCredentials, onLogin, onLogout } from '@/store';
 import { toast } from 'sonner';
 
 export const useAuthStore = () => {
+  // Redux Hooks
   const dispatch = useAppDispatch();
-
   const { status, currentUser, errorMessage } = useAppSelector(
     (state) => state.auth
   );
 
+  // Router
   const router = useRouter();
 
+  // Loading
+  const [loading, setLoading] = useState(false);
+
+  // Logout
   const startLogout = async () => {
     localStorage.clear();
     dispatch(onLogout());
@@ -31,6 +39,7 @@ export const useAuthStore = () => {
     }
   };
 
+  // Login
   const startLogin = async ({
     user,
     password,
@@ -88,6 +97,7 @@ export const useAuthStore = () => {
     }
   };
 
+  // Reset Password
   const startResetPassword = async ({
     user,
     code,
@@ -126,15 +136,59 @@ export const useAuthStore = () => {
     }
   };
 
+  // Create User
+  const startCreateUser = async ({
+    first_name,
+    last_name,
+    email,
+    profession,
+    user_role,
+  }: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    profession: string;
+    user_role: string;
+  }) => {
+    setLoading(true);
+
+    try {
+      const { data } = await projectApi.post('/auth/register', {
+        first_name,
+        last_name,
+        email,
+        profession,
+        user_role,
+      });
+
+      console.log(data);
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      const errData = error.response.data;
+
+      console.log(error);
+
+      toast.error(errData.title);
+    }
+  };
+
   return {
     // Properties
     status,
     currentUser,
     errorMessage,
+    loading,
 
     // Methods
     startLogin,
     startLogout,
     startResetPassword,
+    startCreateUser,
   };
 };

@@ -1,0 +1,70 @@
+.infoCard {
+  // cursor: pointer;
+
+  &__item {
+    // text-align: start;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accents-4);
+    padding-bottom: 1rem;
+    transition: var(--main-transition);
+
+    &:nth-child(-n + 2) {
+      text-align: start;
+    }
+
+    &__name {
+      display: flex;
+      gap: 0.625rem;
+      flex-direction: column;
+      transition: var(--main-transition);
+
+      &__text {
+        font-size: 1rem;
+        font-weight: 600;
+        max-width: 400px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: var(--main-transition);
+      }
+
+      &__tags {
+        display: flex;
+        gap: 0.5rem;
+        overflow: hidden;
+        transition: var(--main-transition);
+
+        &__item {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: var(--accents-5);
+          transition: var(--main-transition);
+        }
+      }
+    }
+
+    &__members {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--main-transition);
+    }
+
+    &__date {
+      min-width: 135px;
+    }
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      transition: var(--main-transition);
+    }
+  }
+}

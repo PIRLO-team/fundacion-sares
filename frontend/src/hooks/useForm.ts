@@ -8,7 +8,9 @@ type FormState = {
 export const useForm = <T extends FormState>(initialForm: T) => {
   const [formState, setFormState] = useState(initialForm);
 
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
 
     setFormState({
