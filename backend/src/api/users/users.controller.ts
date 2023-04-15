@@ -37,7 +37,7 @@ export class UsersController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  @Patch(':user_id')
+  @Patch('update/:user_id')
   @UseGuards(JwtMiddleware)
   async updateUserData(
     @UserToken() user: TokenDto,
@@ -49,10 +49,14 @@ export class UsersController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  @Delete('inactive/:id')
-  async inactiveUser(@Param('id') id: string) {
+  @Delete('inactive/:user_id')
+  async inactiveUser(
+    @UserToken() user: TokenDto,
+    @Param('user_id') user_id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
     const { response, title, message, status } =
-      await this.usersService.inactiveUser(+id);
+      await this.usersService.inactiveUser(user, +user_id, updateUserDto);
     throw new HttpException({ response, title, message, }, status);
   }
 

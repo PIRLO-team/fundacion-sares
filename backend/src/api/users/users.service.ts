@@ -101,6 +101,7 @@ export class UsersService {
           user_role: Not(1)
         }
       });
+      console.log("🚀 ~ file: users.service.ts:104 ~ UsersService ~ findUserById ~ userExists:", userExists)
 
       if (!userExists) {
         return {
@@ -145,37 +146,89 @@ export class UsersService {
     //     status: HttpStatus.UNAUTHORIZED
     //   }
     // }
-    
-    const token_user_id: number = user.user_id;
-    const query_user_id: number = userExist.user_id;
-    if (token_user_id !== query_user_id) {
-      return {
-        response: { valid: false },
-        title: `❌ Ocurrio un error`,
-        message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
-        status: HttpStatus.UNAUTHORIZED
-      }
-    }
 
     try {
-      const {first_name, last_name, email, document, profession, professional_card, } = updateUserDto;
-      return {
-        response: { valid: true },
-        title: `✅ Se actualizó la información`,
-        message: `Hemos actualizado la información del usuario ${user_id}`,
-        status: HttpStatus.OK
+      const id: number = user.user_id;
+      const r: number = user.user_role;
+      const query_user_id: number = userExist.user_id;
+      if (+id === query_user_id || +r === 1) {
+
+        const { first_name, last_name, email, document, profession, img_profile, user_role } = userExist;
+        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role } = updateUserDto;
+
+        const updateUserData = await this._userRepository.update(user_id, {
+          first_name: fName || first_name,
+          last_name: lName || last_name,
+          // email: mail || email,
+          document: doc || document,
+          profession: pro || profession,
+          img_profile: url || img_profile,
+          user_role: role || user_role,
+          last_updated_by: id,
+        });
+
+        return {
+          response: updateUserData,
+          title: `✅ Se actualizó la información`,
+          message: `Hemos actualizado la información del usuario ${user_id}`,
+          status: HttpStatus.OK
+        }
+      } else {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
+          status: HttpStatus.UNAUTHORIZED
+        }
       }
+
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  inactiveUser(id: number) {
-    return {
-      response: { valid: true },
-      title: `🚫 Se inactivo el usuario`,
-      message: `El usuario ${id} fue desactivado, no tiene acceso al aplicativo`,
-      status: HttpStatus.ACCEPTED
+  async inactiveUser(user: TokenDto, user_id: number, updateUserDto: UpdateUserDto) {
+    const userExist: User = await this._userRepository.findOneBy({ user_id });
+
+    if (!userExist) {
+      return {
+        response: { valid: false },
+        title: `❌ Ocurrio un error`,
+        message: `El usuario que buscas no existe`,
+        status: HttpStatus.NOT_FOUND
+      }
+    }
+
+    try {
+      const r: number = user.user_role;
+      const id: number = user.user_id;
+      const { is_active: status } = updateUserDto;
+
+      if (+r === 1) {
+        const inactiveUser = await this._userRepository.update(user_id, {
+          is_active: status,
+          last_updated_by: id,
+        });
+
+
+        return {
+          response: inactiveUser,
+          title: `🚫 Se inactivo el usuario`,
+          message: `El usuario ${userExist.first_name + ' ' + userExist.last_name} fue desactivado, no tiene acceso al aplicativo`,
+          status: HttpStatus.ACCEPTED
+        }
+      } else {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `No puedes modificar el usuario`,
+          status: HttpStatus.UNAUTHORIZED
+        }
+      }
+
+
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 

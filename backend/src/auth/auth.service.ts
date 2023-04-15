@@ -92,106 +92,18 @@ export class AuthService {
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Fundacion sares - Email</title>
-          <style>
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-            }
-        
-            body {
-              font-family: 'Inter', sans-serif;
-              font-size: 16px;
-              line-height: 1.42857143;
-              background-color: #fff;
-              padding: 2rem 1.5rem;
-              display: flex;
-              justify-content: center;
-              align-items: flex-start;
-              height: 100%;
-              width: 100%;
-            }
-
-            img {
-              width: 60%;
-            }
-        
-            .email {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              padding: 2rem;
-              background-color: #fff;
-              border-radius: 10px;
-              max-width: 700px;
-              width: 100%;
-              box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
-            }
-        
-            .email__asset {
-              width: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              padding-bottom: 2rem;
-              border-bottom: 2px solid #eaeaea;
-            }
-        
-            .email__asset img {
-              width: 100%;
-              max-width: 100px;
-            }
-        
-            .email__content {
-              width: 100%;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-            }
-        
-            .email__h1 {
-              font-size: 1.4rem;
-              font-weight: 400;
-              margin: 1.5rem 0;
-            }
-        
-            .email__h2 {
-              font-size: 1.25rem;
-              font-weight: 600;
-              margin: 1rem 0;
-            }
-        
-            .email__footer__text {
-              margin-top: 1.5rem;
-              font-weight: 500;
-            }
-        
-            @media screen and (max-width: 500px) {
-              .email__h1 {
-                font-size: 1rem;
-              }
-        
-              p {
-                font-size: 0.875rem;
-              }
-            }
-          </style>
+          <link rel="stylesheet" href="https://pirlo.s3.us-west-1.amazonaws.com/Access/styles.css" />
         </head>
         
         <body>
           <main class="email">
-            <div class="email__asset">
-              <img src="https://pirlo.s3.us-west-1.amazonaws.com/Access/SARESmod1.0.webp" alt="Logo fundación S.A.R.E.S." />
-            </div>
-        
+      
             <div class="email__content">
               <h1 class="email__h1">Hola, <strong>${first_name}</strong></h1>
               <p>
                 Te damos la bienvenida a la Fundación S.A.R.E.S. A continuación están las credenciales de acceso y los pasos para ingresar al aplicativo.
               </p>
         
-              <br />
         
               <p class="email__note">
                 <strong>
@@ -234,7 +146,7 @@ export class AuthService {
           newUser,
           emailSent
         },
-        title: '✨ Usuario cread0!',
+        title: '✨ Usuario creado!',
         message: `Haz creado la cuenta para ${first_name}, le hemos enviado un correo con los pasos para acceder a la plataforma`,
         status: HttpStatus.OK
       }
@@ -260,7 +172,7 @@ export class AuthService {
 
       const userExists = await this._userRepository
         .createQueryBuilder('user')
-        .where('user.email = :user_req OR user.username = :user_req', { user_req })
+        .where('user.email = :user_req OR user.username = :user_req AND is_active = true', { user_req })
         .getOne();
 
       if (!userExists) {

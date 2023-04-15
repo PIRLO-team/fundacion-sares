@@ -1,7 +1,6 @@
 import { BaseEntity } from '../../shared/entity/base-entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.entity';
-import { UserFile } from '../../api/users/entity/user_file.entity';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -99,20 +98,9 @@ export class User extends BaseEntity {
     })
     user_role: number;
 
-    @Column({
-        type: 'bigint',
-        name: 'file',
-        nullable: false
-    })
-    file: number;
-
     @ManyToOne(() => Role, r => r.role_id)
     @JoinColumn({
         name: 'user_role'
     })
     userRole!: Role;
-
-
-    @OneToMany(() => UserFile, a => a.userFile)
-    obj_user_file: UserFile[];
 }
