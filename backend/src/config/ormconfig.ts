@@ -11,6 +11,7 @@ export const dataSource: DataSource = new DataSource({
     database: env.DB_NAME,
     entities: [
         `${__dirname}/../auth/**/*.entity{.ts,.js}`,
+        `${__dirname}/../api/**/*.entity{.ts,.js}`,
     ],
     migrations: [`${__dirname}/../migrations/**/*{.ts,.js}`],
     synchronize: false,

@@ -1,16 +1,22 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { JwtMiddleware } from 'src/auth/middleware/jwt.middleware';
+import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
+import { AuthModule } from 'src/auth/auth.module';
+import { HandlersError } from 'src/shared/handlers/error.utils';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService]
+  imports: [AuthModule],
+  providers: [
+    UsersService,
+    HandlersError
+  ]
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+      .forRoutes({ path: '/api/user/*', method: RequestMethod.ALL });
   }
 }

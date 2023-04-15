@@ -33,7 +33,8 @@ import { RoleRepository } from './repository/role.repository';
     JwtStrategy
   ],
   exports: [
-    AuthService
+    AuthService,
+    UserRepository
   ]
 })
 export class AuthModule implements NestModule {

@@ -12,6 +12,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { env } from 'process';
 import { User } from './auth/entities/user.entity';
 import { Role } from './auth/entities/role.entity';
+import { UsersModule } from './api/users/users.module';
+import { DirectVolunteerModule } from './api/direct-volunteer/direct-volunteer.module';
+import { Repository } from 'typeorm';
 
 @Module({
   imports: [
@@ -27,6 +30,8 @@ import { Role } from './auth/entities/role.entity';
     }),
     RouterModule.register(MainRoutes),
     AuthModule,
+    UsersModule,
+    DirectVolunteerModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,
@@ -46,6 +51,7 @@ import { Role } from './auth/entities/role.entity';
   providers: [
     AppService,
     JwtService,
+    Repository
   ],
 })
 export class AppModule { }

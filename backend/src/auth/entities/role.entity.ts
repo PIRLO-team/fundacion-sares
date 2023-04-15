@@ -22,6 +22,6 @@ export class Role {
     })
     role_description: string;
 
-    @OneToMany(() => User, a => a.obj_user_role)
+    @OneToMany(() => User, a => a.userRole)
     obj_user_role: User[];
 }
