@@ -9,21 +9,13 @@ import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Get('all/admin')
+  @Get('all')
   @UseGuards(JwtMiddleware)
-  async findAllUsersAdmin(
+  async findAllUsers(
     @UserToken() user: TokenDto,
   ) {
     const { response, title, message, status } =
-      await this.usersService.findAllUsersAdmin(user);
-    throw new HttpException({ response, title, message, }, status);
-  }
-
-  @Get('all')
-  @UseGuards(JwtMiddleware)
-  async findAllUsers() {
-    const { response, title, message, status } =
-      await this.usersService.findAllUsers();
+      await this.usersService.findAllUsers(user);
     throw new HttpException({ response, title, message, }, status);
   }
 

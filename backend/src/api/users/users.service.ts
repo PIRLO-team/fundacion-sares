@@ -13,45 +13,61 @@ export class UsersService {
     private readonly _handlerError: HandlersError,
   ) { }
 
-  async findAllUsersAdmin(user: TokenDto,) {
-    const user_role: number = +user.user_role;
-
-    if (user_role !== 1) {
-      return {
-        response: { valid: false },
-        title: '👮🏻‍♀️ No tienes acceso',
-        message: 'No puedes realizar esta acción, por favor contactate con el administrador del aplicativo',
-        status: HttpStatus.UNAUTHORIZED
-      }
-    }
-
+  async findAllUsers(user: TokenDto) {
     try {
-      const allUsers: User[] = await this._userRepository.find({
-        select: [
-          'user_id',
-          'first_name',
-          'last_name',
-          'username',
-          'email',
-          'profession',
-          'is_active',
-          'created_date',
-        ],
-        relations: ['userRole']
-      });
+      const role: number = user.user_role
+      if (+role === 1) {
+        const allUsers: User[] = await this._userRepository.find({
+          select: [
+            'user_id',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'profession',
+            'is_active',
+            'created_date',
+          ],
+          relations: ['userRole']
+        });
 
-      return {
-        response: allUsers,
-        title: '✅ Todos los usuarios',
-        message: 'Listado de todos los usuarios registrados en el aplicativo para admin',
-        status: HttpStatus.OK
+        return {
+          response: allUsers,
+          title: '✅ Todos los usuarios',
+          message: 'Listado de todos los usuarios registrados en el aplicativo para admin',
+          status: HttpStatus.OK
+        }
+      } else {
+        const allUsers: User[] = await this._userRepository.find({
+          select: [
+            'user_id',
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'profession',
+            'created_date',
+          ],
+          relations: ['userRole'],
+          where: {
+            is_active: true,
+            user_role: Not(1)
+          }
+        });
+
+        return {
+          response: allUsers,
+          title: '✅ Todos los usuarios',
+          message: 'Listado de todos los usuarios registrados en el aplicativo',
+          status: HttpStatus.OK
+        }
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async findAllUsers() {
+  async findUserById(user_id: number) {
     try {
       const allUsers: User[] = await this._userRepository.find({
         select: [
@@ -74,49 +90,6 @@ export class UsersService {
         response: allUsers,
         title: '✅ Todos los usuarios',
         message: 'Listado de todos los usuarios registrados en el aplicativo',
-        status: HttpStatus.OK
-      }
-    } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
-    }
-  }
-
-  async findUserById(user_id: number) {
-    try {
-      const userExists: User[] = await this._userRepository.find({
-        select: [
-          'user_id',
-          'first_name',
-          'last_name',
-          'username',
-          'email',
-          'profession',
-          'created_date',
-          'phone'
-        ],
-        relations: ['userRole'],
-        where: {
-          user_id,
-          is_active: true,
-          user_role: Not(1)
-        }
-      });
-      console.log("🚀 ~ file: users.service.ts:104 ~ UsersService ~ findUserById ~ userExists:", userExists)
-
-      if (!userExists) {
-        return {
-          response: { valid: false },
-          title: `❌ Ocurrio un error`,
-          message: `El usuario que buscas no existe`,
-          status: HttpStatus.NOT_FOUND
-        }
-      }
-      const first_name = userExists[0].first_name;
-
-      return {
-        response: userExists,
-        title: `✅ Usario ${first_name}`,
-        message: `Información del usuario ${first_name}`,
         status: HttpStatus.OK
       }
     } catch (error) {
