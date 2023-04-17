@@ -201,7 +201,7 @@ export class AuthService {
   async passwordResetStepOne(UpdateAuthDto: UpdateAuthDto) {
     try {
       let emailSent: any;
-      const userExists = await this._userRepository.findOneBy({ email: UpdateAuthDto.email });
+      const userExists = await this._userRepository.findOneBy({ email: UpdateAuthDto.email, is_active: true });
 
       if (!userExists) {
         return {
@@ -262,7 +262,7 @@ export class AuthService {
         }
       }
 
-      const userExists = await this._userRepository.findOneBy({ user_id: user, code });
+      const userExists = await this._userRepository.findOneBy({ user_id: user, code, is_active: true });
       if (!userExists) {
         return {
           response: { valid: false },
@@ -289,7 +289,7 @@ export class AuthService {
   async regenerateCode(user, UpdateAuthDto: UpdateAuthDto) {
     try {
       let emailSent: any;
-      const userExists = await this._userRepository.findOneBy({ user_id: user });
+      const userExists = await this._userRepository.findOneBy({ user_id: user, is_active: true });
       if (!userExists) {
         return {
           response: { valid: false },
@@ -402,6 +402,38 @@ export class AuthService {
           message: `El código de validación no coincide, por favor contactate con el administrator del aplicativo`,
           status: HttpStatus.BAD_REQUEST
         }
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+
+  async userResetRequest(user: number) {
+    try {
+      const userExists: User = await this._userRepository.findOneBy({ user_id: user });
+
+      if (!userExists) {
+        return {
+          response: { valid: false },
+          title: '❌ Datos no validos!',
+          message: `El usuario no coincide, por favor contactate con el administrator del aplicativo`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      const { first_name, last_name, email, username } = userExists;
+
+      return {
+        response: {
+          first_name,
+          last_name,
+          email,
+          username
+        },
+        title: '✅ Todos los usuarios',
+        message: 'Listado de todos los usuarios registrados en el aplicativo',
+        status: HttpStatus.OK
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });

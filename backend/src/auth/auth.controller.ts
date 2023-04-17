@@ -71,6 +71,16 @@ export class AuthController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  @Get('user-request')
+  async userResetRequest(
+    @Query('user') user: number,
+  ) {
+    const { response, title, message, status } =
+      await this.authService.userResetRequest(user);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
   @Patch('reset')
   async findAll(
     @Query('user') user: number,
