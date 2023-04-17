@@ -109,17 +109,6 @@ export class UsersService {
       }
     }
 
-    // TODO: Si es admin que tanto puede actualizar?
-    // const token_user_role: number = user.user_role;
-    // if (token_user_role === 1) {
-    //   return {
-    //     response: { valid: false },
-    //     title: `❌ Ocurrio un error`,
-    //     message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
-    //     status: HttpStatus.UNAUTHORIZED
-    //   }
-    // }
-
     try {
       const id: number = user.user_id;
       const r: number = user.user_role;
@@ -132,7 +121,6 @@ export class UsersService {
         const updateUserData = await this._userRepository.update(user_id, {
           first_name: fName || first_name,
           last_name: lName || last_name,
-          // email: mail || email,
           document: doc || document,
           profession: pro || profession,
           img_profile: url || img_profile,

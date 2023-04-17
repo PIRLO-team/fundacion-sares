@@ -4,4 +4,5 @@ import { CreateUserDto } from './create-auth.dto';
 export class UpdateAuthDto extends PartialType(CreateUserDto) {
     password: string;
     confirmPassword: string;
+    code: number;
 }

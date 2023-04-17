@@ -39,6 +39,38 @@ export class AuthController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  @Post('password-reset-step-one')
+  async passwordResetStepOne(
+    @Body() UpdateAuthDto: UpdateAuthDto
+  ) {
+    const { response, title, message, status } =
+      await this.authService.passwordResetStepOne(UpdateAuthDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('password-reset-step-two')
+  async passwordResetStepTwo(
+    @Query('user') user: number,
+    @Body() UpdateAuthDto: UpdateAuthDto
+  ) {
+    const { response, title, message, status } =
+      await this.authService.passwordResetStepTwo(user, UpdateAuthDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('regenerate-code')
+  async regenerateCode(
+    @Query('user') user: number,
+    @Body() UpdateAuthDto: UpdateAuthDto
+  ) {
+    const { response, title, message, status } =
+      await this.authService.regenerateCode(user, UpdateAuthDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
   @Patch('reset')
   async findAll(
     @Query('user') user: number,

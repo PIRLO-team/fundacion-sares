@@ -13,6 +13,7 @@ import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
 import { ResetCodeSnippet } from './utils/random-code.utils';
 import { PasswordGeneratorService } from './utils/random-password.utils';
 import { RoleRepository } from './repository/role.repository';
+import { emailCode, emailWelcome } from './utils/email.utils';
 
 @Injectable()
 export class AuthService {
@@ -84,61 +85,7 @@ export class AuthService {
         to: email,
         subject: `👋 Bienvenido a la Fundación S.A.R.E.S.`,
         text: 'Test',
-        html: `<!DOCTYPE html>
-        <html lang="en">
-        
-        <head>
-          <meta charset="UTF-8" />
-          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Fundacion sares - Email</title>
-          <link rel="stylesheet" href="https://pirlo.s3.us-west-1.amazonaws.com/Access/styles.css" />
-        </head>
-        
-        <body>
-          <main class="email">
-      
-            <div class="email__content">
-              <h1 class="email__h1">Hola, <strong>${first_name}</strong></h1>
-              <p>
-                Te damos la bienvenida a la Fundación S.A.R.E.S. A continuación están las credenciales de acceso y los pasos para ingresar al aplicativo.
-              </p>
-        
-        
-              <p class="email__note">
-                <strong>
-                  Nota: Recuerde que la contraseña es de un solo uso, al momento en que ingrese por primera vez, se le pedirá que la cambie.
-                </strong>
-              </p>
-        
-              <h2 class="email__h2">Credenciales de acceso</h2>
-        
-              <p><strong>Correo:</strong> <span>${email}</span></p>
-              <p><strong>Usuario:</strong> <span>${newUsername}</span></p>
-              <p><strong>Contraseña:</strong> <span>${password}</span></p>
-        
-              <h2 class="email__h2">Pasos para ingresar</h2>
-        
-              <p>
-                1. Ingresa a la siguiente dirección:
-                <a href="http://localhost:3000/login">Link fundacion S.A.R.E.S</a>.
-              </p>
-              <p>
-                2. Ingresa tu usuario y contraseña temporal que se encuentran en este
-                correo.
-              </p>
-              <p>3. Ingresa la contraseña que deseas utilizar en el aplicativo.</p>
-              <p>4. Listo, ya puedes iniciar sesión con tu nueva contraseña.</p>
-        
-              <p class="email__footer__text">
-                Saludos, <br />
-                El equipo de la Fundación S.A.R.E.S.
-              </p>
-            </div>
-          </main>
-        </body>
-        
-        </html>`,
+        html: emailWelcome(first_name, email, newUsername, password),
       });
 
       return {
@@ -245,6 +192,143 @@ export class AuthService {
         status: HttpStatus.OK
       }
 
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+
+  async passwordResetStepOne(UpdateAuthDto: UpdateAuthDto) {
+    try {
+      let emailSent: any;
+      const userExists = await this._userRepository.findOneBy({ email: UpdateAuthDto.email });
+
+      if (!userExists) {
+        return {
+          response: { valid: false },
+          title: '❌ Correo no valido!',
+          message: `Por favor ingrese un correo valido`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      const { user_id, first_name, last_name, email } = userExists;
+      const createCode = await this._resetCodeSnippet.randomCode();
+      if (createCode) {
+        await this._userRepository.update(user_id, { code: createCode });
+        emailSent = await this._mailerService.sendMail({
+          to: email,
+          subject: `🔐 Cambio de contraseña - Fundación S.A.R.E.S.`,
+          text: 'Test',
+          html: emailCode(first_name, last_name, createCode)
+        });
+
+      } else {
+        return {
+          response: {
+            valid: false,
+          },
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor intentalo más tarde',
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      return {
+        response: {
+          user_id,
+          emailSent
+        },
+        title: '📨 Código enviado!',
+        message: `Revisa tu buzón... el código fue enviado pero no se lo compartas a nadie 🤫`,
+        status: HttpStatus.OK
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async passwordResetStepTwo(user, UpdateAuthDto: UpdateAuthDto) {
+    try {
+      const { code } = UpdateAuthDto;
+      if (!code) {
+        return {
+          response: {
+            valid: false,
+          },
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor ingresa el código',
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      const userExists = await this._userRepository.findOneBy({ user_id: user, code });
+      if (!userExists) {
+        return {
+          response: { valid: false },
+          title: '❌ Código no valido!',
+          message: `Por favor ingrese el código nuevamente o genere uno nuevo`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      return {
+        response: {
+          user,
+          code
+        },
+        title: '🔓 Código valido!',
+        message: `Puedes cambiar la contraseña`,
+        status: HttpStatus.OK
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async regenerateCode(user, UpdateAuthDto: UpdateAuthDto) {
+    try {
+      let emailSent: any;
+      const userExists = await this._userRepository.findOneBy({ user_id: user });
+      if (!userExists) {
+        return {
+          response: { valid: false },
+          title: '❌ Código no valido!',
+          message: `Por favor ingrese el código nuevamente o genere uno nuevo`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+      const { user_id, first_name, last_name, email } = userExists;
+      const createCode = await this._resetCodeSnippet.randomCode();
+      if (createCode) {
+        await this._userRepository.update(user_id, { code: createCode });
+        emailSent = await this._mailerService.sendMail({
+          to: email,
+          subject: `🔐 Cambio de contraseña - Fundación S.A.R.E.S.`,
+          text: 'Test',
+          html: emailCode(first_name, last_name, createCode)
+        });
+
+      } else {
+        return {
+          response: {
+            valid: false,
+          },
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor intentalo más tarde',
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      return {
+        response: {
+          user_id,
+          emailSent
+        },
+        title: '📨 Código enviado!',
+        message: `Revisa tu buzón... el código fue enviado pero no se lo compartas a nadie 🤫`,
+        status: HttpStatus.OK
+      }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
