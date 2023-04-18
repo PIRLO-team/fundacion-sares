@@ -57,7 +57,13 @@ function ManejoUsuarios() {
   };
 
   // Table headers
-  const tableHeaders = ['NOMBRE', 'ROL DE CARGO', 'ESTADO', 'ACCIONES'];
+  const tableHeaders = [
+    'NOMBRE',
+    'PROFESION',
+    'ROL DE CARGO',
+    'ESTADO',
+    'ACCIONES',
+  ];
 
   // OnSubmit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

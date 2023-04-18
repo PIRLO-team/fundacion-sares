@@ -49,6 +49,7 @@ function InfoCard({ data }: { data: TUser }) {
             />
           </div>
         </td>
+        <td className={s.infoCard__item__roleName}>{data!.profession}</td>
         <td className={s.infoCard__item__roleName}>
           {data!.userRole.role_name}
         </td>
