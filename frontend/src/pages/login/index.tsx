@@ -7,16 +7,17 @@ import { useRouter } from 'next/router';
 // Hooks
 import { useAuthStore, useForm } from '@/hooks';
 
+// HOC - Higher Order Components
+import { withAuth } from '@/auth/withAuth';
+
+// Local Components
+import LoginLayout from './components/LoginLayout';
+
 // UI Components
 import { Button, Input } from '@/components/ui';
 
-// Local Components
-import { SEO } from '@/components';
-
 // Styles
 import s from './styles/Login.module.scss';
-import { withAuth } from '@/auth/withAuth';
-import LoginLayout from './components/LoginLayout';
 
 function Login() {
   const { status, currentUser, startLogin } = useAuthStore();
