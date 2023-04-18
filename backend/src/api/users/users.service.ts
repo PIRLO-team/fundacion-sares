@@ -5,8 +5,8 @@ import { UserRepository } from '../../auth/repository/user.repository';
 import { User } from '../../auth/entities/user.entity';
 import { HandlersError } from '../../shared/handlers/error.utils';
 import { Not } from 'typeorm';
-import { BcryptPasswordEncoder } from '../../auth/utils/bcrypt.utils';
-import { PasswordGeneratorService } from '../../auth/utils/random-password.utils';
+import { BcryptPasswordEncoder } from '../../shared/utils/bcrypt.utils';
+import { PasswordGeneratorService } from '../../shared/utils/random-password.utils';
 
 @Injectable()
 export class UsersService {

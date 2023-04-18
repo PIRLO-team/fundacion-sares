@@ -9,11 +9,11 @@ import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { User } from './entities/user.entity';
-import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
-import { ResetCodeSnippet } from './utils/random-code.utils';
-import { PasswordGeneratorService } from './utils/random-password.utils';
+import { BcryptPasswordEncoder } from '../shared/utils/bcrypt.utils';
+import { ResetCodeSnippet } from '../shared/utils/random-code.utils';
+import { PasswordGeneratorService } from '../shared/utils/random-password.utils';
 import { RoleRepository } from './repository/role.repository';
-import { emailCode, emailWelcome } from './utils/email.utils';
+import { emailCode, emailWelcome } from '../shared/utils/email.utils';
 
 @Injectable()
 export class AuthService {
@@ -45,20 +45,31 @@ export class AuthService {
       if (role !== '1') {
         return {
           response: { valid: false },
-          title: '👮🏻‍♀️ Error!',
-          message: 'You are not authorized to perform this action, please contact the administrator',
+          title: '👮🏻‍♀️ No autorizado!',
+          message: 'No estas autorizado para realizar esta acción, por favor comunicate con el administrador',
           status: HttpStatus.UNAUTHORIZED
         }
       }
 
       const email = newUserDto.email.trim().toLocaleLowerCase();
-      const emailExists = await this._userRepository.findBy({ email, is_active: true });
-      if (emailExists[0]) {
-        return {
-          response: { valid: false },
-          title: '❌ Error!',
-          message: 'The email you are trying to save is already registered',
-          status: HttpStatus.BAD_REQUEST
+      const emailExists = await this._userRepository.findOneBy({ email });
+      if (emailExists) {
+        if (!emailExists?.is_active) {
+          return {
+            response: { valid: false },
+            title: '⚠️: Cuenta inactiva!',
+            message: 'La cuenta que tratas de guardar ya esta registrada y se encuentra inactiva',
+            status: HttpStatus.BAD_REQUEST
+          }
+        }
+
+        if (emailExists?.is_active) {
+          return {
+            response: { valid: false },
+            title: '⚠️: Correo en uso!',
+            message: 'El correo que tratas de guardar ya se encuentra registrado',
+            status: HttpStatus.BAD_REQUEST
+          }
         }
       }
 
@@ -120,7 +131,7 @@ export class AuthService {
 
       const userExists = await this._userRepository
         .createQueryBuilder('user')
-        .where('user.email = :user_req OR user.username = :user_req AND is_active = true', { user_req })
+        .where('user.email = :user_req OR user.username = :user_req', { user_req })
         .getOne();
 
       if (!userExists) {
@@ -131,8 +142,16 @@ export class AuthService {
           status: HttpStatus.BAD_REQUEST
         }
       }
+      const { is_active, user_id, first_name, last_name, password, email, username, new_user, user_role, phone, img_profile, profession } = userExists;
 
-      const { user_id, first_name, last_name, password, email, username, new_user, user_role, phone, img_profile, profession } = userExists;
+      if (!is_active) {
+        return {
+          response: { valid: false },
+          title: '⚠︰ Usuario inactivo!',
+          message: `Tu cuenta no está activa, por favor contacta al administrador`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
 
       const userRole = await this._roleRepository.findOneBy({ role_id: user_role });
 
