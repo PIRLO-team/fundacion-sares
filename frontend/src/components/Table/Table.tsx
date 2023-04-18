@@ -5,23 +5,16 @@ import InfoCard from './components/infoCard/InfoCard';
 import s from './Table.module.scss';
 
 // Types
+import { TUser } from '@/utils/types/';
+
 type TTable = {
   headers: string[];
-  data: any[];
+  data: TUser[];
 };
 
 export const Table = ({ headers, data }: TTable) => {
   return (
     <table className={s.table}>
-      {/* <colgroup>
-        <col span={1} style={{ width: '30%' }} />
-        <col span={1} style={{ width: '20%' }} />
-        <col span={1} style={{ width: '10%' }} />
-        <col span={1} style={{ width: '10%' }} />
-        <col span={1} style={{ width: '15%' }} />
-        <col span={1} style={{ width: '5%' }} />
-      </colgroup> */}
-
       {data.length > 0 && (
         <thead className={s.table__header}>
           <tr>
@@ -36,8 +29,8 @@ export const Table = ({ headers, data }: TTable) => {
       <tbody>
         {data.length === 0 ? (
           <tr>
-            <td colSpan={6} className={s.table__empty}>
-              No hay Usuarios
+            <td colSpan={4} className={s.table__empty}>
+              No hay usuarios para mostar
             </td>
           </tr>
         ) : (

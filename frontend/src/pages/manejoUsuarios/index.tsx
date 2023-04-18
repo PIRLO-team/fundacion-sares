@@ -1,5 +1,5 @@
 // React
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 // Next
 
@@ -11,7 +11,7 @@ import { Layout, Loader, Table } from '@/components';
 import { Button, Input, Select } from '@/components/ui';
 
 // Hooks
-import { useForm, useAuthStore } from '@/hooks';
+import { useUsersStore } from '@/hooks';
 
 // Sonner Notification
 import { toast } from 'sonner';
@@ -19,27 +19,45 @@ import { toast } from 'sonner';
 // Styles
 import s from './styles/manejoUsuarios.module.scss';
 
-// Fake data
-import { users } from '@/data/users';
-
 function ManejoUsuarios() {
-  // UseAuthStore
-  const { loading, startCreateUser } = useAuthStore();
+  // UseUsersStore
+  const {
+    users,
+    loading,
+    loadingCreate,
+    activeUser,
+    setActiveUser,
+    startLoadingUsers,
+    startSavingUser,
+  } = useUsersStore();
 
-  // Table headers
-  const tableHeaders = ['NOMBRE', 'ROL DE CARGO', 'ESTADO', 'ACCIONES'];
-
-  // Clear buttton state
-  const [openClearButton, setOpenClearButton] = useState(false);
-
-  // UseForm
-  const { onInputChange, onResetForm, formState } = useForm({
+  const [formState, setFormState] = useState({
     first_name: '',
     last_name: '',
     email: '',
     profession: '',
+    userRole: {
+      role_name: '',
+      role_id: '',
+      role_description: '',
+    },
     user_role: '',
   });
+
+  // onInputChange
+  const onInputChange = (
+    e: FormEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.currentTarget;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
+
+  // Table headers
+  const tableHeaders = ['NOMBRE', 'ROL DE CARGO', 'ESTADO', 'ACCIONES'];
 
   // OnSubmit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,31 +65,50 @@ function ManejoUsuarios() {
 
     if (Object.values(formState).some((value) => value === '')) {
       toast.error('Todos los campos son obligatorios');
+      console.log(formState);
       return;
     }
 
-    await startCreateUser(formState);
-    onResetForm();
+    await startSavingUser(formState);
+    startLoadingUsers();
+    handleClearForm();
   };
 
-  // Check form for clear button
+  // Clear form
+  const handleClearForm = () => {
+    setFormState({
+      first_name: '',
+      last_name: '',
+      email: '',
+      profession: '',
+      userRole: {
+        role_name: '',
+        role_id: '',
+        role_description: '',
+      },
+      user_role: '',
+    });
+
+    setActiveUser(null);
+  };
+
   useEffect(() => {
-    if (Object.values(formState).some((value) => value !== '')) {
-      setOpenClearButton(true);
-    } else {
-      setOpenClearButton(false);
+    startLoadingUsers();
+  }, []);
+
+  useEffect(() => {
+    if (activeUser !== null) {
+      setFormState(activeUser as any);
     }
-  }, [formState]);
+  }, [activeUser]);
 
   return (
     <Layout pageTitle="Inicio">
       <h1 className={s.manejoUsuarios__title}>Usuarios</h1>
 
-      <br />
-
       <div className={s.manejoUsuarios}>
         <div className={s.manejoUsuarios__table}>
-          <Table headers={tableHeaders} data={users} />
+          {loading ? <Loader /> : <Table headers={tableHeaders} data={users} />}
         </div>
 
         <form
@@ -82,7 +119,7 @@ function ManejoUsuarios() {
           <h3>Manejo de usuario</h3>
 
           <Input
-            readOnly={loading}
+            readOnly={loadingCreate}
             inputType="secondary"
             type="text"
             title="Nombre"
@@ -93,7 +130,7 @@ function ManejoUsuarios() {
           />
 
           <Input
-            readOnly={loading}
+            readOnly={loadingCreate}
             inputType="secondary"
             type="text"
             title="Apellido"
@@ -104,7 +141,8 @@ function ManejoUsuarios() {
           />
 
           <Input
-            readOnly={loading}
+            disabled={!!activeUser}
+            readOnly={loadingCreate}
             inputType="secondary"
             type="email"
             title="Correo electrónico"
@@ -115,7 +153,7 @@ function ManejoUsuarios() {
           />
 
           <Input
-            readOnly={loading}
+            readOnly={loadingCreate}
             inputType="secondary"
             type="text"
             title="Profesión"
@@ -126,10 +164,14 @@ function ManejoUsuarios() {
           />
 
           <Select
+            readOnly={loadingCreate}
+            disabled={activeUser?.userRole.role_id === '1'}
             SelectType="secondary"
             title="Perfil profesional"
             name="user_role"
-            value={formState.user_role}
+            value={
+              activeUser ? formState.userRole.role_id : formState?.user_role
+            }
             onChange={onInputChange}
             className={s.manejoUsuarios__createUser__input}
           >
@@ -142,26 +184,24 @@ function ManejoUsuarios() {
             <option value="6">Coordinador Operativo</option>
           </Select>
 
-          {loading && <Loader />}
+          {loadingCreate && <Loader />}
 
           <div className={s.manejoUsuarios__createUser__button}>
             <Button
               type="submit"
               className={s.manejoUsuarios__createUser__button__create}
-              disabled={loading}
+              disabled={loadingCreate}
             >
               Crear Usuario
             </Button>
 
-            {openClearButton && (
-              <Button
-                disabled={loading}
-                type="button"
-                className={s.manejoUsuarios__createUser__button__clear}
-                onClick={onResetForm}
-                icon="/icons/Actions/clear.png"
-              />
-            )}
+            <Button
+              disabled={loadingCreate}
+              type="button"
+              className={s.manejoUsuarios__createUser__button__clear}
+              onClick={handleClearForm}
+              icon="/icons/Actions/clear.png"
+            />
           </div>
         </form>
       </div>

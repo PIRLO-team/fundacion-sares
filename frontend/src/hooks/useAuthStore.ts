@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { projectApi } from '@/api';
 
 // Redux Actions
-import { checkingCredentials, onLogin, onLogout } from '@/store';
+import { checkingCredentials, onLogin, onLogout, onLogoutUsers } from '@/store';
 
 // Soonner Notifications
 import { toast } from 'sonner';
@@ -33,6 +33,7 @@ export const useAuthStore = () => {
   const startLogout = async () => {
     localStorage.clear();
     dispatch(onLogout());
+    dispatch(onLogoutUsers());
 
     if (router.pathname !== '/login') {
       router.replace('/login');
@@ -136,48 +137,6 @@ export const useAuthStore = () => {
     }
   };
 
-  // Create User
-  const startCreateUser = async ({
-    first_name,
-    last_name,
-    email,
-    profession,
-    user_role,
-  }: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    profession: string;
-    user_role: string;
-  }) => {
-    setLoading(true);
-
-    try {
-      const { data } = await projectApi.post('/auth/register', {
-        first_name,
-        last_name,
-        email,
-        profession,
-        user_role,
-      });
-
-      console.log(data);
-
-      toast.message(data.title, {
-        description: data.message,
-      });
-
-      setLoading(false);
-    } catch (error: any) {
-      setLoading(false);
-      const errData = error.response.data;
-
-      console.log(error);
-
-      toast.error(errData.title);
-    }
-  };
-
   return {
     // Properties
     status,
@@ -189,6 +148,5 @@ export const useAuthStore = () => {
     startLogin,
     startLogout,
     startResetPassword,
-    startCreateUser,
   };
 };
