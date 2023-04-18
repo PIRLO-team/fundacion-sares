@@ -57,7 +57,7 @@ export const emailWelcome = (first_name: string, email: string, newUsername: str
 
       <p>
         1. Ingresa a la siguiente dirección:
-        <a href="${env.FRONT_URL}>Link fundacion S.A.R.E.S</a>.
+        <a href="${env.FRONT_URL}">Link fundacion S.A.R.E.S</a>.
       </p>
       <p>
         2. Ingresa tu usuario y contraseña temporal que se encuentran en este
