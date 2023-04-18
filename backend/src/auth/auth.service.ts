@@ -182,10 +182,10 @@ export class AuthService {
         response: {
           valid: true,
           token: this._jwtService.sign(
-            { user_id, email, username, first_name, last_name, user_role, phone, img_profile, profession },
+            { user_id, email, username, first_name, last_name, user_role },
             { secret: env.JWT_SECRET }
           ),
-          userData: { user_id, email, username, first_name, last_name },
+          userData: { user_id, email, username, first_name, last_name, phone, img_profile, profession },
           userRole: userRole
         },
         title: `👋🏻 Hola ${first_name}!`,
