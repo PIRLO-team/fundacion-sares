@@ -3,13 +3,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserRepository } from './repository/user.repository';
 import { HandlersError } from '../shared/handlers/error.utils';
-import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
-import { ResetCodeSnippet } from './utils/random-code.utils';
+import { BcryptPasswordEncoder } from '../shared/utils/bcrypt.utils';
+import { ResetCodeSnippet } from '../shared/utils/random-code.utils';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { env } from 'process';
 import { JwtMiddleware } from './middleware/jwt.middleware';
 import { JwtStrategy } from './jwt.strategy';
-import { PasswordGeneratorService } from './utils/random-password.utils';
+import { PasswordGeneratorService } from '../shared/utils/random-password.utils';
 import { RoleRepository } from './repository/role.repository';
 
 @Module({

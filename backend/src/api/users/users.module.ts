@@ -4,8 +4,8 @@ import { UsersController } from './users.controller';
 import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 import { AuthModule } from 'src/auth/auth.module';
 import { HandlersError } from 'src/shared/handlers/error.utils';
-import { BcryptPasswordEncoder } from '../../auth/utils/bcrypt.utils';
-import { PasswordGeneratorService } from '../../auth/utils/random-password.utils';
+import { BcryptPasswordEncoder } from '../../shared/utils/bcrypt.utils';
+import { PasswordGeneratorService } from '../../shared/utils/random-password.utils';
 
 @Module({
   controllers: [UsersController],

@@ -9,11 +9,11 @@ import { CreateUserDto } from './dto/create-auth.dto';
 import { LogInCredentialDto } from './dto/login-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { User } from './entities/user.entity';
-import { BcryptPasswordEncoder } from './utils/bcrypt.utils';
-import { ResetCodeSnippet } from './utils/random-code.utils';
-import { PasswordGeneratorService } from './utils/random-password.utils';
+import { BcryptPasswordEncoder } from '../shared/utils/bcrypt.utils';
+import { ResetCodeSnippet } from '../shared/utils/random-code.utils';
+import { PasswordGeneratorService } from '../shared/utils/random-password.utils';
 import { RoleRepository } from './repository/role.repository';
-import { emailCode, emailWelcome } from './utils/email.utils';
+import { emailCode, emailWelcome } from '../shared/utils/email.utils';
 
 @Injectable()
 export class AuthService {
