@@ -27,15 +27,6 @@ export class AuthController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  @Get('test')
-  async test(
-  ) {
-    const { response, title, message, status } =
-      await this.authService.test();
-
-    throw new HttpException({ response, title, message, }, status);
-  }
-
   @Post('login')
   async logIn(
     @Body() LogInCredentialDto: LogInCredentialDto
