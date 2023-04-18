@@ -74,6 +74,7 @@ export class AuthService {
         username: newUsername,
         profession,
         user_role,
+        img_profile: `https://source.boringavatars.com/bauhaus/120/${newUsername}?square`,
         password: hashedPassword,
         created_by: tokenDto.user_role,
         last_updated_by: tokenDto.user_role,
@@ -131,7 +132,7 @@ export class AuthService {
         }
       }
 
-      const { user_id, first_name, last_name, password, email, username, new_user, user_role } = userExists;
+      const { user_id, first_name, last_name, password, email, username, new_user, user_role, phone, img_profile, profession } = userExists;
 
       const userRole = await this._roleRepository.findOneBy({ role_id: user_role });
 
@@ -181,7 +182,7 @@ export class AuthService {
         response: {
           valid: true,
           token: this._jwtService.sign(
-            { user_id, email, username, first_name, last_name, user_role },
+            { user_id, email, username, first_name, last_name, user_role, phone, img_profile, profession },
             { secret: env.JWT_SECRET }
           ),
           userData: { user_id, email, username, first_name, last_name },

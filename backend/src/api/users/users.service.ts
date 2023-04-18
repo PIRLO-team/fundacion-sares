@@ -211,7 +211,7 @@ export class UsersService {
       }
 
       const hashedPassword = this._bcryp.encode(new_password);
-      const updatePassword = await this._userRepository.update(id, {
+      await this._userRepository.update(id, {
         password: hashedPassword,
         last_updated_by: id,
       });

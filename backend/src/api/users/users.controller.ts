@@ -41,7 +41,7 @@ export class UsersController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  @Post('update-password/:user_id')
+  @Patch('update-password/:user_id')
   @UseGuards(JwtMiddleware)
   async resetPassword(
     @UserToken() user: TokenDto,
