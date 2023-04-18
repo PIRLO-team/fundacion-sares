@@ -126,7 +126,7 @@ export function Sidebar() {
                   </li>
                 )}
 
-                {currentUser.role === link.role && (
+                {currentUser.role.role_id === link.role && (
                   <li
                     className={`${s.sidebar__links__item} ${
                       router.pathname === link.link && `${s.active}`

@@ -24,7 +24,7 @@ function Login() {
 
   const router = useRouter();
 
-  const { user, password, onInputChange, formState } = useForm({
+  const { user, password, onInputChange } = useForm({
     user: '',
     password: '',
   });
@@ -35,7 +35,6 @@ function Login() {
     e.preventDefault();
 
     startLogin({ user, password });
-    console.log(formState);
   };
 
   useEffect(() => {

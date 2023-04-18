@@ -111,7 +111,7 @@ function Reset() {
 
       <div
         className={s.login__form__group__cancel}
-        onClick={() => router.push('/login')}
+        onClick={() => router.back()}
       >
         <Image
           src="/icons/Globals/arrowleft.svg"

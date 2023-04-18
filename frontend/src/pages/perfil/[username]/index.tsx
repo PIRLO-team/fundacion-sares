@@ -25,16 +25,14 @@ function Perfil() {
 
   const { currentUser, startLogout } = useAuthStore();
 
-  const { name, email, id, profession, role, tel, other_tel, onInputChange } =
-    useForm({
-      name: '',
-      email: '',
-      id: '',
-      profession: '',
-      role: '',
-      tel: '',
-      other_tel: '',
-    });
+  const { onInputChange: handleInputChange } = useForm({
+    name: '',
+    email: '',
+    profession: '',
+    role: '',
+    phone: '',
+    other_contact: '',
+  });
 
   return (
     <Layout pageTitle="Perfil">
@@ -42,7 +40,7 @@ function Perfil() {
         <div className={s.profile__info__coverPhoto}>
           <img
             src={
-              currentUser?.coverPhotoURL ||
+              currentUser?.coverPhotoURL ??
               `https://source.boringavatars.com/bauhaus/120/${currentUser.name}?square`
             }
             alt={currentUser?.name}
@@ -54,7 +52,7 @@ function Perfil() {
         <div className={s.profile__info}>
           <div className={s.profile__info__avatar}>
             <Avatar
-              src={currentUser?.photoURL}
+              src={currentUser?.img_profile}
               name={currentUser?.name}
               username={currentUser?.username}
               email={currentUser?.email}
@@ -74,42 +72,45 @@ function Perfil() {
 
             <Input
               className={s.profile__personalInfo__form__group__input}
-              required
+              //
+              disabled
               type="text"
               name="name"
-              value={name}
+              defaultValue={currentUser?.name}
               inputType="secondary"
               title="Nombre completo"
               placeholder="Nombre completo"
-              onChange={onInputChange}
+              onChange={handleInputChange}
             />
 
             <div className={s.profile__personalInfo__form__group}>
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="text"
                   name="email"
-                  value={email}
+                  defaultValue={currentUser?.email}
                   inputType="secondary"
                   title="Correo electrónico"
                   placeholder="Correo electrónico"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
 
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="number"
-                  name="id"
-                  value={id}
+                  name="uid"
+                  defaultValue={currentUser?.uid}
                   inputType="secondary"
                   title="Cédula"
                   placeholder="Cédula"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -118,27 +119,29 @@ function Perfil() {
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="text"
                   name="profession"
-                  value={profession}
+                  defaultValue={currentUser?.profession}
                   inputType="secondary"
                   title="Profesión"
                   placeholder="Profesión"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="text"
                   name="role"
-                  value={role}
+                  defaultValue={currentUser?.role.role_name}
                   inputType="secondary"
                   title="Rol"
                   placeholder="Rol"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -147,46 +150,48 @@ function Perfil() {
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="tel"
-                  name="tel"
-                  value={tel}
+                  name="phone"
+                  defaultValue={currentUser?.phone}
                   inputType="secondary"
                   title="Telefono celular"
                   placeholder="Telefono celular"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
 
               <div>
                 <Input
                   className={s.profile__personalInfo__form__group__input}
-                  required
+                  //
+                  disabled
                   type="tel"
-                  name="other_tel"
-                  value={other_tel}
+                  name="other_contact"
+                  defaultValue={currentUser?.other_contact}
                   inputType="secondary"
                   title="Otro medio de contacto"
                   placeholder="Otro medio de contacto"
-                  onChange={onInputChange}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
 
-            <div className={s.profile__personalInfo__form__group__button}>
+            {/* <div className={s.profile__personalInfo__form__group__button}>
               <Button
                 className={s.profile__personalInfo__form__group__button__item}
                 type="submit"
+                disabled
               >
                 Guardar cambios
               </Button>
-            </div>
+            </div> */}
           </form>
 
           <div>
             {currentUser.username === username && (
               <>
-                {/* <Button href={`/perfil/${username}/ajustes`}>Ajustes</Button> */}
                 <Button
                   onClick={() => {
                     startLogout();

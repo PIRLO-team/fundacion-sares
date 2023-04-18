@@ -26,7 +26,6 @@ import { projectApi } from '@/api';
 import { TUser } from '@/utils/types/';
 
 export const useUsersStore = () => {
-  //Get all activities by username
   const { users, activeUser, loading } = useAppSelector((state) => state.users);
 
   // Dispatch
@@ -35,7 +34,7 @@ export const useUsersStore = () => {
   const [error, setError] = useState<string | null>();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
-  // Get Activities
+  // Get Users
   const startLoadingUsers = async () => {
     dispatch(onSetLoadingUsers(true));
 
@@ -43,19 +42,17 @@ export const useUsersStore = () => {
       const { data } = await projectApi.get('/api/user/all');
 
       dispatch(onLoadUsers(data.response));
-      // console.log(data.response);
     } catch (error) {
-      console.log('Error cargando actividades');
+      dispatch(onSetLoadingUsers(false));
+      console.log('Error cargando los usuarios');
       console.log(error);
     }
   };
 
-  // Set active activity
+  // Set active user
   const setActiveUser = (user: TUser | null) => {
     dispatch(onSetActiveUser(user));
   };
-
-  // VER ESTAS DOS FUNCIONES
 
   // Saving user
   const startSavingUser = async (userForm: any) => {
@@ -63,7 +60,7 @@ export const useUsersStore = () => {
 
     try {
       if (userForm.user_id) {
-        // Update activity
+        // Update user
         await projectApi.patch(
           `/api/user/update/${userForm.user_id}`,
           userForm
@@ -72,12 +69,12 @@ export const useUsersStore = () => {
         dispatch(onUpdateUser(userForm));
         setLoadingCreate(false);
 
-        // Update activity notification
+        // update user notification
         toast.success('Usuario actualizado con éxito');
         return;
       }
 
-      // Add new activity
+      // Create activity
       const { data } = await projectApi.post('/auth/register', userForm);
       dispatch(
         onAddNewUser({
@@ -92,13 +89,14 @@ export const useUsersStore = () => {
 
       //
     } catch (error: any) {
+      setLoadingCreate(false);
       const errData = error.response.data;
       console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
-  // Delete activity
+  // Inactive user
   const startInactiveUser = async ({
     user_id,
     is_active,

@@ -56,8 +56,6 @@ export const useAuthStore = () => {
         password,
       });
 
-      console.log(data);
-
       const userData = data.response.userData;
       const roleData = data.response.userRole;
 
@@ -73,8 +71,10 @@ export const useAuthStore = () => {
           name: userData.first_name + ' ' + userData.last_name,
           email: userData.email,
           username: userData.username,
-          role: roleData.role_id,
-          photoURL: userData.photoURL,
+          role: roleData,
+          profession: userData.profession,
+          phone: userData.phone,
+          img_profile: userData.img_profile,
           coverPhotoURL: userData.coverPhotoURL,
         })
       );
@@ -129,8 +129,6 @@ export const useAuthStore = () => {
       startLogout();
     } catch (error: any) {
       const errData = error.response.data;
-
-      console.log(error);
 
       toast.error(errData.title);
       startLogout();
