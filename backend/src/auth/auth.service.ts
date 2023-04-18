@@ -102,7 +102,20 @@ export class AuthService {
     }
   }
 
+  async test() {
+    try {
+      const user = await this._userRepository.find();
+      console.log("🚀 ~ file: auth.service.ts:108 ~ AuthService ~ test ~ user:", user)
+      return {
+        response: user,
+        title: '✨ Usuario creado!',
+        message: `Haz creado la cuenta para, le hemos enviado un correo con los pasos para acceder a la plataforma`,
+        status: HttpStatus.OK
+      }
+    } catch (error) {
 
+    }
+  }
   async logIn(LogInCredentialDto: LogInCredentialDto): Promise<any> {
     try {
       const user_req: string = LogInCredentialDto.user.trim().toLocaleLowerCase();
