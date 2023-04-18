@@ -25,6 +25,18 @@
     height: 100%;
     width: 100%;
     transition: var(--main-transition);
+
+    @include mediaqueryheight(900px) {
+      max-height: 20px;
+      transition: var(--main-transition);
+    }
+
+    &__img {
+      @include mediaqueryheight(900px) {
+        display: none;
+        transition: var(--main-transition);
+      }
+    }
   }
 
   &__links {

@@ -192,7 +192,7 @@ function ManejoUsuarios() {
               className={s.manejoUsuarios__createUser__button__create}
               disabled={loadingCreate}
             >
-              Crear Usuario
+              {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
             </Button>
 
             <Button
