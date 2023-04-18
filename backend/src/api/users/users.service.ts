@@ -73,7 +73,7 @@ export class UsersService {
 
   async findUserById(user_id: number) {
     try {
-      const allUsers: User[] = await this._userRepository.find({
+      const userById: User[] = await this._userRepository.find({
         select: [
           'user_id',
           'first_name',
@@ -86,13 +86,21 @@ export class UsersService {
         relations: ['userRole'],
         where: {
           is_active: true,
-          user_role: Not(1),
           user_id
         }
       });
 
+      if(!userById?.length){
+        return {
+          response: {valid: false},
+          title: '❌ Ocurrio un error',
+          message: 'El usuario que buscas no se encuentra ergistrado',
+          status: HttpStatus.NOT_FOUND
+        }
+      }
+
       return {
-        response: allUsers,
+        response: userById,
         title: '✅ Todos los usuarios',
         message: 'Listado de todos los usuarios registrados en el aplicativo',
         status: HttpStatus.OK
