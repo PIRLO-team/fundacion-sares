@@ -3,13 +3,13 @@ import { FormEvent, useEffect } from 'react';
 
 // Next
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 
 // Hooks
 import { useAuthStore, useForm } from '@/hooks';
 
 // Local Components
 import LoginLayout from './components/LoginLayout';
+import CancelAction from './components/CancelAction/CancelAction';
 
 // UI Components
 import { Button, Input } from '@/components/ui';
@@ -33,12 +33,6 @@ function Reset() {
     password2: '',
   });
 
-  useEffect(() => {
-    if (user === undefined || code === undefined) {
-      router.replace('/login');
-    }
-  }, [user, code, router]);
-
   const onReset = (e: FormEvent) => {
     e.preventDefault();
 
@@ -60,9 +54,13 @@ function Reset() {
       password: password1,
       confirmPassword: password2,
     });
-
-    console.log(formState);
   };
+
+  useEffect(() => {
+    if (user === undefined || code === undefined) {
+      router.replace('/login');
+    }
+  }, [user, code, router]);
 
   return (
     <LoginLayout SEOTitle="Reestablecer contraseña">
@@ -109,18 +107,7 @@ function Reset() {
         </Button>
       </form>
 
-      <div
-        className={s.login__form__group__cancel}
-        onClick={() => router.back()}
-      >
-        <Image
-          src="/icons/Globals/arrowleft.svg"
-          alt="arrow-left"
-          width={20}
-          height={20}
-        />
-        <p>Cancelar y volver al inicio de sesion</p>
-      </div>
+      <CancelAction />
     </LoginLayout>
   );
 }

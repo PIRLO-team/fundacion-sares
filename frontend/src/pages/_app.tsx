@@ -11,7 +11,7 @@ import { Toaster } from 'sonner';
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Toaster richColors closeButton />
+      <Toaster richColors closeButton duration={10000} />
       <Provider store={store}>
         <Component {...pageProps} />
       </Provider>

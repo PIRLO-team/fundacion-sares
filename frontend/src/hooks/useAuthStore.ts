@@ -93,8 +93,80 @@ export const useAuthStore = () => {
         return;
       }
 
-      toast.error(errData.title);
+      toast.error(errData.message);
       startLogout();
+    }
+  };
+
+  const startResetPasswordStep1 = async (email: string) => {
+    setLoading(true);
+    try {
+      const { data } = await projectApi.post('/auth/password-reset-step-one', {
+        email,
+      });
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      router.push(
+        `/login/steps/step2?user=${data.response.user_id}`,
+        '/login/steps/step2'
+      );
+
+      setLoading(false);
+    } catch (error: any) {
+      const errData = error.response.data;
+      setLoading(false);
+      toast.error(errData.title);
+    }
+  };
+
+  const startResetPasswordStep2 = async ({
+    user,
+    code,
+  }: {
+    user: string;
+    code: number;
+  }) => {
+    setLoading(true);
+
+    try {
+      const { data } = await projectApi.post('/auth/password-reset-step-two', {
+        code,
+      });
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      router.push(`/login/reset?user=${user}&code=${code}`, '/login/reset');
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      const errData = error.response.data;
+      toast.error(errData.title);
+    }
+  };
+
+  // Resend code
+  const resendCode = async (user: string) => {
+    setLoading(true);
+
+    try {
+      const { data } = await projectApi.post(
+        `/auth/regenerate-code?user=${user}`
+      );
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      const errData = error.response.data;
+      toast.error(errData.title);
     }
   };
 
@@ -110,8 +182,6 @@ export const useAuthStore = () => {
     password: string;
     confirmPassword: string;
   }) => {
-    dispatch(checkingCredentials());
-
     try {
       const { data } = await projectApi.patch(
         `/auth/reset?user=${user}&code=${code}`,
@@ -126,12 +196,10 @@ export const useAuthStore = () => {
       });
 
       router.replace('/login');
-      startLogout();
     } catch (error: any) {
       const errData = error.response.data;
 
       toast.error(errData.title);
-      startLogout();
     }
   };
 
@@ -145,6 +213,9 @@ export const useAuthStore = () => {
     // Methods
     startLogin,
     startLogout,
+    resendCode,
     startResetPassword,
+    startResetPasswordStep1,
+    startResetPasswordStep2,
   };
 };
