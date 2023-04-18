@@ -5,12 +5,16 @@ import { UserRepository } from '../../auth/repository/user.repository';
 import { User } from '../../auth/entities/user.entity';
 import { HandlersError } from '../../shared/handlers/error.utils';
 import { Not } from 'typeorm';
+import { BcryptPasswordEncoder } from '../../auth/utils/bcrypt.utils';
+import { PasswordGeneratorService } from '../../auth/utils/random-password.utils';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly _userRepository: UserRepository,
     private readonly _handlerError: HandlersError,
+    private readonly _bcryp: BcryptPasswordEncoder,
+    private readonly _newPasswordSnippet: PasswordGeneratorService,
   ) { }
 
   async findAllUsers(user: TokenDto) {
@@ -82,7 +86,8 @@ export class UsersService {
         relations: ['userRole'],
         where: {
           is_active: true,
-          user_role: Not(1)
+          user_role: Not(1),
+          user_id
         }
       });
 
@@ -143,6 +148,80 @@ export class UsersService {
         }
       }
 
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async resetPassword(user: TokenDto, user_id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const { user_id: id } = user;
+      const userExists = await this._userRepository.findOneBy({ user_id: user_id });
+
+      if (!userExists) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `El usuario que buscas no existe`,
+          status: HttpStatus.NOT_FOUND
+        }
+      }
+
+      if (id !== userExists.user_id) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
+          status: HttpStatus.UNAUTHORIZED
+        }
+      }
+
+      const { password, new_password, comfirm_password } = updateUserDto;
+
+      if (!new_password || !comfirm_password) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `Por favor ingresa las contraseña nueva o la confirmación`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      if (new_password.length < 7) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `La contrarseña debe contener al menos 7 caracteres`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      const valid: boolean = this._bcryp.matches(
+        userExists.password,
+        password
+      );
+
+      if (!valid) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `Credenciales invalidas, por favor verifica tu contraseña`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      const hashedPassword = this._bcryp.encode(new_password);
+      const updatePassword = await this._userRepository.update(id, {
+        password: hashedPassword,
+        last_updated_by: id,
+      });
+
+      return {
+        response: { valid: true },
+        title: `✅ Se actualizó la información`,
+        message: `Haz actualizado tu contraseña ${userExists.first_name}`,
+        status: HttpStatus.OK
+      }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }

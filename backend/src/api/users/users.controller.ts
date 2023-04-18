@@ -41,6 +41,18 @@ export class UsersController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  @Post('update-password/:user_id')
+  @UseGuards(JwtMiddleware)
+  async resetPassword(
+    @UserToken() user: TokenDto,
+    @Param('user_id') user_id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    const { response, title, message, status } =
+      await this.usersService.resetPassword(user, +user_id, updateUserDto);
+    throw new HttpException({ response, title, message, }, status);
+  }
+
   @Delete('inactive/:user_id')
   async inactiveUser(
     @UserToken() user: TokenDto,
