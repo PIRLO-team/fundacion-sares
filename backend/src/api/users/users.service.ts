@@ -82,6 +82,8 @@ export class UsersService {
           'email',
           'profession',
           'created_date',
+          'img_profile',
+          'phone'
         ],
         relations: ['userRole'],
         where: {
