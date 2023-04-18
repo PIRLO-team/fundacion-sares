@@ -76,20 +76,20 @@ export function Sidebar() {
       link: '/eventos',
       role: '1',
     },
-    {
-      name: 'Registro de eventos',
-      icon: '/icons/SidebarIcons/registros.svg',
-      alt: 'Registro de eventos',
-      link: '/registroEventos',
-      role: '1',
-    },
-    {
-      name: 'Reporte de gastos',
-      icon: '/icons/SidebarIcons/reportes.svg',
-      alt: 'Reporte de gastos',
-      link: '/reporteGastos',
-      role: '1',
-    },
+    // {
+    //   name: 'Registro de eventos',
+    //   icon: '/icons/SidebarIcons/registros.svg',
+    //   alt: 'Registro de eventos',
+    //   link: '/registroEventos',
+    //   role: '1',
+    // },
+    // {
+    //   name: 'Reporte de gastos',
+    //   icon: '/icons/SidebarIcons/reportes.svg',
+    //   alt: 'Reporte de gastos',
+    //   link: '/reporteGastos',
+    //   role: '1',
+    // },
   ];
 
   return (

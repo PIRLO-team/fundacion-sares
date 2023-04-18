@@ -1,5 +1,6 @@
 .infoCard {
   // cursor: pointer;
+  position: relative;
 
   &__item {
     // text-align: start;
@@ -69,13 +70,14 @@
   }
 
   &__dropdown {
+    z-index: 99999;
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 0.5rem;
-    top: 86px;
+    // bottom: 86px;
     right: 0;
     width: 250px;
     padding: 0.5rem 1rem;

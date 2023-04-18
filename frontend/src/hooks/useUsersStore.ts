@@ -104,7 +104,7 @@ export const useUsersStore = () => {
     user_id: string;
     is_active: boolean;
   }) => {
-    dispatch(onSetLoadingUsers(false));
+    dispatch(onSetLoadingUsers(true));
 
     try {
       await projectApi.delete(`/api/user/inactive/${user_id}`, {
@@ -112,8 +112,15 @@ export const useUsersStore = () => {
       });
 
       startLoadingUsers();
+      dispatch(onSetLoadingUsers(false));
 
-      toast.success('Usuario actualizado con éxito');
+      if (!is_active) {
+        toast.success('Usuario activado con éxito');
+        return;
+      } else {
+        toast.error('Usuario desactivado con éxito');
+        return;
+      }
     } catch (error: any) {
       const errData = error.response.data;
       console.log(error);
