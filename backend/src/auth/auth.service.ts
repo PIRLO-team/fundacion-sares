@@ -31,17 +31,17 @@ export class AuthService {
   async registerUser(newUserDto: CreateUserDto, tokenDto: TokenDto) {
     try {
       const { user_id } = tokenDto;
-      const existingUser = await this._userRepository.findOneBy({ user_id });
-      if (!existingUser) {
+      const userExist = await this._userRepository.findOneBy({ user_id });
+      if (!userExist) {
         return {
           response: { valid: false },
-          title: '❌ Error!',
-          message: 'Please log in again.',
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor inicia sesión nuevamente',
           status: HttpStatus.NOT_FOUND
         };
       }
 
-      const role = existingUser.user_role.toString();
+      const role = userExist.user_role.toString();
       if (role !== '1') {
         return {
           response: { valid: false },
@@ -201,7 +201,7 @@ export class AuthService {
         response: {
           valid: true,
           token: this._jwtService.sign(
-            { user_id, email, username, first_name, last_name, user_role },
+            { user_id, user_role },
             { secret: env.JWT_SECRET }
           ),
           userData: { user_id, email, username, first_name, last_name, phone, img_profile, profession },
@@ -268,7 +268,7 @@ export class AuthService {
     }
   }
 
-  async passwordResetStepTwo(user, UpdateAuthDto: UpdateAuthDto) {
+  async passwordResetStepTwo(user: number, UpdateAuthDto: UpdateAuthDto) {
     try {
       const { code } = UpdateAuthDto;
       if (!code) {
@@ -461,9 +461,37 @@ export class AuthService {
   }
 
   async checkAuth(user: TokenDto) {
-    return {
-      response: user,
-      status: HttpStatus.OK
+    try {
+      const userExists: User[] = await this._userRepository.find({
+        select: [
+          'first_name',
+          'last_name',
+          'email',
+          'username',
+          'img_profile',
+          'profession'
+        ],
+        where: {
+          user_id: user.user_id
+        },
+        relations: ['userRole']
+      });
+
+      if (!userExists.length) {
+        return {
+          response: { valid: false },
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor inicia sesión nuevamente',
+          status: HttpStatus.NOT_FOUND
+        };
+      }
+
+      return {
+        response: userExists[0],
+        status: HttpStatus.OK
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 }
