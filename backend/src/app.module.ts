@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
+import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -15,6 +15,7 @@ import { Role } from './auth/entities/role.entity';
 import { UsersModule } from './api/users/users.module';
 import { DirectVolunteerModule } from './api/direct-volunteer/direct-volunteer.module';
 import { Repository } from 'typeorm';
+import { HttpExceptionFilter } from './shared/handlers/error.exception';
 
 @Module({
   imports: [
@@ -51,7 +52,11 @@ import { Repository } from 'typeorm';
   providers: [
     AppService,
     JwtService,
-    Repository
+    Repository,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule { }
