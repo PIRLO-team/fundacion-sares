@@ -76,20 +76,20 @@ export function Sidebar() {
       link: '/eventos',
       role: '1',
     },
-    // {
-    //   name: 'Registro de eventos',
-    //   icon: '/icons/SidebarIcons/registros.svg',
-    //   alt: 'Registro de eventos',
-    //   link: '/registroEventos',
-    //   role: '1',
-    // },
-    // {
-    //   name: 'Reporte de gastos',
-    //   icon: '/icons/SidebarIcons/reportes.svg',
-    //   alt: 'Reporte de gastos',
-    //   link: '/reporteGastos',
-    //   role: '1',
-    // },
+    {
+      name: 'Registro de eventos',
+      icon: '/icons/SidebarIcons/registros.svg',
+      alt: 'Registro de eventos',
+      link: '/registroEventos',
+      role: '1',
+    },
+    {
+      name: 'Reporte de gastos',
+      icon: '/icons/SidebarIcons/reportes.svg',
+      alt: 'Reporte de gastos',
+      link: '/reporteGastos',
+      role: '1',
+    },
   ];
 
   return (
@@ -122,6 +122,7 @@ export function Sidebar() {
                       alt={link.alt}
                       width={24}
                       height={24}
+                      className={s.sidebar__links__item__icon}
                     />
                   </li>
                 )}
@@ -137,6 +138,7 @@ export function Sidebar() {
                       alt={link.alt}
                       width={24}
                       height={24}
+                      className={s.sidebar__links__item__icon}
                     />
                   </li>
                 )}
@@ -150,6 +152,7 @@ export function Sidebar() {
             <Avatar
               src={`https://source.boringavatars.com/marble/50/${currentUser.username}`}
               size={45}
+              classNameImg={s.sidebar__footer__avatar__img}
             />
           </Link>
         </div>

@@ -17,8 +17,12 @@ export function withAuth(
   // config?: { isAuthPage: boolean }
 ) {
   const Auth = (props: JSX.IntrinsicAttributes) => {
-    const { status, currentUser } = useAuthStore();
+    const { status, currentUser, checkToken } = useAuthStore();
     const router = useRouter();
+
+    useEffect(() => {
+      checkToken();
+    }, []);
 
     useEffect(() => {
       if (status === 'not-authenticated') {

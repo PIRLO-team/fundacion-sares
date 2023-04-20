@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Redux hooks
 import { useAppDispatch, useAppSelector } from '@/store/app/hooks';
@@ -60,10 +60,6 @@ export const useAuthStore = () => {
       const roleData = data.response.userRole;
 
       localStorage.setItem('Authorization', data.response.token);
-      localStorage.setItem(
-        'Authorization-init-date',
-        new Date().getTime().toString()
-      );
 
       dispatch(
         onLogin({
@@ -94,6 +90,43 @@ export const useAuthStore = () => {
       }
 
       toast.error(errData.message);
+      startLogout();
+    }
+  };
+
+  // Check if token is valid
+  const checkToken = async () => {
+    const token = localStorage.getItem('Authorization');
+
+    if (!token) {
+      startLogout();
+
+      return;
+    }
+
+    dispatch(checkingCredentials());
+
+    try {
+      const { data } = await projectApi.get('/auth/check');
+
+      const userData = data.response;
+      const roleData = data.response.userRole;
+
+      dispatch(
+        onLogin({
+          uid: userData.user_id,
+          name: userData.first_name + ' ' + userData.last_name,
+          email: userData.email,
+          username: userData.username,
+          role: roleData,
+          profession: userData.profession,
+          phone: userData.phone,
+          img_profile: userData.img_profile,
+          coverPhotoURL: userData.coverPhotoURL,
+        })
+      );
+    } catch (error: any) {
+      console.log(error);
       startLogout();
     }
   };
@@ -212,6 +245,7 @@ export const useAuthStore = () => {
 
     // Methods
     startLogin,
+    checkToken,
     startLogout,
     resendCode,
     startResetPassword,
