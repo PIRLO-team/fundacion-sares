@@ -43,5 +43,9 @@ export class AuthModule implements NestModule {
       path: '/auth/register',
       method: RequestMethod.POST
     });
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: '/auth/check',
+      method: RequestMethod.GET
+    });
   }
 }

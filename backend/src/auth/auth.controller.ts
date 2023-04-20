@@ -92,4 +92,15 @@ export class AuthController {
 
     throw new HttpException({ response, title, message, }, status);
   }
+
+  @Get('check')
+  @UseGuards(JwtMiddleware)
+  async checkAuth(
+    @UserToken() user: TokenDto,
+  ) {
+    const { response, status } =
+      await this.authService.checkAuth(user);
+
+    throw new HttpException({ response }, status);
+  }
 }

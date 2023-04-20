@@ -138,7 +138,7 @@ export class AuthService {
         return {
           response: { valid: false },
           title: '❌ Datos no validos!',
-          message: `El usuario ingresado <b>${user_req}</b> no fue encontrado, por favor verifica los datos`,
+          message: `El usuario ingresado ${user_req} no fue encontrado, por favor verifica los datos`,
           status: HttpStatus.BAD_REQUEST
         }
       }
@@ -457,6 +457,13 @@ export class AuthService {
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async checkAuth(user: TokenDto) {
+    return {
+      response: user,
+      status: HttpStatus.OK
     }
   }
 }
