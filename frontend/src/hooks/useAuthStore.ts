@@ -151,7 +151,7 @@ export const useAuthStore = () => {
     } catch (error: any) {
       const errData = error.response.data;
       setLoading(false);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 

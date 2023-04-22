@@ -1,19 +1,24 @@
+// React
+import { useEffect, useState } from 'react';
+
 // Next
 import { useRouter } from 'next/router';
+
+// Chakra UI
+import { PinInput, PinInputField } from '@chakra-ui/react';
 
 // Hooks
 import { useAuthStore, useForm } from '@/hooks';
 
 // Local Components
 import LoginLayout from '../components/LoginLayout';
+import { Loader } from '@/components';
 
 // UI Components
 import { Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../styles/Login.module.scss';
-import { useEffect, useRef, useState } from 'react';
-import { Loader } from '@/components';
 
 export default function Step2() {
   const router = useRouter();
@@ -22,9 +27,7 @@ export default function Step2() {
 
   const [countDown, setCoundDown] = useState(20);
 
-  const { code, onInputChange } = useForm({
-    code: '',
-  });
+  const [code, setCode] = useState('');
 
   const { loading, startResetPasswordStep2, resendCode } = useAuthStore();
 
@@ -78,16 +81,19 @@ export default function Step2() {
           correo.
         </p>
 
-        <Input
-          required
-          type="number"
-          name="code"
-          value={code}
-          inputType="secondary"
-          title="Ingrese el codigo de verificacion"
-          placeholder="Ingrese el codigo de verificacion"
-          onChange={onInputChange}
-        />
+        <div className={s.login__form__group__code}>
+          <PinInput
+            autoFocus
+            onChange={(value) => {
+              setCode(value);
+            }}
+          >
+            <PinInputField />
+            <PinInputField />
+            <PinInputField />
+            <PinInputField />
+          </PinInput>
+        </div>
 
         <Button
           disabled={code.length < 4}

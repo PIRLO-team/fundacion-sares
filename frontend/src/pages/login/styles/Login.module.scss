@@ -69,6 +69,15 @@
         transition: var(--main-transition);
       }
 
+      &__code {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        padding-top: 2rem;
+        width: 100%;
+      }
+
       &__button {
         margin-top: 2rem;
       }
