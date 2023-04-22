@@ -1,14 +1,10 @@
 // React
 import { FormEvent, useEffect, useState } from 'react';
 
-// Next
-
 // Local Components
 import { withAuth } from '@/auth/withAuth';
-import { Layout, Loader, Table } from '@/components';
-
-// Local Components
-import { Button, Input, Select } from '@/components/ui';
+import { Layout, Loader } from '@/components';
+import UserTable from './components/UserTable';
 
 // Hooks
 import { useUsersStore } from '@/hooks';
@@ -18,11 +14,11 @@ import { toast } from 'sonner';
 
 // Styles
 import s from './styles/manejoUsuarios.module.scss';
+import UserDrawer from './components/UserDrawer';
 
 function ManejoUsuarios() {
   // UseUsersStore
   const {
-    users,
     loading,
     loadingCreate,
     activeUser,
@@ -55,15 +51,6 @@ function ManejoUsuarios() {
       [name]: value,
     });
   };
-
-  // Table headers
-  const tableHeaders = [
-    'NOMBRE',
-    'PROFESION',
-    'ROL DE CARGO',
-    'ESTADO',
-    'ACCIONES',
-  ];
 
   // OnSubmit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -109,107 +96,15 @@ function ManejoUsuarios() {
   }, [activeUser]);
 
   return (
-    <Layout pageTitle="Inicio">
-      <h1 className={s.manejoUsuarios__title}>Usuarios</h1>
-
+    <Layout pageTitle="Manejo de usuarios">
       <div className={s.manejoUsuarios}>
-        <div className={s.manejoUsuarios__table}>
-          {loading ? <Loader /> : <Table headers={tableHeaders} data={users} />}
+        <div className={s.manejoUsuarios__header}>
+          <h1 className={s.manejoUsuarios__title}>Usuarios</h1>
+          <UserDrawer />
         </div>
-
-        <form
-          className={s.manejoUsuarios__createUser}
-          onSubmit={handleSubmit}
-          autoComplete="off"
-        >
-          <h3>Manejo de usuario</h3>
-
-          <Input
-            readOnly={loadingCreate}
-            inputType="secondary"
-            type="text"
-            title="Nombre"
-            name="first_name"
-            value={formState.first_name}
-            onChange={onInputChange}
-            className={s.manejoUsuarios__createUser__input}
-          />
-
-          <Input
-            readOnly={loadingCreate}
-            inputType="secondary"
-            type="text"
-            title="Apellido"
-            name="last_name"
-            value={formState.last_name}
-            onChange={onInputChange}
-            className={s.manejoUsuarios__createUser__input}
-          />
-
-          <Input
-            disabled={!!activeUser}
-            readOnly={loadingCreate}
-            inputType="secondary"
-            type="email"
-            title="Correo electrónico"
-            name="email"
-            value={formState.email}
-            onChange={onInputChange}
-            className={s.manejoUsuarios__createUser__input}
-          />
-
-          <Input
-            readOnly={loadingCreate}
-            inputType="secondary"
-            type="text"
-            title="Profesión"
-            name="profession"
-            value={formState.profession}
-            onChange={onInputChange}
-            className={s.manejoUsuarios__createUser__input}
-          />
-
-          <Select
-            readOnly={loadingCreate}
-            disabled={activeUser?.userRole.role_id === '1'}
-            SelectType="secondary"
-            title="Perfil profesional"
-            name="user_role"
-            value={
-              activeUser ? formState.userRole.role_id : formState?.user_role
-            }
-            onChange={onInputChange}
-            className={s.manejoUsuarios__createUser__input}
-          >
-            <option value="">-- Seleccionar perfil --</option>
-            <option value="1">Administrador</option>
-            <option value="2">Personal de Bodega</option>
-            <option value="3">Médico</option>
-            <option value="4">Coordinador Logístico</option>
-            <option value="5">Coordinador de Formación</option>
-            <option value="6">Coordinador Operativo</option>
-          </Select>
-
-          {loadingCreate && <Loader />}
-
-          <div className={s.manejoUsuarios__createUser__button}>
-            <Button
-              type="submit"
-              className={s.manejoUsuarios__createUser__button__create}
-              disabled={loadingCreate}
-            >
-              {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
-            </Button>
-
-            <Button
-              disabled={loadingCreate}
-              type="button"
-              className={s.manejoUsuarios__createUser__button__clear}
-              onClick={handleClearForm}
-              icon="/icons/Actions/clear.png"
-            />
-          </div>
-        </form>
+        <div className={s.manejoUsuarios__table}>
+          {loading ? <Loader /> : <UserTable />}
+        </div>
       </div>
     </Layout>
   );
