@@ -8,14 +8,14 @@ import { useRouter } from 'next/router';
 import { PinInput, PinInputField } from '@chakra-ui/react';
 
 // Hooks
-import { useAuthStore, useForm } from '@/hooks';
+import { useAuthStore } from '@/hooks';
 
 // Local Components
 import LoginLayout from '../components/LoginLayout';
 import { Loader } from '@/components';
 
 // UI Components
-import { Button, Input } from '@/components/ui';
+import { Button } from '@/components/ui';
 
 // Styles
 import s from '../styles/Login.module.scss';
