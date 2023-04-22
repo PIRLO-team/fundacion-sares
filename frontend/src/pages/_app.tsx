@@ -8,12 +8,17 @@ import { store } from '../store';
 // Notifications
 import { Toaster } from 'sonner';
 
+// Chakra UI Provider
+import { ChakraProvider } from '@chakra-ui/react';
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Toaster richColors closeButton duration={10000} />
       <Provider store={store}>
-        <Component {...pageProps} />
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
       </Provider>
     </>
   );
