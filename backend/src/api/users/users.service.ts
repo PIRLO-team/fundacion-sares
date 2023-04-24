@@ -133,12 +133,13 @@ export class UsersService {
       const query_user_id: number = userExist.user_id;
       if (+id === query_user_id || +r === 1) {
 
-        const { first_name, last_name, email, document, profession, img_profile, user_role } = userExist;
-        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role } = updateUserDto;
+        const { first_name, last_name, email, document, profession, img_profile, user_role, phone } = userExist;
+        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role, phone: Celular } = updateUserDto;
 
         const updateUserData = await this._userRepository.update(user_id, {
           first_name: fName || first_name,
           last_name: lName || last_name,
+          phone: Celular || phone,
           document: doc || document,
           profession: pro || profession,
           img_profile: url || img_profile,
