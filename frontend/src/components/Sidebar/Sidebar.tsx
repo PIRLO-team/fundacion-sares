@@ -176,6 +176,9 @@ export function Sidebar() {
                   style={{
                     borderRadius: '5px',
                   }}
+                  // onClick={() => {
+                  //   router.push(`/perfil/${currentUser.uid}`);
+                  // }}
                 >
                   Mi cuenta
                 </MenuItem>

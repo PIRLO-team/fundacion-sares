@@ -1,5 +1,5 @@
 // React
-import { FormEvent, useEffect } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 // Next
 import { useRouter } from 'next/router';
@@ -24,24 +24,45 @@ function Perfil() {
 
   const userID = router.query.id;
 
-  const { loading, activeUser, startGetUserById, setActiveUser } =
-    useUsersStore();
+  const { currentUser } = useAuthStore();
+
+  const {
+    loading,
+    activeUser,
+    startGetUserById,
+    setActiveUser,
+    startSavingUser,
+  } = useUsersStore();
 
   const FULLNAME = `${activeUser?.first_name} ${activeUser?.last_name}`;
 
-  const { onInputChange: handleInputChange, formState } = useForm({
-    name: '',
-    document: '',
+  const [formState, setFormState] = useState({
+    user_id: '',
+    first_name: '',
+    last_name: '',
     email: '',
+    document: '',
     profession: '',
     phone: '',
-    other_contact: '',
   });
+
+  // onInputChange
+  const onInputChange = (
+    e: FormEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.currentTarget;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(formState);
+    startSavingUser(formState);
+    startGetUserById(userID as string);
   };
 
   useEffect(() => {
@@ -52,7 +73,21 @@ function Perfil() {
     return () => {
       setActiveUser(null);
     };
-  }, []);
+  }, [userID]);
+
+  useEffect(() => {
+    if (activeUser !== null) {
+      setFormState({
+        user_id: activeUser.user_id,
+        first_name: activeUser.first_name,
+        last_name: activeUser.last_name,
+        email: activeUser.email,
+        document: activeUser.document,
+        profession: activeUser.profession,
+        phone: activeUser.phone,
+      });
+    }
+  }, [activeUser]);
 
   return (
     <Layout pageTitle="Perfil">
@@ -62,10 +97,7 @@ function Perfil() {
         <div className={s.profile}>
           <div className={s.profile__info__coverPhoto}>
             <img
-              src={
-                activeUser?.coverPhotoURL ??
-                `https://source.boringavatars.com/bauhaus/120/${activeUser?.username}?square`
-              }
+              src={`https://source.boringavatars.com/bauhaus/120/${activeUser?.user_id}?square`}
               alt={FULLNAME}
               width="100%"
               className={s.profile__info__coverPhoto__img}
@@ -97,16 +129,33 @@ function Perfil() {
                 Informacion personal
               </p>
 
-              <Input
-                className={s.profile__personalInfo__form__group__input}
-                type="text"
-                name="name"
-                defaultValue={FULLNAME}
-                inputType="secondary"
-                title="Nombre completo"
-                placeholder="Nombre completo"
-                onChange={handleInputChange}
-              />
+              <div className={s.profile__personalInfo__form__group}>
+                <div>
+                  <Input
+                    className={s.profile__personalInfo__form__group__input}
+                    type="text"
+                    name="first_name"
+                    defaultValue={activeUser?.first_name}
+                    inputType="secondary"
+                    title="Nombre"
+                    placeholder="Nombre"
+                    onChange={onInputChange}
+                  />
+                </div>
+
+                <div>
+                  <Input
+                    className={s.profile__personalInfo__form__group__input}
+                    type="text"
+                    name="last_name"
+                    defaultValue={activeUser?.last_name}
+                    inputType="secondary"
+                    title="Apellido(s)"
+                    placeholder="Apellido(s)"
+                    onChange={onInputChange}
+                  />
+                </div>
+              </div>
 
               <div className={s.profile__personalInfo__form__group}>
                 <div>
@@ -118,7 +167,7 @@ function Perfil() {
                     inputType="secondary"
                     title="Correo electrónico"
                     placeholder="Correo electrónico"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
 
@@ -131,7 +180,7 @@ function Perfil() {
                     inputType="secondary"
                     title="Cédula"
                     placeholder="Cédula"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
               </div>
@@ -146,7 +195,7 @@ function Perfil() {
                     inputType="secondary"
                     title="Profesión"
                     placeholder="Profesión"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
                 <div>
@@ -159,7 +208,7 @@ function Perfil() {
                     inputType="secondary"
                     title="Rol"
                     placeholder="Rol"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
               </div>
@@ -168,18 +217,19 @@ function Perfil() {
                 <div>
                   <Input
                     className={s.profile__personalInfo__form__group__input}
-                    type="tel"
+                    type="number"
                     name="phone"
                     defaultValue={activeUser?.phone}
                     inputType="secondary"
                     title="Telefono celular"
                     placeholder="Telefono celular"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
 
                 <div>
                   <Input
+                    disabled
                     className={s.profile__personalInfo__form__group__input}
                     type="tel"
                     name="other_contact"
@@ -187,19 +237,23 @@ function Perfil() {
                     inputType="secondary"
                     title="Otro medio de contacto"
                     placeholder="Otro medio de contacto"
-                    onChange={handleInputChange}
+                    onChange={onInputChange}
                   />
                 </div>
               </div>
 
-              <div className={s.profile__personalInfo__form__group__button}>
-                <Button
-                  className={s.profile__personalInfo__form__group__button__item}
-                  type="submit"
-                >
-                  Guardar cambios
-                </Button>
-              </div>
+              {userID === currentUser.uid && (
+                <div className={s.profile__personalInfo__form__group__button}>
+                  <Button
+                    className={
+                      s.profile__personalInfo__form__group__button__item
+                    }
+                    type="submit"
+                  >
+                    Guardar cambios
+                  </Button>
+                </div>
+              )}
             </form>
           </div>
         </div>

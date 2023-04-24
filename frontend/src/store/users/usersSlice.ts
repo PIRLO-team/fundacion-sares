@@ -62,7 +62,7 @@ export const usersSlice = createSlice({
         return user;
       });
 
-      state.activeUser = null;
+      // state.activeUser = null;
     },
 
     onDeleteUser: (state) => {

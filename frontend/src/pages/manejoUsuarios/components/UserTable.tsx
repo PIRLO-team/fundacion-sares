@@ -1,3 +1,6 @@
+// Next
+import Link from 'next/link';
+
 // Chakra UI Components
 import {
   Table,
@@ -24,12 +27,14 @@ import {
 } from '@chakra-ui/icons';
 
 // Hooks
-import { useUiStore, useUsersStore } from '@/hooks';
+import { useAuthStore, useUiStore, useUsersStore } from '@/hooks';
 
 // Local Components
 import { Avatar, Status } from '@/components/ui';
 
 export default function UserTable() {
+  const { currentUser } = useAuthStore();
+
   const { users, startInactiveUser, startLoadingUsers, setActiveUser } =
     useUsersStore();
 
@@ -78,29 +83,43 @@ export default function UserTable() {
                     variant="outline"
                   />
                   <MenuList>
-                    <MenuItem
-                      icon={
-                        user?.is_active ? <CheckCircleIcon /> : <WarningIcon />
-                      }
-                      onClick={() => {
-                        startInactiveUser(user);
-                        startLoadingUsers();
-                      }}
-                    >
-                      {user.is_active
-                        ? 'Marcar como Inactivo'
-                        : 'Marcar como Activo'}
-                    </MenuItem>
-                    <MenuItem
-                      icon={<EditIcon />}
-                      onClick={() => {
-                        setActiveUser(user);
-                        openCloseUserDrawer();
-                      }}
-                    >
-                      Editar Usuario
-                    </MenuItem>
-                    <MenuItem icon={<ExternalLinkIcon />}>Ver Perfil</MenuItem>
+                    {user.user_id !== currentUser.uid && (
+                      <>
+                        <MenuItem
+                          icon={
+                            user?.is_active ? (
+                              <CheckCircleIcon />
+                            ) : (
+                              <WarningIcon />
+                            )
+                          }
+                          onClick={() => {
+                            startInactiveUser(user);
+                            startLoadingUsers();
+                          }}
+                        >
+                          {user.is_active
+                            ? 'Marcar como Inactivo'
+                            : 'Marcar como Activo'}
+                        </MenuItem>
+
+                        <MenuItem
+                          icon={<EditIcon />}
+                          onClick={() => {
+                            setActiveUser(user);
+                            openCloseUserDrawer();
+                          }}
+                        >
+                          Editar Usuario
+                        </MenuItem>
+                      </>
+                    )}
+
+                    <Link href={`/perfil/${user.user_id}`}>
+                      <MenuItem icon={<ExternalLinkIcon />}>
+                        Ver Perfil
+                      </MenuItem>
+                    </Link>
                   </MenuList>
                 </Menu>
               </Td>

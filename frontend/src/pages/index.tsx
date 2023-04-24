@@ -2,7 +2,7 @@
 
 // Local Components
 import { withAuth } from '@/auth/withAuth';
-import { Layout } from '@/components';
+import { File, Layout } from '@/components';
 
 // UI Components
 // import { Avatar } from '@/components/ui';
@@ -14,6 +14,8 @@ function Home() {
   return (
     <Layout pageTitle="Inicio">
       <h1>Inicio</h1>
+
+      <File />
     </Layout>
   );
 }

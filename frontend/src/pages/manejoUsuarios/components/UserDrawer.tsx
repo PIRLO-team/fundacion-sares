@@ -70,7 +70,7 @@ export default function UserDrawer() {
       return;
     }
 
-    await startSavingUser(formState);
+    startSavingUser(formState);
     startLoadingUsers();
     openCloseUserDrawer();
     handleClearForm();
@@ -108,6 +108,7 @@ export default function UserDrawer() {
         placement="right"
         onClose={openCloseUserDrawer}
         size="sm"
+        closeOnOverlayClick={false}
       >
         <DrawerOverlay />
 
@@ -117,7 +118,11 @@ export default function UserDrawer() {
           autoComplete="off"
         >
           <DrawerContent>
-            <DrawerCloseButton />
+            <DrawerCloseButton
+              onClick={() => {
+                handleClearForm();
+              }}
+            />
 
             <DrawerHeader borderBottomWidth="1px">
               {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
