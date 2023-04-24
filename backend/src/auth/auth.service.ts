@@ -85,7 +85,7 @@ export class AuthService {
         username: newUsername,
         profession,
         user_role,
-        img_profile: `https://source.boringavatars.com/bauhaus/120/${newUsername}?square`,
+        img_profile: `https://source.boringavatars.com/marble/120/${newUsername}`,
         password: hashedPassword,
         created_by: tokenDto.user_role,
         last_updated_by: tokenDto.user_role,
@@ -233,6 +233,7 @@ export class AuthService {
       }
 
       const { user_id, first_name, last_name, email } = userExists;
+      email.trim().toLocaleLowerCase();
       const createCode = await this._resetCodeSnippet.randomCode();
       if (createCode) {
         await this._userRepository.update(user_id, { code: createCode });
@@ -319,6 +320,7 @@ export class AuthService {
         }
       }
       const { user_id, first_name, last_name, email } = userExists;
+      email.trim().toLocaleLowerCase();
       const createCode = await this._resetCodeSnippet.randomCode();
       if (createCode) {
         await this._userRepository.update(user_id, { code: createCode });
@@ -464,15 +466,19 @@ export class AuthService {
     try {
       const userExists: User[] = await this._userRepository.find({
         select: [
+          'user_id',
           'first_name',
           'last_name',
           'email',
           'username',
           'img_profile',
-          'profession'
+          'profession',
+          'phone',
+          'is_active'
         ],
         where: {
-          user_id: user.user_id
+          user_id: user.user_id,
+          is_active: true
         },
         relations: ['userRole']
       });
