@@ -12,7 +12,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
 } from '@chakra-ui/react';
 
 // Sonner notification
@@ -26,8 +25,6 @@ import { Button, Input, Select } from '@/components/ui';
 import s from '../styles/manejoUsuarios.module.scss';
 
 export default function UserDrawer() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { isUserDrawerOpen, openCloseUserDrawer } = useUiStore();
 
   const {
@@ -174,7 +171,7 @@ export default function UserDrawer() {
 
               <Select
                 readOnly={loadingCreate}
-                disabled={activeUser?.userRole.role_id === '1'}
+                disabled={activeUser?.userRole?.role_id === '1'}
                 SelectType="secondary"
                 title="Perfil profesional"
                 name="user_role"
