@@ -31,6 +31,7 @@ export class UsersService {
             'profession',
             'is_active',
             'created_date',
+            'document'
           ],
           relations: ['userRole']
         });
@@ -51,6 +52,7 @@ export class UsersService {
             'email',
             'profession',
             'created_date',
+            'document'
           ],
           relations: ['userRole'],
           where: {
@@ -83,7 +85,8 @@ export class UsersService {
           'profession',
           'created_date',
           'img_profile',
-          'phone'
+          'phone',
+          'document'
         ],
         relations: ['userRole'],
         where: {
