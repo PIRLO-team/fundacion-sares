@@ -122,15 +122,17 @@ export function Nav() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>
-              <Image
-                src="/logo/sares/logo_small_icon.png"
-                alt="Logo"
-                width={35}
-                height={35}
-                priority
-              />
-            </Box>
+            <Link href="/">
+              <Box>
+                <Image
+                  src="/logo/sares/logo_small_icon.png"
+                  alt="Logo"
+                  width={35}
+                  height={35}
+                  priority
+                />
+              </Box>
+            </Link>
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
@@ -150,8 +152,16 @@ export function Nav() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <Link href={`/perfil/${currentUser.uid}`}>
+                  <MenuItem
+                    isDisabled={router.asPath === `/perfil/${currentUser.uid}`}
+                    style={{
+                      padding: '0.8rem',
+                    }}
+                  >
+                    Mi Cuenta
+                  </MenuItem>
+                </Link>
                 <MenuDivider />
                 <MenuItem onClick={startLogout}>Cerrar Sesión</MenuItem>
               </MenuList>
