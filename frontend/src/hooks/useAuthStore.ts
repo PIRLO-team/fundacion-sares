@@ -100,7 +100,6 @@ export const useAuthStore = () => {
 
     if (!token) {
       startLogout();
-
       return;
     }
 

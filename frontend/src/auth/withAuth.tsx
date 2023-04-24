@@ -24,11 +24,11 @@ export function withAuth(
       checkToken();
     }, []);
 
-    useEffect(() => {
-      if (status === 'not-authenticated') {
-        router.replace('/login');
-      }
-    }, [status]);
+    // useEffect(() => {
+    //   if (status === 'not-authenticated') {
+    //     router.replace('/login');
+    //   }
+    // }, [status]);
 
     // if (status === 'checking') {
     //   return <Loader />;

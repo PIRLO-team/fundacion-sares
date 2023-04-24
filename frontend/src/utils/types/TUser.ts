@@ -12,6 +12,7 @@ export type TUser = {
     role_name: string;
     role_description: string;
   };
+  document: string | undefined;
   phone: string | undefined;
   other_contact: string | undefined;
   img_profile: string | undefined;

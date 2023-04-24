@@ -13,11 +13,18 @@ import { Avatar } from '../ui';
 
 // Styles
 import s from './Sidebar.module.scss';
+import {
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+} from '@chakra-ui/react';
 
 export function Sidebar() {
   const router = useRouter();
 
-  const { currentUser } = useAuthStore();
+  const { currentUser, startLogout } = useAuthStore();
 
   const sideBarLinks = [
     {
@@ -148,13 +155,47 @@ export function Sidebar() {
         </div>
 
         <div className={s.sidebar__footer}>
-          <Link href={`/perfil/${currentUser.username}`}>
-            <Avatar
-              src={`https://source.boringavatars.com/marble/50/${currentUser.username}`}
-              size={45}
-              classNameImg={s.sidebar__footer__avatar__img}
-            />
-          </Link>
+          <Menu>
+            <MenuButton>
+              <Avatar
+                src={currentUser.img_profile}
+                size={45}
+                classNameImg={s.sidebar__footer__avatar__img}
+              />
+            </MenuButton>
+            <MenuList
+              style={{
+                padding: '0.5rem 0.5rem',
+                borderRadius: '0.5rem',
+                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.25)',
+              }}
+            >
+              <Link href={`/perfil/${currentUser.uid}`}>
+                <MenuItem
+                  isDisabled={router.asPath === `/perfil/${currentUser.uid}`}
+                  style={{
+                    borderRadius: '5px',
+                  }}
+                >
+                  Mi cuenta
+                </MenuItem>
+              </Link>
+
+              <MenuDivider />
+
+              <MenuItem
+                onClick={startLogout}
+                style={{
+                  color: '#E53E3E',
+                  fontWeight: 500,
+                  backgroundColor: '#FEE2E2',
+                  borderRadius: '5px',
+                }}
+              >
+                Cerrar sesión
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
     </>

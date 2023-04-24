@@ -128,6 +128,23 @@ export const useUsersStore = () => {
     }
   };
 
+  // User by id
+  const startGetUserById = async (user_id: string) => {
+    dispatch(onSetLoadingUsers(true));
+
+    try {
+      const { data } = await projectApi.get(`/api/user/${user_id}`);
+
+      console.log(data);
+      dispatch(onSetActiveUser(data.response));
+      dispatch(onSetLoadingUsers(false));
+    } catch (error: any) {
+      const errData = error.response.data;
+      console.log(error);
+      toast.error(errData.title);
+    }
+  };
+
   return {
     // Properties
     users,
@@ -141,5 +158,6 @@ export const useUsersStore = () => {
     startInactiveUser,
     startLoadingUsers,
     startSavingUser,
+    startGetUserById,
   };
 };
