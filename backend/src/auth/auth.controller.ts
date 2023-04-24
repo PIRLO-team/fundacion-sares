@@ -98,9 +98,9 @@ export class AuthController {
   async checkAuth(
     @UserToken() user: TokenDto,
   ) {
-    const { response, status } =
+    const { response, message, status } =
       await this.authService.checkAuth(user);
 
-    throw new HttpException({ response }, status);
+    throw new HttpException({ response, message }, status);
   }
 }

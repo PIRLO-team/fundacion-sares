@@ -494,6 +494,7 @@ export class AuthService {
 
       return {
         response: userExists[0],
+        message: 'Usario autenticado correctamente',
         status: HttpStatus.OK
       }
     } catch (error) {
