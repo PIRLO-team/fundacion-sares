@@ -37,7 +37,7 @@
       &__item {
         @include mobileLarge {
           flex-direction: column;
-          align-items: flex-start;
+          align-items: flex-start !important;
         }
 
         &__name {

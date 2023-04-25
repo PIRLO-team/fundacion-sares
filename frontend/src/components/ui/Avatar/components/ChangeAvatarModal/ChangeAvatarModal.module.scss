@@ -1,0 +1,55 @@
+.fileModal {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  transition: var(--main-transition);
+
+  &__group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+    gap: 1rem;
+    padding: 0.625rem 1rem;
+    cursor: pointer;
+    border: 1px dashed var(--accents-3);
+    border-radius: 10px;
+    transition: var(--main-transition);
+
+    &__icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 40px;
+      min-width: 40px;
+      height: 40px;
+      width: 40px;
+      border-radius: var(--border-radius);
+      background-color: var(--accents-2);
+      transition: var(--main-transition);
+    }
+
+    &__text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--accents-5);
+
+      // @include mobileLarge {
+      //   font-size: 0.875rem;
+      // }
+    }
+
+    &__subText {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accents-5);
+
+      // @include mobileLarge {
+      //   font-size: 0.7rem;
+      // }
+    }
+  }
+}

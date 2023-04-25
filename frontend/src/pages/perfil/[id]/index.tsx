@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Hooks
-import { useAuthStore, useForm, useUsersStore } from '@/hooks';
+import { useAuthStore, useUsersStore } from '@/hooks';
 
 // Local Components
 import { withAuth } from '@/auth/withAuth';
@@ -132,6 +132,7 @@ function Perfil() {
               <div className={s.profile__personalInfo__form__group}>
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="text"
                     name="first_name"
@@ -145,6 +146,7 @@ function Perfil() {
 
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="text"
                     name="last_name"
@@ -160,6 +162,7 @@ function Perfil() {
               <div className={s.profile__personalInfo__form__group}>
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="text"
                     name="email"
@@ -173,6 +176,7 @@ function Perfil() {
 
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="number"
                     name="document"
@@ -188,6 +192,7 @@ function Perfil() {
               <div className={s.profile__personalInfo__form__group}>
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="text"
                     name="profession"
@@ -216,6 +221,7 @@ function Perfil() {
               <div className={s.profile__personalInfo__form__group}>
                 <div>
                   <Input
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="number"
                     name="phone"

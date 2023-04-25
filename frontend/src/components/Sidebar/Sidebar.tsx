@@ -19,6 +19,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Tooltip,
 } from '@chakra-ui/react';
 
 export function Sidebar() {
@@ -83,20 +84,20 @@ export function Sidebar() {
       link: '/eventos',
       role: '1',
     },
-    {
-      name: 'Registro de eventos',
-      icon: '/icons/SidebarIcons/registros.svg',
-      alt: 'Registro de eventos',
-      link: '/registroEventos',
-      role: '1',
-    },
-    {
-      name: 'Reporte de gastos',
-      icon: '/icons/SidebarIcons/reportes.svg',
-      alt: 'Reporte de gastos',
-      link: '/reporteGastos',
-      role: '1',
-    },
+    // {
+    //   name: 'Registro de eventos',
+    //   icon: '/icons/SidebarIcons/registros.svg',
+    //   alt: 'Registro de eventos',
+    //   link: '/registroEventos',
+    //   role: '1',
+    // },
+    // {
+    //   name: 'Reporte de gastos',
+    //   icon: '/icons/SidebarIcons/reportes.svg',
+    //   alt: 'Reporte de gastos',
+    //   link: '/reporteGastos',
+    //   role: '1',
+    // },
   ];
 
   return (
@@ -117,39 +118,41 @@ export function Sidebar() {
 
           <ul className={s.sidebar__links}>
             {sideBarLinks.map((link, index) => (
-              <Link href={link.link} key={index}>
-                {link.role === 'Todos' && (
-                  <li
-                    className={`${s.sidebar__links__item} ${
-                      router.pathname === link.link && `${s.active}`
-                    }`}
-                  >
-                    <Image
-                      src={link.icon}
-                      alt={link.alt}
-                      width={24}
-                      height={24}
-                      className={s.sidebar__links__item__icon}
-                    />
-                  </li>
-                )}
+              <Tooltip label={link.name} placement="right" key={index}>
+                <Link href={link.link}>
+                  {link.role === 'Todos' && (
+                    <li
+                      className={`${s.sidebar__links__item} ${
+                        router.pathname === link.link && `${s.active}`
+                      }`}
+                    >
+                      <Image
+                        src={link.icon}
+                        alt={link.alt}
+                        width={24}
+                        height={24}
+                        className={s.sidebar__links__item__icon}
+                      />
+                    </li>
+                  )}
 
-                {currentUser.role.role_id === link.role && (
-                  <li
-                    className={`${s.sidebar__links__item} ${
-                      router.pathname === link.link && `${s.active}`
-                    }`}
-                  >
-                    <Image
-                      src={link.icon}
-                      alt={link.alt}
-                      width={24}
-                      height={24}
-                      className={s.sidebar__links__item__icon}
-                    />
-                  </li>
-                )}
-              </Link>
+                  {currentUser.role.role_id === link.role && (
+                    <li
+                      className={`${s.sidebar__links__item} ${
+                        router.pathname === link.link && `${s.active}`
+                      }`}
+                    >
+                      <Image
+                        src={link.icon}
+                        alt={link.alt}
+                        width={24}
+                        height={24}
+                        className={s.sidebar__links__item__icon}
+                      />
+                    </li>
+                  )}
+                </Link>
+              </Tooltip>
             ))}
           </ul>
         </div>
@@ -176,9 +179,6 @@ export function Sidebar() {
                   style={{
                     borderRadius: '5px',
                   }}
-                  // onClick={() => {
-                  //   router.push(`/perfil/${currentUser.uid}`);
-                  // }}
                 >
                   Mi cuenta
                 </MenuItem>

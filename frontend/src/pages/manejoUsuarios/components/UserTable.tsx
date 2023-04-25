@@ -60,12 +60,16 @@ export default function UserTable() {
         </Thead>
         <Tbody>
           {users.map((user) => (
-            <Tr key={user.username}>
-              <Td>
+            <Tr key={user.user_id}>
+              <Td
+                style={{
+                  paddingLeft: '5px',
+                }}
+              >
                 <Avatar
                   name={`${user!.first_name} ${user!.last_name}`}
                   email={user!.email}
-                  src={`https://source.boringavatars.com/marble/120/${user.username}`}
+                  src={user.img_profile}
                   size={40}
                 />
               </Td>
