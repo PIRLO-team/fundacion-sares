@@ -3,9 +3,10 @@ import { FormEvent, useRef, useState } from 'react';
 
 // Next
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 // AWS
-import AWS from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 
 // Chakra UI
 import {
@@ -20,16 +21,15 @@ import {
 } from '@chakra-ui/react';
 
 // Hooks
-import { useAuthStore, useUsersStore } from '@/hooks';
+import { useUsersStore } from '@/hooks';
 
 // Sonner Notificacitions
 import { toast } from 'sonner';
 
 // Styles
 import s from './ChangeAvatarModal.module.scss';
-import { useRouter } from 'next/router';
 
-const s3 = new AWS.S3({
+const s3 = new S3({
   accessKeyId: 'AKIA2HNOOQJSJV4HRVUX',
   secretAccessKey: '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',
   region: 'us-west-1',
