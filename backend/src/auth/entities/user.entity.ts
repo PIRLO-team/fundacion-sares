@@ -104,4 +104,7 @@ export class User extends BaseEntity {
         name: 'user_role'
     })
     userRole!: Role;
+
+    @OneToMany(() => File, f => f.userFile)
+    userFile: File[];
 }

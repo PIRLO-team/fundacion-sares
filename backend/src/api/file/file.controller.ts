@@ -8,16 +8,22 @@ import { TokenDto } from '../../shared/interfaces/token.dto';
 
 @Controller()
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(private readonly fileService: FileService) { }
 
   @Post()
   create(@Body() createFileDto: CreateFileDto) {
     return this.fileService.create(createFileDto);
   }
 
-  @Get()
-  findAll() {
-    return this.fileService.findAll();
+  @Get('all')
+  async findAll(
+    @UserToken() user: TokenDto,
+    @Body() updateFileDto: UpdateFileDto
+  ) {
+    const { response, title, message, status } =
+      await this.fileService.findAll(user, updateFileDto);
+
+    throw new HttpException({ response, title, message, }, status);
   }
 
   @Get(':id')

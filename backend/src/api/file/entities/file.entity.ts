@@ -27,5 +27,5 @@ export class File extends BaseEntity{
     @JoinColumn({ 
         name: 'user_id' 
     })
-    user_file!: User;
+    userFile!: User;
 }

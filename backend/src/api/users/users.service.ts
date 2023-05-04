@@ -31,9 +31,13 @@ export class UsersService {
             'profession',
             'is_active',
             'created_date',
-            'document'
+            'document',
+            'img_profile'
           ],
-          relations: ['userRole']
+          relations: [
+            'userRole',
+            'userFile'
+          ]
         });
 
         return {
@@ -54,10 +58,16 @@ export class UsersService {
             'created_date',
             'document'
           ],
-          relations: ['userRole'],
+          relations: [
+            'userRole',
+            'userFile'
+          ],
           where: {
             is_active: true,
-            user_role: Not(1)
+            user_role: Not(1),
+            userFile: {
+              is_active: true
+            }
           }
         });
 
@@ -88,16 +98,22 @@ export class UsersService {
           'phone',
           'document'
         ],
-        relations: ['userRole'],
+        relations: [
+          'userRole',
+          'userFile'
+        ],
         where: {
           is_active: true,
-          user_id
+          user_id,
+          userFile: {
+            is_active: true
+          }
         }
       });
 
-      if(!userById?.length){
+      if (!userById?.length) {
         return {
-          response: {valid: false},
+          response: { valid: false },
           title: '❌ Ocurrio un error',
           message: 'El usuario que buscas no se encuentra registrado',
           status: HttpStatus.NOT_FOUND

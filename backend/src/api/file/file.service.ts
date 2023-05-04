@@ -21,8 +21,39 @@ export class FileService {
     return 'This action adds a new file';
   }
 
-  findAll() {
-    return `This action returns all file`;
+  async findAll(user: TokenDto, updateFileDto: UpdateFileDto) {
+    try {
+      const userExist = await this._userRepository.findOne({
+        where: { user_id: user.user_id }
+      });
+      if (!userExist) {
+        return {
+          response: { valid: false },
+          title: `❌ Ocurrio un error`,
+          message: `El usuario no existe`,
+          status: HttpStatus.NOT_FOUND
+        }
+      }
+      const { user_id: id, user_role } = userExist;
+
+      const file = await this._fileRepository.find({
+        relations: ['userFile'],
+        select: [
+          'user_id'
+        ],
+      });
+      console.log("🚀 ~ file: file.service.ts:45 ~ FileService ~ findAll ~ file:", file)
+
+
+      return {
+        response: { valid: true },
+        title: `✅ Se encontrón los datos`,
+        message: `Se encontrón los datos del usuario`,
+        status: HttpStatus.OK,
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
   }
 
   findOne(id: number) {
@@ -45,7 +76,6 @@ export class FileService {
       }
       const { user_id: id, first_name } = userExist;
       const file = await this._fileRepository.findOneBy({ user_id: id });
-      console.log("🚀 ~ file: file.service.ts:48 ~ FileService ~ updateFile ~ file:", file)
 
       if (file) {
         const { file_id, url: urlExist } = file;
