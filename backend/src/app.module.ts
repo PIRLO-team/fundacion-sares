@@ -16,6 +16,8 @@ import { UsersModule } from './api/users/users.module';
 import { DirectVolunteerModule } from './api/direct-volunteer/direct-volunteer.module';
 import { Repository } from 'typeorm';
 import { HttpExceptionFilter } from './shared/handlers/error.exception';
+import { FileModule } from './api/file/file.module';
+import { File } from './api/file/entities/file.entity';
 
 @Module({
   imports: [
@@ -26,13 +28,15 @@ import { HttpExceptionFilter } from './shared/handlers/error.exception';
       autoLoadEntities: true,
       entities: [
         User,
-        Role
+        Role,
+        File
       ]
     }),
     RouterModule.register(MainRoutes),
     AuthModule,
     UsersModule,
     DirectVolunteerModule,
+    FileModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,

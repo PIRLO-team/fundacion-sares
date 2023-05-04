@@ -1,6 +1,7 @@
 import { BaseEntity } from '../../shared/entity/base-entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.entity';
+import { File } from '../../api/file/entities/file.entity';
 
 @Entity('user')
 export class User extends BaseEntity {
