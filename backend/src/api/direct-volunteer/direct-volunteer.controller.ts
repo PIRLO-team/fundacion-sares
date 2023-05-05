@@ -2,43 +2,52 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException } from
 import { DirectVolunteerService } from './direct-volunteer.service';
 import { CreateDirectVolunteerDto } from './dto/create-direct-volunteer.dto';
 import { UpdateDirectVolunteerDto } from './dto/update-direct-volunteer.dto';
+import { UserToken } from '../../shared/decorators/user-token.decorator';
+import { TokenDto } from '../../shared/interfaces/token.dto';
 
 @Controller()
 export class DirectVolunteerController {
-  constructor(private readonly directVolunteerService: DirectVolunteerService) {}
+  constructor(private readonly directVolunteerService: DirectVolunteerService) { }
 
   @Get()
   async findAllUsers() {
     const { response, title, message, status } =
-      await this.directVolunteerService.findAllUsers();
+      await this.directVolunteerService.findAll();
     throw new HttpException({ response, title, message, }, status);
   }
 
   @Get(':id')
   async findUserById(@Param('id') id: string) {
     const { response, title, message, status } =
-      await this.directVolunteerService.findUserById(+id);
+      await this.directVolunteerService.findOne(+id);
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('register')
+  async createVolunteer(
+    @UserToken() user: TokenDto,
+    @Body() createVolunteer: CreateDirectVolunteerDto
+  ) {
+    const { response, title, message, status } =
+      await this.directVolunteerService.create(user, createVolunteer);
     throw new HttpException({ response, title, message, }, status);
   }
 
   @Patch(':id')
-  async updateUserData(@Param('id') id: string, @Body() updateUserDto: UpdateDirectVolunteerDto) {
+  async updateUserData(
+    @UserToken() user: TokenDto,
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateDirectVolunteerDto
+  ) {
     const { response, title, message, status } =
-      await this.directVolunteerService.updateUserData(+id, updateUserDto);
-    throw new HttpException({ response, title, message, }, status);
-  }
-
-  @Delete('inactive/:id')
-  async inactiveUser(@Param('id') id: string) {
-    const { response, title, message, status } =
-      await this.directVolunteerService.inactiveUser(+id);
+      await this.directVolunteerService.update(user, +id, updateUserDto);
     throw new HttpException({ response, title, message, }, status);
   }
 
   @Delete('remove/:id')
-  async logicalRemove(@Param('id') id: string) {
+  async inactiveUser(@Param('id') id: string) {
     const { response, title, message, status } =
-      await this.directVolunteerService.logicalRemove(+id);
+      await this.directVolunteerService.deleteById(+id);
     throw new HttpException({ response, title, message, }, status);
   }
 }
