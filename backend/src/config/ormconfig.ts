@@ -12,7 +12,8 @@ export const dataSource: DataSource = new DataSource({
     entities: [
         `${__dirname}/../auth/**/*.entity{.ts,.js}`,
         `${__dirname}/../api/direct-volunteer/**/*.entity{.ts,.js}`,
-        __dirname + '/../api/file/**/*.entity{.ts,.js}'
+        __dirname + '/../api/file/**/*.entity{.ts,.js}',
+        __dirname + '/../api/provider/**/*.entity{.ts,.js}',
     ],
     migrations: [`${__dirname}/../migrations/**/*{.ts,.js}`],
     synchronize: false,

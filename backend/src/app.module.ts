@@ -19,6 +19,8 @@ import { HttpExceptionFilter } from './shared/handlers/error.exception';
 import { FileModule } from './api/file/file.module';
 import { File } from './api/file/entities/file.entity';
 import { DirectVolunteer } from './api/direct-volunteer/entities/direct-volunteer.entity';
+import { Provider } from './api/provider/entities/provider.entity';
+import { ProviderModule } from './api/provider/provider.module';
 
 @Module({
   imports: [
@@ -31,7 +33,8 @@ import { DirectVolunteer } from './api/direct-volunteer/entities/direct-voluntee
         User,
         Role,
         File,
-        DirectVolunteer
+        DirectVolunteer,
+        Provider
       ]
     }),
     RouterModule.register(MainRoutes),
@@ -39,6 +42,7 @@ import { DirectVolunteer } from './api/direct-volunteer/entities/direct-voluntee
     UsersModule,
     DirectVolunteerModule,
     FileModule,
+    ProviderModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,
