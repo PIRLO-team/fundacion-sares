@@ -60,4 +60,11 @@ export class DirectVolunteer extends BaseEntity{
         nullable: true
     })
     other_contact: string;
+
+    @Column({
+        type: 'text',
+        name: 'observation',
+        nullable: true
+    })
+    observation: string;
 }

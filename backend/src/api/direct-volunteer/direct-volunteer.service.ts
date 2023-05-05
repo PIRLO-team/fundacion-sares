@@ -97,6 +97,7 @@ export class DirectVolunteerService {
     directVolunteer.document = updateDirectVolunteerDto.document || directVolunteer.document;
     directVolunteer.phone = updateDirectVolunteerDto.phone || directVolunteer.phone;
     directVolunteer.other_contact = updateDirectVolunteerDto.other_contact || directVolunteer.other_contact;
+    directVolunteer.observation = updateDirectVolunteerDto.observation;
     directVolunteer.is_active = updateDirectVolunteerDto.is_active;
     directVolunteer.last_updated_by = user.user_id;
 
