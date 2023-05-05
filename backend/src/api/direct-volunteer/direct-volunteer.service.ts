@@ -79,6 +79,7 @@ export class DirectVolunteerService {
   }
 
   async update(user: TokenDto, id: number, updateDirectVolunteerDto: UpdateDirectVolunteerDto) {
+    console.log("🚀 ~ file: direct-volunteer.service.ts:82 ~ DirectVolunteerService ~ update ~ updateDirectVolunteerDto:", updateDirectVolunteerDto)
     const directVolunteer = await this._directVolunteerRepository.findOne({ where: { direct_volunteer_id: id } });
 
     if (!directVolunteer) {
@@ -96,6 +97,7 @@ export class DirectVolunteerService {
     directVolunteer.document = updateDirectVolunteerDto.document || directVolunteer.document;
     directVolunteer.phone = updateDirectVolunteerDto.phone || directVolunteer.phone;
     directVolunteer.other_contact = updateDirectVolunteerDto.other_contact || directVolunteer.other_contact;
+    directVolunteer.is_active = updateDirectVolunteerDto.is_active;
     directVolunteer.last_updated_by = user.user_id;
 
     try {
