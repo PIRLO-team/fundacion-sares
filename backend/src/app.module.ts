@@ -18,6 +18,7 @@ import { Repository } from 'typeorm';
 import { HttpExceptionFilter } from './shared/handlers/error.exception';
 import { FileModule } from './api/file/file.module';
 import { File } from './api/file/entities/file.entity';
+import { DirectVolunteer } from './api/direct-volunteer/entities/direct-volunteer.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { File } from './api/file/entities/file.entity';
       entities: [
         User,
         Role,
-        File
+        File,
+        DirectVolunteer
       ]
     }),
     RouterModule.register(MainRoutes),

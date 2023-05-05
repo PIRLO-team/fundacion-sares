@@ -64,6 +64,13 @@ export class User extends BaseEntity {
     document: string;
 
     @Column({
+        type: 'text',
+        name: 'other_contact',
+        nullable: true
+    })
+    other_contact: string;
+
+    @Column({
         type: 'bigint',
         name: 'phone',
         nullable: true

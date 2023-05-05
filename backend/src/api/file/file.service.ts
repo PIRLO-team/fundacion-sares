@@ -42,7 +42,6 @@ export class FileService {
           'user_id'
         ],
       });
-      console.log("🚀 ~ file: file.service.ts:45 ~ FileService ~ findAll ~ file:", file)
 
 
       return {
