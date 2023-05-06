@@ -38,7 +38,7 @@ export default function UserTable() {
   const { users, startInactiveUser, startLoadingUsers, setActiveUser } =
     useUsersStore();
 
-  const { openCloseUserDrawer } = useUiStore();
+  const { openCloseDrawer } = useUiStore();
 
   // Table headers
   const tableHeaders = [
@@ -59,24 +59,24 @@ export default function UserTable() {
           </Tr>
         </Thead>
         <Tbody>
-          {users.map((user) => (
-            <Tr key={user.user_id}>
+          {users.map((user, index) => (
+            <Tr key={index}>
               <Td
                 style={{
                   paddingLeft: '5px',
                 }}
               >
                 <Avatar
-                  name={`${user!.first_name} ${user!.last_name}`}
-                  email={user!.email}
-                  src={user.img_profile}
+                  name={`${user?.first_name} ${user?.last_name}`}
+                  email={user?.email}
+                  src={user?.img_profile}
                   size={40}
                 />
               </Td>
-              <Td>{user.profession}</Td>
-              <Td>{user.userRole.role_name}</Td>
+              <Td>{user?.profession}</Td>
+              <Td>{user?.userRole.role_name}</Td>
               <Td>
-                <Status status={user!.is_active} />
+                <Status status={user?.is_active} />
               </Td>
               <Td>
                 <Menu>
@@ -87,7 +87,7 @@ export default function UserTable() {
                     variant="outline"
                   />
                   <MenuList>
-                    {user.user_id !== currentUser.uid && (
+                    {user?.user_id !== currentUser.uid && (
                       <>
                         <MenuItem
                           icon={
@@ -102,7 +102,7 @@ export default function UserTable() {
                             startLoadingUsers();
                           }}
                         >
-                          {user.is_active
+                          {user?.is_active
                             ? 'Marcar como Inactivo'
                             : 'Marcar como Activo'}
                         </MenuItem>
@@ -111,7 +111,7 @@ export default function UserTable() {
                           icon={<EditIcon />}
                           onClick={() => {
                             setActiveUser(user);
-                            openCloseUserDrawer();
+                            openCloseDrawer();
                           }}
                         >
                           Editar Usuario
@@ -119,7 +119,7 @@ export default function UserTable() {
                       </>
                     )}
 
-                    <Link href={`/perfil/${user.user_id}`}>
+                    <Link href={`/perfil/${user?.user_id}`}>
                       <MenuItem icon={<ExternalLinkIcon />}>
                         Ver Perfil
                       </MenuItem>

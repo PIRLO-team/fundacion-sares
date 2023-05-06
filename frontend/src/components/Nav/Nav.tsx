@@ -143,13 +143,7 @@ export function Nav() {
                 cursor={'pointer'}
                 minW={0}
               >
-                <Avatar
-                  size={'sm'}
-                  src={
-                    currentUser?.img_profile ??
-                    `https://source.boringavatars.com/marble/50/${currentUser.username}`
-                  }
-                />
+                <Avatar size={'sm'} src={currentUser.img_profile} />
               </MenuButton>
               <MenuList>
                 <Link href={`/perfil/${currentUser.uid}`}>

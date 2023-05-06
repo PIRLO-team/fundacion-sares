@@ -57,7 +57,7 @@ function InfoCard({ data }: { data: TUser }) {
           <Status status={data!.is_active} />
         </td>
         <td>
-          {data!.username !== currentUser?.username && (
+          {data!.username !== currentUser.username && (
             <div
               className={s.infoCard__item__actions}
               onClick={() => {

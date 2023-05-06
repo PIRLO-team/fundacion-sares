@@ -4,12 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { authSlice } from './auth/authSlice';
 import { usersSlice } from './users/usersSlice';
 import { uiSlice } from './ui/uiSlice';
+import { voluntariosSlice } from './voluntarios/voluntariosStore';
 // ...
 
 export const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     users: usersSlice.reducer,
+    voluntarios: voluntariosSlice.reducer,
     ui: uiSlice.reducer,
   },
 });

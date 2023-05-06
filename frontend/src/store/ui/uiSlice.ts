@@ -5,21 +5,21 @@ import {
 } from '@reduxjs/toolkit';
 
 interface uiState {
-  isUserDrawerOpen: boolean;
+  isDrawerOpen: boolean;
 }
 
 const initialState: uiState = {
-  isUserDrawerOpen: false,
+  isDrawerOpen: false,
 };
 
 export const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    onOpenCloseUserDrawer: (state) => {
-      state.isUserDrawerOpen = !state.isUserDrawerOpen;
+    onOpenCloseDrawer: (state) => {
+      state.isDrawerOpen = !state.isDrawerOpen;
     },
   },
 });
 
-export const { onOpenCloseUserDrawer } = uiSlice.actions;
+export const { onOpenCloseDrawer } = uiSlice.actions;

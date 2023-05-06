@@ -36,7 +36,7 @@ function Perfil() {
 
   const FULLNAME = `${activeUser?.first_name} ${activeUser?.last_name}`;
 
-  const [formState, setFormState] = useState({
+  const [formUserState, setFormUserState] = useState({
     user_id: '',
     first_name: '',
     last_name: '',
@@ -52,17 +52,17 @@ function Perfil() {
   ) => {
     const { name, value } = e.currentTarget;
 
-    setFormState({
-      ...formState,
+    setFormUserState({
+      ...formUserState,
       [name]: value,
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    startSavingUser(formState);
-    startGetUserById(userID as string);
+    await startSavingUser(formUserState);
+    await startGetUserById(userID as string);
   };
 
   useEffect(() => {
@@ -77,7 +77,7 @@ function Perfil() {
 
   useEffect(() => {
     if (activeUser !== null) {
-      setFormState({
+      setFormUserState({
         user_id: activeUser.user_id,
         first_name: activeUser.first_name,
         last_name: activeUser.last_name,

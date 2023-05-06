@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const projectApi = axios.create({
-  baseURL: 'https://fundacion-sares-dev-51ab.up.railway.app/',
+  baseURL: 'https://fundacion-sares-dev.up.railway.app/',
 });
 
 projectApi.interceptors.request.use((config) => {

@@ -43,20 +43,20 @@ export const Avatar = ({
     <div className={`${s.avatar} ${className}`}>
       <div
         className={
-          currentUser?.uid === activeUser?.user_id
+          currentUser.uid === activeUser?.user_id
             ? s.avatar__container
             : undefined
         }
       >
         <Image
-          src={src || `https://source.boringavatars.com/marble/120/${username}`}
+          src={src ?? `https://source.boringavatars.com/marble/120/${username}`}
           alt={`${username} Avatar`}
           width={size}
           height={size}
           className={`${s.avatar__container__img} ${classNameImg}`}
         />
 
-        {currentUser?.uid === activeUser?.user_id && (
+        {currentUser.uid === activeUser?.user_id && (
           <>
             <div className={s.avatar__container__content} onClick={onOpen}>
               <EditIcon boxSize="30px" />

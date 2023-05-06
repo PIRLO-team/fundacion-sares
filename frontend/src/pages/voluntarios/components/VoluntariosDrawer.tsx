@@ -1,7 +1,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 
 // Hooks
-import { useUiStore, useUsersStore } from '@/hooks';
+import { useUiStore, useVoluntariosStore } from '@/hooks';
 
 // Chakra UI Components
 import {
@@ -19,33 +19,30 @@ import { toast } from 'sonner';
 
 // UI Local Components
 import { Loader } from '@/components';
-import { Button, Input, Select } from '@/components/ui';
+import { Button, Input } from '@/components/ui';
 
 // Styles
-import s from '../styles/manejoUsuarios.module.scss';
+import s from '../styles/Voluntarios.module.scss';
 
-export default function UserDrawer() {
+export default function VoluntariosDrawer() {
   const { isDrawerOpen, openCloseDrawer } = useUiStore();
 
   const {
-    activeUser,
+    activeVoluntario,
     loadingCreate,
-    startSavingUser,
-    startLoadingUsers,
-    setActiveUser,
-  } = useUsersStore();
+    startSavingVoluntario,
+    startLoadingVoluntarios,
+    setActiveVoluntario,
+  } = useVoluntariosStore();
 
-  const [formState, setFormState] = useState({
+  const [formVoluntariosState, setFormVoluntariosState] = useState({
     first_name: '',
     last_name: '',
     email: '',
     profession: '',
-    userRole: {
-      role_name: '',
-      role_id: '',
-      role_description: '',
-    },
-    user_role: '',
+    document: '',
+    phone: '',
+    other_contact: '',
   });
 
   // onInputChange
@@ -54,8 +51,8 @@ export default function UserDrawer() {
   ) => {
     const { name, value } = e.currentTarget;
 
-    setFormState({
-      ...formState,
+    setFormVoluntariosState({
+      ...formVoluntariosState,
       [name]: value,
     });
   };
@@ -64,45 +61,42 @@ export default function UserDrawer() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (Object.values(formState).some((value) => value === '')) {
+    if (Object.values(formVoluntariosState).some((value) => value === '')) {
       toast.error('Todos los campos son obligatorios');
-      // console.log(formState);
+      // console.log(formVoluntariosState);
       return;
     }
 
-    await startSavingUser(formState);
-    await startLoadingUsers();
+    await startSavingVoluntario(formVoluntariosState);
+    await startLoadingVoluntarios();
     openCloseDrawer();
     handleClearForm();
   };
 
   // Clear form
   const handleClearForm = () => {
-    setFormState({
+    setFormVoluntariosState({
       first_name: '',
       last_name: '',
       email: '',
       profession: '',
-      userRole: {
-        role_name: '',
-        role_id: '',
-        role_description: '',
-      },
-      user_role: '',
+      document: '',
+      phone: '',
+      other_contact: '',
     });
 
-    setActiveUser(null);
+    setActiveVoluntario(null);
   };
 
   useEffect(() => {
-    if (activeUser !== null) {
-      setFormState(activeUser as any);
+    if (activeVoluntario !== null) {
+      setFormVoluntariosState(activeVoluntario as any);
     }
-  }, [activeUser]);
+  }, [activeVoluntario]);
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear usuario</Button>
+      <Button onClick={openCloseDrawer}>Crear voluntario</Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -113,7 +107,7 @@ export default function UserDrawer() {
         <DrawerOverlay />
 
         <form
-          className={s.manejoUsuarios__createUser}
+          className={s.voluntarios__createUser}
           onSubmit={handleSubmit}
           autoComplete="off"
         >
@@ -125,7 +119,7 @@ export default function UserDrawer() {
             />
 
             <DrawerHeader borderBottomWidth="1px">
-              {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
+              {activeVoluntario ? 'Actualizar voluntario' : 'Crear voluntario'}
             </DrawerHeader>
 
             <DrawerBody>
@@ -135,9 +129,9 @@ export default function UserDrawer() {
                 type="text"
                 title="Nombre"
                 name="first_name"
-                value={formState.first_name}
+                value={formVoluntariosState.first_name}
                 onChange={onInputChange}
-                className={s.manejoUsuarios__createUser__input}
+                className={s.voluntarios__createUser__input}
               />
 
               <Input
@@ -146,21 +140,21 @@ export default function UserDrawer() {
                 type="text"
                 title="Apellido"
                 name="last_name"
-                value={formState.last_name}
+                value={formVoluntariosState.last_name}
                 onChange={onInputChange}
-                className={s.manejoUsuarios__createUser__input}
+                className={s.voluntarios__createUser__input}
               />
 
               <Input
-                disabled={!!activeUser}
+                // disabled={!!activeVoluntario}
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="email"
                 title="Correo electrónico"
                 name="email"
-                value={formState.email}
+                value={formVoluntariosState.email}
                 onChange={onInputChange}
-                className={s.manejoUsuarios__createUser__input}
+                className={s.voluntarios__createUser__input}
               />
 
               <Input
@@ -169,33 +163,47 @@ export default function UserDrawer() {
                 type="text"
                 title="Profesión"
                 name="profession"
-                value={formState.profession}
+                value={formVoluntariosState.profession}
                 onChange={onInputChange}
-                className={s.manejoUsuarios__createUser__input}
+                className={s.voluntarios__createUser__input}
               />
 
-              <Select
+              <Input
                 readOnly={loadingCreate}
-                disabled={activeUser?.userRole?.role_id === '1'}
-                SelectType="secondary"
-                title="Perfil profesional"
-                name="user_role"
-                value={
-                  activeUser ? formState.userRole.role_id : formState?.user_role
-                }
+                inputType="secondary"
+                type="number"
+                title="Cedula"
+                name="document"
+                value={formVoluntariosState.document}
                 onChange={onInputChange}
-                className={s.manejoUsuarios__createUser__input}
-              >
-                <option value="">-- Seleccionar perfil --</option>
-                <option value="1">Administrador</option>
-                <option value="2">Personal de Bodega</option>
-                <option value="3">Médico</option>
-                <option value="4">Coordinador Logístico</option>
-                <option value="5">Coordinador de Formación</option>
-                <option value="6">Coordinador Operativo</option>
-              </Select>
+                className={s.voluntarios__createUser__input}
+              />
+
+              <Input
+                readOnly={loadingCreate}
+                inputType="secondary"
+                type="number"
+                title="Contacto"
+                name="phone"
+                value={formVoluntariosState.phone}
+                onChange={onInputChange}
+                className={s.voluntarios__createUser__input}
+              />
+
+              <Input
+                readOnly={loadingCreate}
+                inputType="secondary"
+                type="text"
+                title="Otro contacto"
+                name="other_contact"
+                value={formVoluntariosState.other_contact}
+                onChange={onInputChange}
+                className={s.voluntarios__createUser__input}
+                style={{ marginBottom: '20px' }}
+              />
 
               <br />
+
               {loadingCreate && <Loader />}
             </DrawerBody>
 
@@ -207,12 +215,14 @@ export default function UserDrawer() {
                   openCloseDrawer();
                   handleClearForm();
                 }}
-                className={s.manejoUsuarios__createUser__button__cancel}
+                className={s.voluntarios__createUser__button__cancel}
               >
                 Cancelar
               </Button>
               <Button type="submit">
-                {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
+                {activeVoluntario
+                  ? 'Actualizar voluntario'
+                  : 'Crear voluntario'}
               </Button>
             </DrawerFooter>
           </DrawerContent>
