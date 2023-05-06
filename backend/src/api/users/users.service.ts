@@ -104,10 +104,7 @@ export class UsersService {
         ],
         where: {
           is_active: true,
-          user_id,
-          userFile: {
-            is_active: true
-          }
+          user_id: user_id
         }
       });
 
