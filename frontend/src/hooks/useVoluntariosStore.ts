@@ -102,24 +102,23 @@ export const useVoluntariosStore = () => {
   };
 
   // Inactive user
-  const startInactiveVoluntario = async ({
-    direct_volunteer_id,
-    is_active,
-  }: {
-    direct_volunteer_id: string;
-    is_active: boolean;
-  }) => {
+  const startInactiveVoluntario = async (voluntario: any) => {
     dispatch(onSetLoadingVoluntarios(true));
 
     try {
-      await projectApi.delete(`/api/user/inactive/${direct_volunteer_id}`, {
-        data: { is_active: !is_active },
-      });
+      await projectApi.patch(
+        `/api/direct-volunteer/${voluntario.direct_volunteer_id}`,
+        {
+          ...voluntario,
+          is_active: !voluntario.is_active,
+        }
+      );
 
-      startLoadingVoluntarios();
+      await startLoadingVoluntarios();
+
       dispatch(onSetLoadingVoluntarios(false));
 
-      if (!is_active) {
+      if (!voluntario.is_active) {
         toast.success('Usuario activado con éxito');
         return;
       } else {
@@ -142,7 +141,6 @@ export const useVoluntariosStore = () => {
         `/api/direct-volunteer/${direct_volunteer_id}`
       );
 
-      console.log(data);
       dispatch(onSetActiveVoluntario(data.response));
       dispatch(onSetLoadingVoluntarios(false));
     } catch (error: any) {
@@ -161,7 +159,7 @@ export const useVoluntariosStore = () => {
         `/api/direct-volunteer/remove/${direct_volunteer_id}`
       );
 
-      startLoadingVoluntarios();
+      await startLoadingVoluntarios();
       dispatch(onSetLoadingVoluntarios(false));
 
       toast.success('Usuario eliminado con éxito');

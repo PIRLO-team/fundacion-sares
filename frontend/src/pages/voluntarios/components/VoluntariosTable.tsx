@@ -104,9 +104,8 @@ export default function VoluntariosTable() {
                           <WarningIcon />
                         )
                       }
-                      onClick={() => {
-                        startInactiveVoluntario(voluntario);
-                        startLoadingVoluntarios();
+                      onClick={async () => {
+                        await startInactiveVoluntario(voluntario);
                       }}
                     >
                       {voluntario?.is_active
