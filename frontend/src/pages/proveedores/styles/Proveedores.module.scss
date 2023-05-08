@@ -1,0 +1,105 @@
+@import '../../../styles/_media_queries.scss';
+
+.proveedores {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: var(--main-transition);
+
+  &__email {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--accents-5);
+    transition: var(--main-transition);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    // margin-bottom: 2rem;
+    transition: var(--main-transition);
+
+    @include midDeskTablet {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--black);
+    transition: var(--main-transition);
+  }
+
+  &__table {
+    width: 100%;
+    max-height: 80vh;
+    overflow-x: scroll;
+  }
+
+  &__createProveedor {
+    width: 100%;
+    transition: var(--main-transition);
+
+    &__button {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+
+      &__create {
+        width: 100%;
+        font-size: 0.875rem;
+        min-height: 38px;
+        transition: var(--main-transition);
+
+        &:hover {
+          background-color: var(--color-primary-dark);
+          border-color: var(--color-primary-dark);
+          color: white;
+        }
+      }
+
+      &__clear {
+        max-width: 50px;
+        width: 100%;
+        min-height: 38px;
+        // animation: animation 500ms ease-in-out;
+        transition: var(--main-transition);
+
+        &:hover {
+          background-color: var(--color-primary-dark);
+          border-color: var(--color-primary-dark);
+        }
+      }
+
+      &__cancel {
+        background-color: var(--color-not-started);
+        color: var(--white);
+        border-color: var(--color-not-started);
+
+        &:hover {
+          background-color: var(--accents-3);
+          color: var(--white);
+          border-color: var(--accents-3);
+        }
+      }
+    }
+  }
+}
+
+@keyframes animation {
+  0% {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

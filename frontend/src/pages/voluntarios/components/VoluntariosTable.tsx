@@ -1,5 +1,4 @@
 // Next
-import Link from 'next/link';
 
 // Chakra UI Components
 import {
@@ -25,6 +24,7 @@ import {
   WarningIcon,
   ChatIcon,
   EditIcon,
+  DeleteIcon,
 } from '@chakra-ui/icons';
 
 // Hooks
@@ -32,6 +32,9 @@ import { useUiStore, useVoluntariosStore } from '@/hooks';
 
 // Local Components
 import { Status } from '@/components/ui';
+
+// Styles
+import s from '../styles/Voluntarios.module.scss';
 
 export default function VoluntariosTable() {
   const {
@@ -73,6 +76,10 @@ export default function VoluntariosTable() {
                 }}
               >
                 {voluntario?.first_name} {voluntario?.last_name}
+                <br />
+                <span className={s.voluntarios__email}>
+                  {voluntario?.email}
+                </span>
               </Td>
 
               <Td>{voluntario?.document}</Td>
@@ -130,7 +137,7 @@ export default function VoluntariosTable() {
                     <Divider />
 
                     <MenuItem
-                      icon={<EditIcon color="red" />}
+                      icon={<DeleteIcon color="red" />}
                       color="red"
                       onClick={() => {
                         startDeleteVoluntario(voluntario?.direct_volunteer_id);

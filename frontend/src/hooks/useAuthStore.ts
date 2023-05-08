@@ -15,6 +15,7 @@ import {
   checkingCredentials,
   onLogin,
   onLogout,
+  onLogoutProveedores,
   onLogoutUsers,
   onLogoutVoluntarios,
 } from '@/store';
@@ -41,6 +42,7 @@ export const useAuthStore = () => {
     dispatch(onLogout());
     dispatch(onLogoutUsers());
     dispatch(onLogoutVoluntarios());
+    dispatch(onLogoutProveedores());
 
     if (router.pathname !== '/login') {
       router.replace('/login');

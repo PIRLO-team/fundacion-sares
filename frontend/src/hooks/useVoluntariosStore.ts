@@ -46,7 +46,7 @@ export const useVoluntariosStore = () => {
       dispatch(onLoadVoluntarios(data.response));
     } catch (error) {
       dispatch(onSetLoadingVoluntarios(false));
-      console.log('Error cargando los usuarios');
+      console.log('Error cargando los Voluntarios');
       console.log(error);
     }
   };
@@ -72,7 +72,7 @@ export const useVoluntariosStore = () => {
         setLoadingCreate(false);
 
         // update user notification
-        toast.success('Usuario actualizado con éxito');
+        toast.success('Voluntario actualizado con éxito');
         return;
       }
 
@@ -119,10 +119,10 @@ export const useVoluntariosStore = () => {
       dispatch(onSetLoadingVoluntarios(false));
 
       if (!voluntario.is_active) {
-        toast.success('Usuario activado con éxito');
+        toast.success('Voluntario activado con éxito');
         return;
       } else {
-        toast.error('Usuario desactivado con éxito');
+        toast.error('Voluntario desactivado con éxito');
         return;
       }
     } catch (error: any) {
@@ -162,7 +162,7 @@ export const useVoluntariosStore = () => {
       await startLoadingVoluntarios();
       dispatch(onSetLoadingVoluntarios(false));
 
-      toast.success('Usuario eliminado con éxito');
+      toast.success('Voluntario eliminado con éxito');
     } catch (error: any) {
       const errData = error.response.data;
       console.log(error);

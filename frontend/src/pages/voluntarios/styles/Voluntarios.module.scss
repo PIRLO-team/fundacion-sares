@@ -7,6 +7,13 @@
   gap: 1rem;
   transition: var(--main-transition);
 
+  &__email {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--accents-5);
+    transition: var(--main-transition);
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
@@ -35,7 +42,7 @@
     overflow-x: scroll;
   }
 
-  &__createUser {
+  &__createVoluntario {
     width: 100%;
     transition: var(--main-transition);
 

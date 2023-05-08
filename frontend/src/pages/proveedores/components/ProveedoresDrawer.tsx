@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 // Hooks
-import { useForm, useUiStore, useVoluntariosStore } from '@/hooks';
+import { useUiStore, useProveedoresStore, useForm } from '@/hooks';
 
 // Chakra UI Components
 import {
@@ -22,26 +22,23 @@ import { Loader } from '@/components';
 import { Button, Input } from '@/components/ui';
 
 // Styles
-import s from '../styles/Voluntarios.module.scss';
+import s from '../styles/Proveedores.module.scss';
 
-export default function VoluntariosDrawer() {
-  // Global state for drawer
+export default function ProveedoresDrawer() {
   const { isDrawerOpen, openCloseDrawer } = useUiStore();
 
   const {
-    activeVoluntario,
+    activeProveedor,
     loadingCreate,
-    startSavingVoluntario,
-    startLoadingVoluntarios,
-    setActiveVoluntario,
-  } = useVoluntariosStore();
+    startSavingProveedor,
+    startLoadingProveedores,
+    setActiveProveedor,
+  } = useProveedoresStore();
 
   const { formState, onInputChange, onResetForm, setFormState } = useForm({
-    first_name: '',
-    last_name: '',
+    name: '',
     email: '',
-    profession: '',
-    document: '',
+    nit: '',
     phone: '',
     other_contact: '',
   });
@@ -56,8 +53,8 @@ export default function VoluntariosDrawer() {
       return;
     }
 
-    await startSavingVoluntario(formState);
-    await startLoadingVoluntarios();
+    await startSavingProveedor(formState);
+    await startLoadingProveedores();
     openCloseDrawer();
     handleClearForm();
   };
@@ -65,20 +62,18 @@ export default function VoluntariosDrawer() {
   // Clear form
   const handleClearForm = () => {
     onResetForm();
-
-    setActiveVoluntario(null);
+    setActiveProveedor(null);
   };
 
-  // Set form state if activeVoluntario
   useEffect(() => {
-    if (activeVoluntario !== null) {
-      setFormState(activeVoluntario as any);
+    if (activeProveedor !== null) {
+      setFormState(activeProveedor as any);
     }
-  }, [activeVoluntario]);
+  }, [activeProveedor]);
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear voluntario</Button>
+      <Button onClick={openCloseDrawer}>Crear proveedor</Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -89,7 +84,7 @@ export default function VoluntariosDrawer() {
         <DrawerOverlay />
 
         <form
-          className={s.voluntarios__createVoluntario}
+          className={s.proveedores__createProveedor}
           onSubmit={handleSubmit}
           autoComplete="off"
         >
@@ -101,7 +96,7 @@ export default function VoluntariosDrawer() {
             />
 
             <DrawerHeader borderBottomWidth="1px">
-              {activeVoluntario ? 'Actualizar voluntario' : 'Crear voluntario'}
+              {activeProveedor ? 'Actualizar proveedor' : 'Crear proveedor'}
             </DrawerHeader>
 
             <DrawerBody>
@@ -110,25 +105,13 @@ export default function VoluntariosDrawer() {
                 inputType="secondary"
                 type="text"
                 title="Nombre"
-                name="first_name"
-                value={formState.first_name}
+                name="name"
+                value={formState.name}
                 onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
+                className={s.proveedores__createProveedor__input}
               />
 
               <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="text"
-                title="Apellido"
-                name="last_name"
-                value={formState.last_name}
-                onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
-              />
-
-              <Input
-                // disabled={!!activeVoluntario}
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="email"
@@ -136,18 +119,7 @@ export default function VoluntariosDrawer() {
                 name="email"
                 value={formState.email}
                 onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
-              />
-
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="text"
-                title="Profesión"
-                name="profession"
-                value={formState.profession}
-                onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
+                className={s.proveedores__createProveedor__input}
               />
 
               <Input
@@ -155,10 +127,10 @@ export default function VoluntariosDrawer() {
                 inputType="secondary"
                 type="number"
                 title="Cedula"
-                name="document"
-                value={formState.document}
+                name="nit"
+                value={formState.nit}
                 onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
+                className={s.proveedores__createProveedor__input}
               />
 
               <Input
@@ -169,7 +141,7 @@ export default function VoluntariosDrawer() {
                 name="phone"
                 value={formState.phone}
                 onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
+                className={s.proveedores__createProveedor__input}
               />
 
               <Input
@@ -180,7 +152,7 @@ export default function VoluntariosDrawer() {
                 name="other_contact"
                 value={formState.other_contact}
                 onChange={onInputChange}
-                className={s.voluntarios__createVoluntario__input}
+                className={s.proveedores__createProveedor__input}
                 style={{ marginBottom: '20px' }}
               />
 
@@ -197,14 +169,12 @@ export default function VoluntariosDrawer() {
                   openCloseDrawer();
                   handleClearForm();
                 }}
-                className={s.voluntarios__createVoluntario__button__cancel}
+                className={s.proveedores__createProveedor__button__cancel}
               >
                 Cancelar
               </Button>
               <Button type="submit">
-                {activeVoluntario
-                  ? 'Actualizar voluntario'
-                  : 'Crear voluntario'}
+                {activeProveedor ? 'Actualizar proveedor' : 'Crear proveedor'}
               </Button>
             </DrawerFooter>
           </DrawerContent>
