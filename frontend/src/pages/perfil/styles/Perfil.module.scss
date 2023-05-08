@@ -57,6 +57,10 @@
   }
 
   &__personalInfo {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin-top: 1rem;
     transition: var(--main-transition);
 
@@ -64,11 +68,11 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-
       border: 1px solid var(--accents-2);
       padding: 2rem 1.3rem 1.3rem 1.3rem;
       border-radius: var(--border-radius);
       max-width: 820px;
+      width: 100%;
       transition: var(--main-transition);
 
       &__text {
@@ -115,6 +119,16 @@
           }
         }
       }
+    }
+
+    &__security {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--accents-2);
+      padding: 1.3rem;
+      gap: 1rem;
+      border-radius: var(--border-radius);
+      transition: var(--main-transition);
     }
   }
 }

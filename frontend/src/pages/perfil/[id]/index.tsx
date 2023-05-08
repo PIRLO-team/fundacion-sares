@@ -7,6 +7,9 @@ import { useRouter } from 'next/router';
 // Hooks
 import { useAuthStore, useUsersStore } from '@/hooks';
 
+// Chakra UI
+import { useDisclosure } from '@chakra-ui/react';
+
 // Local Components
 import { withAuth } from '@/auth/withAuth';
 import { Layout, Loader } from '@/components';
@@ -16,12 +19,12 @@ import { Avatar, Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../styles/Perfil.module.scss';
+import ChangePassword from '../components/ChangePassword/ChangePassword';
 
 // Types
 
 function Perfil() {
   const router = useRouter();
-
   const userID = router.query.id;
 
   const { currentUser } = useAuthStore();
@@ -33,6 +36,8 @@ function Perfil() {
     setActiveUser,
     startSavingUser,
   } = useUsersStore();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const FULLNAME = `${activeUser?.first_name} ${activeUser?.last_name}`;
 
@@ -261,6 +266,21 @@ function Perfil() {
                 </div>
               )}
             </form>
+
+            {userID === currentUser.uid && (
+              <div className={s.profile__personalInfo__security}>
+                <p className={s.profile__personalInfo__form__text}>Seguridad</p>
+
+                <Button
+                  onClick={onOpen}
+                  className={s.profile__personalInfo__form__group__button__item}
+                >
+                  Cambiar contraseña
+                </Button>
+
+                <ChangePassword isOpen={isOpen} onClose={onClose} />
+              </div>
+            )}
           </div>
         </div>
       )}

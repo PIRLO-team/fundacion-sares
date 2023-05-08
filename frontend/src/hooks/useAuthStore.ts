@@ -1,5 +1,5 @@
 // React
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // Redux hooks
 import { useAppDispatch, useAppSelector } from '@/store/app/hooks';
@@ -11,7 +11,13 @@ import { useRouter } from 'next/router';
 import { projectApi } from '@/api';
 
 // Redux Actions
-import { checkingCredentials, onLogin, onLogout, onLogoutUsers } from '@/store';
+import {
+  checkingCredentials,
+  onLogin,
+  onLogout,
+  onLogoutUsers,
+  onLogoutVoluntarios,
+} from '@/store';
 
 // Soonner Notifications
 import { toast } from 'sonner';
@@ -34,6 +40,7 @@ export const useAuthStore = () => {
     localStorage.clear();
     dispatch(onLogout());
     dispatch(onLogoutUsers());
+    dispatch(onLogoutVoluntarios());
 
     if (router.pathname !== '/login') {
       router.replace('/login');
@@ -235,6 +242,39 @@ export const useAuthStore = () => {
     }
   };
 
+  // Update password
+  const startUpdatePassword = async ({
+    user_id,
+    password,
+    new_password,
+    comfirm_password,
+  }: {
+    user_id: string;
+    password: string;
+    new_password: string;
+    comfirm_password: string;
+  }) => {
+    try {
+      const { data } = await projectApi.patch(
+        `/api/user/update-password/${user_id}`,
+        {
+          password,
+          new_password,
+          comfirm_password,
+        }
+      );
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+    } catch (error: any) {
+      console.log(error);
+      const errData = error.response.data;
+
+      toast.error(errData.message);
+    }
+  };
+
   return {
     // Properties
     status,
@@ -250,5 +290,6 @@ export const useAuthStore = () => {
     startResetPassword,
     startResetPasswordStep1,
     startResetPasswordStep2,
+    startUpdatePassword,
   };
 };
