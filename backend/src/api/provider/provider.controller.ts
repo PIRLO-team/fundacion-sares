@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, UseGuards } from '@nestjs/common';
 import { ProviderService } from './provider.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
+import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 
 @Controller()
 export class ProviderController {
   constructor(private readonly providerService: ProviderService) { }
 
   @Get()
+  @UseGuards(JwtMiddleware)
   async findAll() {
     const { response, title, message, status } =
       await this.providerService.findAll();
@@ -15,6 +17,7 @@ export class ProviderController {
   }
 
   @Get(':id')
+  @UseGuards(JwtMiddleware)
   async findOne(@Param('id') id: string) {
     const { response, title, message, status } =
       await this.providerService.findById(+id);
@@ -22,6 +25,7 @@ export class ProviderController {
   }
 
   @Post('register')
+  @UseGuards(JwtMiddleware)
   async create(@Body() createProviderDto: CreateProviderDto) {
     const { response, title, message, status } =
       await this.providerService.create(createProviderDto);
@@ -29,6 +33,7 @@ export class ProviderController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtMiddleware)
   async update(
     @Param('id') id: string,
     @Body() updateProviderDto: UpdateProviderDto
@@ -39,6 +44,7 @@ export class ProviderController {
   }
 
   @Delete('remove/:id')
+  @UseGuards(JwtMiddleware)
   async remove(@Param('id') id: string) {
     const { response, title, message, status } =
       await this.providerService.delete(+id);

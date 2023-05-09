@@ -10,11 +10,6 @@ import { TokenDto } from '../../shared/interfaces/token.dto';
 export class FileController {
   constructor(private readonly fileService: FileService) { }
 
-  @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.fileService.create(createFileDto);
-  }
-
   @Get('all')
   async findAll(
     @UserToken() user: TokenDto,
@@ -24,11 +19,6 @@ export class FileController {
       await this.fileService.findAll(user, updateFileDto);
 
     throw new HttpException({ response, title, message, }, status);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fileService.findOne(+id);
   }
 
   @Patch('update/:user_id')
@@ -42,10 +32,5 @@ export class FileController {
       await this.fileService.updateFile(user, +user_id, updateFileDto);
 
     throw new HttpException({ response, title, message, }, status);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.fileService.remove(+id);
   }
 }

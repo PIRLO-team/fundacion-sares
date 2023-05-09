@@ -21,6 +21,9 @@ import { File } from './api/file/entities/file.entity';
 import { DirectVolunteer } from './api/direct-volunteer/entities/direct-volunteer.entity';
 import { Provider } from './api/provider/entities/provider.entity';
 import { ProviderModule } from './api/provider/provider.module';
+import { Supply } from './api/supply/entities/supply.entity';
+import { SupplyModule } from './api/supply/supply.module';
+import { JwtMiddleware } from './auth/middleware/jwt.middleware';
 
 @Module({
   imports: [
@@ -34,7 +37,8 @@ import { ProviderModule } from './api/provider/provider.module';
         Role,
         File,
         DirectVolunteer,
-        Provider
+        Provider,
+        Supply
       ]
     }),
     RouterModule.register(MainRoutes),
@@ -43,6 +47,7 @@ import { ProviderModule } from './api/provider/provider.module';
     DirectVolunteerModule,
     FileModule,
     ProviderModule,
+    SupplyModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,
