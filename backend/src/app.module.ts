@@ -69,7 +69,7 @@ import { AcquisitionType } from './api/supply/entities/acquisition-type.entity';
         },
       },
       defaults: {
-        from: 'juan_man.molina@uao.edu.co',
+        from: env.SMTP_FROM,
       },
     })
   ],
