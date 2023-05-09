@@ -24,6 +24,11 @@ import { ProviderModule } from './api/provider/provider.module';
 import { Supply } from './api/supply/entities/supply.entity';
 import { SupplyModule } from './api/supply/supply.module';
 import { JwtMiddleware } from './auth/middleware/jwt.middleware';
+import { SupplyCategory } from './api/supply/entities/supply-category.entity';
+import { SupplyType } from './api/supply/entities/supply-type.entity';
+import { CategoryBySupply } from './api/supply/entities/category-by-supply.entity';
+import { NonConsumable } from './api/supply/entities/non-consumable.entity';
+import { AcquisitionType } from './api/supply/entities/acquisition-type.entity';
 
 @Module({
   imports: [
@@ -38,7 +43,12 @@ import { JwtMiddleware } from './auth/middleware/jwt.middleware';
         File,
         DirectVolunteer,
         Provider,
-        Supply
+        Supply,
+        SupplyCategory,
+        SupplyType,
+        CategoryBySupply,
+        AcquisitionType,
+        NonConsumable
       ]
     }),
     RouterModule.register(MainRoutes),

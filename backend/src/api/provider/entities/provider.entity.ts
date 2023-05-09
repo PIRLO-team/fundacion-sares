@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Supply } from "../../supply/entities/supply.entity";
+import { NonConsumable } from "../../supply/entities/non-consumable.entity";
 
 @Entity('provider')
 export class Provider {
@@ -42,4 +44,10 @@ export class Provider {
         nullable: true
     })
     phone: number;
+
+    @OneToMany(type => Supply, s => s.providerSupply)
+    providerSupply: Supply[];
+
+    @OneToMany(type => NonConsumable, nc => nc.providerNonConsumable)
+    providerNonConsumable: Supply[];
 }
