@@ -10,10 +10,11 @@ export const dataSource: DataSource = new DataSource({
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
     entities: [
-        `${__dirname}/../auth/**/*.entity{.ts,.js}`,
-        `${__dirname}/../api/direct-volunteer/**/*.entity{.ts,.js}`,
+        __dirname + '/../auth/**/*.entity{.ts,.js}',
+        __dirname + '/../api/direct-volunteer/**/*.entity{.ts,.js}',
         __dirname + '/../api/file/**/*.entity{.ts,.js}',
         __dirname + '/../api/provider/**/*.entity{.ts,.js}',
+        __dirname + '/../api/supply/**/*.entity{.ts,.js}',
     ],
     migrations: [`${__dirname}/../migrations/**/*{.ts,.js}`],
     synchronize: false,

@@ -19,6 +19,11 @@ export class FileModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '/api/file/*', method: RequestMethod.ALL });
+      .forRoutes(
+        {
+          path: '/api/file/*',
+          method: RequestMethod.ALL
+        }
+      );
   }
 }

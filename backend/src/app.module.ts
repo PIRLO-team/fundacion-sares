@@ -21,6 +21,14 @@ import { File } from './api/file/entities/file.entity';
 import { DirectVolunteer } from './api/direct-volunteer/entities/direct-volunteer.entity';
 import { Provider } from './api/provider/entities/provider.entity';
 import { ProviderModule } from './api/provider/provider.module';
+import { Supply } from './api/supply/entities/supply.entity';
+import { SupplyModule } from './api/supply/supply.module';
+import { JwtMiddleware } from './auth/middleware/jwt.middleware';
+import { SupplyCategory } from './api/supply/entities/supply-category.entity';
+import { SupplyType } from './api/supply/entities/supply-type.entity';
+import { CategoryBySupply } from './api/supply/entities/category-by-supply.entity';
+import { NonConsumable } from './api/supply/entities/non-consumable.entity';
+import { AcquisitionType } from './api/supply/entities/acquisition-type.entity';
 
 @Module({
   imports: [
@@ -34,7 +42,13 @@ import { ProviderModule } from './api/provider/provider.module';
         Role,
         File,
         DirectVolunteer,
-        Provider
+        Provider,
+        Supply,
+        SupplyCategory,
+        SupplyType,
+        CategoryBySupply,
+        AcquisitionType,
+        NonConsumable
       ]
     }),
     RouterModule.register(MainRoutes),
@@ -43,6 +57,7 @@ import { ProviderModule } from './api/provider/provider.module';
     DirectVolunteerModule,
     FileModule,
     ProviderModule,
+    SupplyModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,
@@ -54,7 +69,7 @@ import { ProviderModule } from './api/provider/provider.module';
         },
       },
       defaults: {
-        from: 'juan_man.molina@uao.edu.co',
+        from: env.SMTP_FROM,
       },
     })
   ],

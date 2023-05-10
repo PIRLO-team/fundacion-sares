@@ -21,6 +21,11 @@ export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '/api/user/*', method: RequestMethod.ALL });
+      .forRoutes(
+        {
+          path: '/api/user/*',
+          method: RequestMethod.ALL
+        }
+      );
   }
 }

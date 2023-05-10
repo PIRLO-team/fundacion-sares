@@ -17,6 +17,15 @@ export class ProviderModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '/api/provider/*', method: RequestMethod.ALL });
+      .forRoutes(
+        {
+          path: '/api/provider', 
+          method: RequestMethod.ALL
+        },
+        {
+          path: '/api/provider/*', 
+          method: RequestMethod.ALL
+        }
+      );
   }
 }
