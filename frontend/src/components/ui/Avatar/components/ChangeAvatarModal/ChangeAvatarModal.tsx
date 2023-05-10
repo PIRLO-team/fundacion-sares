@@ -30,8 +30,8 @@ import { toast } from 'sonner';
 import s from './ChangeAvatarModal.module.scss';
 
 const s3 = new S3({
-  accessKeyId: 'AKIA2HNOOQJSJV4HRVUX',
-  secretAccessKey: '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',
+  accessKeyId: 'AKIAWOLATSZ7VIMC5APJ',
+  secretAccessKey: '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',
   region: 'us-west-1',
 });
 
@@ -96,24 +96,24 @@ export const ChangeAvatarModal = ({
     const fileName = selectedFile.name;
 
     const params = {
-      Bucket: `pirlo/${activeUser?.user_id}`,
+      Bucket: `saresapp/${activeUser?.user_id}`,
       Key: fileName,
       Body: selectedFile,
       ContentType: selectedFile.type,
-      ACL: 'public-read',
+      // ACL: 'public-read',
     };
 
     try {
       await s3.putObject(params).promise();
 
-      const url = `https://pirlo.s3-us-west-1.amazonaws.com/${activeUser?.user_id}/${fileName}`;
+      const url = `https://saresapp.s3-us-west-1.amazonaws.com/${activeUser?.user_id}/${fileName}`;
 
-      startSavingUser({
+      await startSavingUser({
         user_id: activeUser?.user_id,
         img_profile: url,
       });
 
-      startGetUserById(userID as string);
+      await startGetUserById(userID as string);
 
       onClose();
 
@@ -175,10 +175,10 @@ export const ChangeAvatarModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button variant="ghost" mr={3} onClick={onClose}>
             Cancelar
           </Button>
-          <Button variant="ghost" onClick={handleUpload}>
+          <Button colorScheme="blue" onClick={handleUpload}>
             Actualizar
           </Button>
         </ModalFooter>

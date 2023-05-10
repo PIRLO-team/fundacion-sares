@@ -1,24 +1,22 @@
 // React
 import { useEffect } from 'react';
 
+// Next
+
 //  HOC
 import { NextComponentType } from 'next';
 
 // Local component
-import Login from '../pages/login';
-import { Loader } from '@/components';
 
 // Renew token if expired
 import { useAuthStore } from '@/hooks';
-import { useRouter } from 'next/router';
 
 export function withAuth(
   Component: NextComponentType
   // config?: { isAuthPage: boolean }
 ) {
   const Auth = (props: JSX.IntrinsicAttributes) => {
-    const { status, currentUser, checkToken } = useAuthStore();
-    const router = useRouter();
+    const { checkToken } = useAuthStore();
 
     useEffect(() => {
       checkToken();

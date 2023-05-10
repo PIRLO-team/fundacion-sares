@@ -54,6 +54,7 @@ export const Avatar = ({
           width={size}
           height={size}
           className={`${s.avatar__container__img} ${classNameImg}`}
+          priority
         />
 
         {currentUser.uid === activeUser?.user_id && (

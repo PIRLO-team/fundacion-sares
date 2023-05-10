@@ -6,7 +6,7 @@ const nextConfig = {
     domains: [
       'source.boringavatars.com',
       'avatar.vercel.sh',
-      'pirlo.s3-us-west-1.amazonaws.com',
+      'saresapp.s3-us-west-1.amazonaws.com',
     ],
   },
 };

@@ -66,6 +66,11 @@ function Perfil() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // If data is equal to activeUser, do not update
+    if (formUserState === activeUser) {
+      return;
+    }
+
     await startSavingUser(formUserState);
     await startGetUserById(userID as string);
   };

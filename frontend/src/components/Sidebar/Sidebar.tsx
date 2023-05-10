@@ -51,7 +51,7 @@ export function Sidebar() {
     },
     {
       name: 'Proveedores',
-      icon: '/icons/SidebarIcons/proveedores.svg',
+      icon: '/icons/SidebarIcons/proveedores.png',
       alt: 'Proveedores',
       link: '/proveedores',
       role: '1',
