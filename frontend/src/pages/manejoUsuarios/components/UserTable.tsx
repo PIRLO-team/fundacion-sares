@@ -32,6 +32,9 @@ import { useAuthStore, useUiStore, useUsersStore } from '@/hooks';
 // Local Components
 import { Avatar, Status } from '@/components/ui';
 
+// Styles
+import s from '../styles/manejoUsuarios.module.scss';
+
 export default function UserTable() {
   const { currentUser } = useAuthStore();
 
@@ -71,6 +74,7 @@ export default function UserTable() {
                   email={user?.email}
                   src={user?.img_profile}
                   size={40}
+                  classNameImg={s.avatar}
                 />
               </Td>
               <Td>{user?.profession}</Td>

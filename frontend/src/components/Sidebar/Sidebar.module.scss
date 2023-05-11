@@ -90,6 +90,9 @@
 
     &__avatar {
       &__img {
+        max-width: 45px;
+        max-height: 45px;
+
         @include mediaqueryheight(900px) {
           height: 40px;
           width: 40px;
