@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { SupplyService } from './supply.service';
+import { SupplyCategoryService } from './supply-category.service';
 import { SupplyController } from './supply.controller';
 import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 import { Provider } from '../provider/entities/provider.entity';
@@ -11,11 +11,13 @@ import { NonConsumableRepository } from './repositories/non-consumable.repositor
 import { NonConsumableStatusRepository } from './repositories/non-consumable-status.repository';
 import { CategoryBySupplyRepository } from './repositories/category-by-supply.repository';
 import { AcquisitionTypeRepository } from './repositories/acquisition-type.repository';
+import { SupplyService } from './supply.service';
 
 @Module({
   controllers: [SupplyController],
   providers: [
     HandlersError,
+    SupplyCategoryService,
     SupplyService,
     Provider,
     SupplyRepository,

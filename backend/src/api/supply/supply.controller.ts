@@ -1,21 +1,26 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException } from '@nestjs/common';
-import { SupplyService } from './supply.service';
-import { CreateSupplyCategoryDto } from './dto/create-supply.dto';
+import { SupplyCategoryService } from './supply-category.service';
+import { CreateSupplyCategoryDto, CreateSupplyDto } from './dto/create-supply.dto';
 import { CreateCategoryBySupplyDto } from './dto/create-supply.dto';
-import { UpdateCategoryBySupplyCategoryDto, UpdateSupplyCategoryDto } from './dto/update-supply.dto';
+import { UpdateCategoryBySupplyCategoryDto, UpdateSupplyCategoryDto, UpdateSupplyDto } from './dto/update-supply.dto';
 import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 import { UserToken } from '../../shared/decorators/user-token.decorator';
 import { TokenDto } from '../../shared/interfaces/token.dto';
+import { SupplyService } from './supply.service';
 
 @Controller()
 export class SupplyController {
-  constructor(private readonly supplyService: SupplyService) { }
+  constructor(
+    private readonly supplyCategoryService: SupplyCategoryService,
+    private readonly supplyService: SupplyService
+  ) { }
 
+  // * SUPPLY CATEGORY
   @Get('types')
   @UseGuards(JwtMiddleware)
   async getSupplyTypes() {
     const { response, title, message, status } =
-      await this.supplyService.getSupplyTypes();
+      await this.supplyCategoryService.getSupplyTypes();
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -24,7 +29,7 @@ export class SupplyController {
   @UseGuards(JwtMiddleware)
   async getSupplyCategories() {
     const { response, title, message, status } =
-      await this.supplyService.getSupplyCategories();
+      await this.supplyCategoryService.getSupplyCategories();
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -33,7 +38,7 @@ export class SupplyController {
   @UseGuards(JwtMiddleware)
   async getCategory() {
     const { response, title, message, status } =
-      await this.supplyService.getCategory();
+      await this.supplyCategoryService.getCategory();
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -44,7 +49,7 @@ export class SupplyController {
     @Param('id') id: number
   ) {
     const { response, title, message, status } =
-      await this.supplyService.getCategoryById(id);
+      await this.supplyCategoryService.getCategoryById(id);
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -53,10 +58,10 @@ export class SupplyController {
   @UseGuards(JwtMiddleware)
   async createSupplyCategory(
     @UserToken() user: TokenDto,
-    @Body() createSupplyDto: CreateSupplyCategoryDto
+    @Body() createSupplyCategoryDto: CreateSupplyCategoryDto
   ) {
     const { response, title, message, status } =
-      await this.supplyService.createSupplyCategory(user, createSupplyDto);
+      await this.supplyCategoryService.createSupplyCategory(user, createSupplyCategoryDto);
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -70,7 +75,7 @@ export class SupplyController {
     @Body() updateCategoryBySupplyCategoryDto: UpdateCategoryBySupplyCategoryDto
   ) {
     const { response, title, message, status } =
-      await this.supplyService.updateSupplyCategory(id, user, updateSupplyCategoryDto, updateCategoryBySupplyCategoryDto);
+      await this.supplyCategoryService.updateSupplyCategory(id, user, updateSupplyCategoryDto, updateCategoryBySupplyCategoryDto);
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -82,7 +87,51 @@ export class SupplyController {
     @Body() createCategoryBySupplyDto: CreateCategoryBySupplyDto
   ) {
     const { response, title, message, status } =
-      await this.supplyService.createCategoryBySupply(user, createCategoryBySupplyDto);
+      await this.supplyCategoryService.createCategoryBySupply(user, createCategoryBySupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  // TODO: SUPPLY
+  @Get('acquisition-types')
+  @UseGuards(JwtMiddleware)
+  async getAcquisitionTypes() {
+    const { response, title, message, status } =
+      await this.supplyService.getAcquisitionTypes();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('all')
+  @UseGuards(JwtMiddleware)
+  async getSupply() {
+    const { response, title, message, status } =
+      await this.supplyService.getSupply();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('create-supply')
+  @UseGuards(JwtMiddleware)
+  async createSupply(
+    @UserToken() user: TokenDto,
+    @Body() createSupplyDto: CreateSupplyDto
+  ) {
+    const { response, title, message, status } =
+      await this.supplyService.createSupply(user, createSupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Patch('update-supply/:id')
+  @UseGuards(JwtMiddleware)
+  async updateSupply(
+    @UserToken() user: TokenDto,
+    @Param('id') id: number,
+    @Body() updateSupplyDto: UpdateSupplyDto,
+  ) {
+    const { response, title, message, status } =
+      await this.supplyService.updateSupply(id, user, updateSupplyDto);
 
     throw new HttpException({ response, title, message, }, status);
   }

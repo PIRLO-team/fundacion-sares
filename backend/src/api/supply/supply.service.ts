@@ -1,325 +1,175 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { CreateSupplyCategoryDto } from './dto/create-supply.dto';
-import { CreateCategoryBySupplyDto } from './dto/create-supply.dto';
-import { UpdateCategoryBySupplyCategoryDto, UpdateSupplyCategoryDto } from './dto/update-supply.dto';
+import { CreateSupplyDto } from './dto/create-supply.dto';
+import { UpdateSupplyDto } from './dto/update-supply.dto';
 import { HandlersError } from '../../shared/handlers/error.utils';
 import { TokenDto } from '../../shared/interfaces/token.dto';
 import { SupplyCategoryRepository } from './repositories/supply-category.repository';
-import { SupplyTypeRepository } from './repositories/supply-type.repository';
 import { SupplyCategory } from './entities/supply-category.entity';
-import { SupplyType } from './entities/supply-type.entity';
 import { CategoryBySupply } from './entities/category-by-supply.entity';
 import { CategoryBySupplyRepository } from './repositories/category-by-supply.repository';
+import { AcquisitionTypeRepository } from './repositories/acquisition-type.repository';
+import { SupplyRepository } from './repositories/supply.repository';
+import { Supply } from './entities/supply.entity';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class SupplyService {
   constructor(
     private readonly _handlerError: HandlersError,
-    private readonly _supplyTypeRepository: SupplyTypeRepository,
+    private readonly _acquisitionTypeRepository: AcquisitionTypeRepository,
+    private readonly _supplyRepository: SupplyRepository,
     private readonly _supplyCategoryRepository: SupplyCategoryRepository,
     private readonly _supplyCategoryBySupplyRepository: CategoryBySupplyRepository,
   ) { }
 
-  async getSupplyTypes() {
+  async getAcquisitionTypes() {
     try {
-      const supplyTypes: SupplyType[] = await this._supplyTypeRepository.find();
+      const acquisitionTypes = await this._acquisitionTypeRepository.find();
 
       return {
-        response: supplyTypes,
-        title: '✅: Tipos de insumos',
-        message: 'Todos los tipos de insumos',
+        response: acquisitionTypes,
+        title: '✅: Todos los tipos de adquisición',
+        message: 'Lista de tipos de adquisición',
         status: HttpStatus.OK
-      }
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async getSupplyCategories() {
+  async getSupply() {
     try {
-      const supplyCategory: SupplyCategory[] = await this._supplyCategoryRepository.find();
-
-      return {
-        response: supplyCategory,
-        title: '✅: Insumos',
-        message: 'Todos los insumos',
-        status: HttpStatus.OK
-      }
-    } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
-    }
-  }
-
-  async getCategory() {
-    try {
-      const supplyCategoryQuery: SupplyCategory[] = await this._supplyCategoryRepository.find({
+      const supplyQuery: Supply[] = await this._supplyRepository.find({
         relations: [
-          'supplyType',
-          'supplyCategory'
+          'supplyCategory',
+          'categoryBySupply',
+          'providerSupply',
+          'acquisitionTypeSupply',
         ],
         where: {
           is_active: true
         },
       });
-      console.log("🚀 ~ file: supply.service.ts:64 ~ SupplyService ~ getCategory ~ supplyCategoryQuery:", supplyCategoryQuery)
 
-      const supplyCategory: SupplyCategory[] = supplyCategoryQuery.map(supply => ({
-        ...supply,
-        supplyCategory: supply.supplyCategory.filter(category => category.is_active === true)
-      }));
-
-
-
-      return {
-        response: supplyCategory,
-        title: '✅: Todas las categorias',
-        message: 'Lista de todas las categorias',
-        status: HttpStatus.OK
-      }
-    } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
-    }
-  }
-
-  async getCategoryById(id: number) {
-    try {
-      const supplyCategoryQuery: SupplyCategory[] = await this._supplyCategoryRepository.find({
-        where: {
-          supply_id: id,
-          is_active: true
-        },
-        relations: [
-          'supplyType',
-          'supplyCategory'
-        ]
-      });
-
-
-      if (!supplyCategoryQuery) {
+      if (!supplyQuery.length) {
         return {
-          response: { valid: false },
-          title: `⚠︰ La categoria no existe`,
-          message: `La categoria con id ${id} no existe`,
-          status: HttpStatus.BAD_REQUEST
-        }
-      }
-
-      const supplyCategory: SupplyCategory[] = supplyCategoryQuery.map(supply => ({
-        ...supply,
-        supplyCategory: supply.supplyCategory.filter(category => category.is_active === true)
-      }));
-
-      return {
-        response: supplyCategory[0],
-        title: '✅: Todas las categorias',
-        message: 'Lista de todas las categorias',
-        status: HttpStatus.OK
-      }
-    } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
-    }
-  }
-
-  async createSupplyCategory(user: TokenDto, createSupplyDto: CreateSupplyCategoryDto) {
-    console.log("🚀 ~ file: supply.service.ts:111 ~ SupplyService ~ createSupplyCategory ~ createSupplyDto:", createSupplyDto)
-    try {
-      const { name, type, min_quantity } = createSupplyDto;
-
-      if (!name || !type || !min_quantity) {
-        return {
-          response: { valid: false },
-          title: `⚠︰ Campos incompletos`,
-          message: `Por favor, llene todos los campos`,
-          status: HttpStatus.BAD_REQUEST
-        }
-      }
-
-      const nameExist: SupplyCategory[] = await this._supplyCategoryRepository.find({
-        where: {
-          supply_name: name,
-          is_active: true
-        }
-      });
-
-      if (nameExist.length) {
-        return {
-          response: { valid: false },
-          title: `⚠︰ El nombre ya existe`,
-          status: HttpStatus.BAD_REQUEST
-        }
-      }
-
-      const supplyCategory: SupplyCategory = await this._supplyCategoryRepository.save({
-        supply_name: name,
-        supply_type_id: type,
-        min_quantity: min_quantity,
-        created_by: user.user_id,
-        last_updated_by: user.user_id
-      });
-
-      return {
-        response: supplyCategory,
-        title: `✅: La categoria ha sido creada`,
-        message: `La categoria ${name} ha sido creada satisfctoriamente`,
-        status: HttpStatus.CREATED
-      }
-    } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
-    }
-  }
-
-  async updateSupplyCategory(id: number, user: TokenDto, updateSupplyDto: UpdateSupplyCategoryDto, updateCategoryBySupplyCategoryDto: UpdateCategoryBySupplyCategoryDto) {
-    try {
-      const supplyExist: SupplyCategory = await this._supplyCategoryRepository.findOneBy({
-        supply_id: id,
-        is_active: true
-      });
-
-      if (!supplyExist) {
-        return {
-          response: { valid: false },
-          title: `⚠︰ La categoria no existe`,
-          message: 'La categoria que quieres actualizar no existe',
+          response: [],
+          title: '⚠: Sin datos',
+          message: 'No hay datos',
           status: HttpStatus.NOT_FOUND
         }
       }
 
-      const updateSupplyCategory = await this._supplyCategoryRepository.update({
-        supply_id: id,
-      }, {
-        supply_name: updateSupplyDto?.name,
-        supply_type_id: updateSupplyDto?.type,
-        min_quantity: updateSupplyDto?.min_quantity,
-        is_active: updateSupplyDto?.is_active,
-        last_updated_by: user.user_id
-      });
-
-      const categoryBySupply = updateCategoryBySupplyCategoryDto.category_by_suppply;
-
-      if (updateSupplyDto.is_active === true) {
-        if (categoryBySupply.length) {
-          for (const category of categoryBySupply) {
-            const categoryExists = await this._supplyCategoryBySupplyRepository.findOneBy({
-              supply_id: id,
-              supply_category_name: category?.supply_category_name,
-            });
-
-            if (!categoryExists) {
-              const newCategoryBySupply = new CategoryBySupply();
-              newCategoryBySupply.supply_id = id;
-              newCategoryBySupply.supply_category_name = category?.supply_category_name.toUpperCase();
-              newCategoryBySupply.quantity = category?.quantity;
-              newCategoryBySupply.created_by = user.user_id;
-              newCategoryBySupply.last_updated_by = user.user_id;
-
-              await this._supplyCategoryBySupplyRepository.save(newCategoryBySupply);
-            }
-
-            if (categoryExists) {
-              await this._supplyCategoryBySupplyRepository.update(
-                {
-                  supply_category_id: categoryExists.supply_category_id,
-                },
-                {
-                  supply_category_name: category.supply_category_name,
-                  quantity: category.quantity,
-                  last_updated_by: user.user_id,
-                  is_active: true
-                }
-              );
-            }
-          }
-        }
-
-        const existingCategories = await this._supplyCategoryBySupplyRepository.findBy({
-          supply_id: id,
-          is_active: true
-        });
-
-        for (const existingCategory of existingCategories) {
-          const isCategoryProvided = categoryBySupply.some(category => category.supply_category_name === existingCategory.supply_category_name);
-
-          if (!isCategoryProvided) {
-            existingCategory.is_active = false;
-            existingCategory.last_updated_by = user.user_id;
-            await this._supplyCategoryBySupplyRepository.save(existingCategory);
-          }
-        }
-        return {
-          response: updateSupplyCategory,
-          title: `✅: La categoria ha sido actualizada`,
-          message: `La categoria ${updateSupplyDto?.name}`,
-          status: HttpStatus.OK
-        }
-      }
-
       return {
-        response: updateSupplyCategory,
-        title: `✅: La categoria ha sido actualizada`,
-        message: `La categoria ${id} ha sido desactivada satisfactoriamente`,
+        response: supplyQuery,
+        title: '✅: Todas las categorias',
+        message: 'Lista de todas las categorias',
         status: HttpStatus.OK
       }
-
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async createCategoryBySupply(user: TokenDto, createCategoryBySupplyDto: CreateCategoryBySupplyDto) {
+  async createSupply(user: TokenDto, createSupplyDto: CreateSupplyDto) {
     try {
-      const { supply_id, supply_category_name, quantity } = createCategoryBySupplyDto;
+      const {
+        supply_category_id,
+        category_by_supply_id,
+        provider_id,
+        acquisition_id,
+        agreement,
+        expiration_date,
+        quantity
+      } = createSupplyDto
 
-      if (!supply_category_name || !supply_id || !quantity) {
-        return {
-          response: { valid: false },
-          title: `⚠︰ Campos incompletos`,
-          message: `Por favor, llene todos los campos`,
-          status: HttpStatus.BAD_REQUEST
+      const supplyExist: Supply[] = await this._supplyRepository.find({
+        where: {
+          supply_category_id,
+          category_by_supply_id
         }
-      }
-
-      const supplyCategory = await this._supplyCategoryBySupplyRepository.findOneBy({
-        supply_id: supply_id,
-        is_active: true
       });
 
-      if (!supplyCategory) {
+      if (supplyExist.length) {
         return {
           response: { valid: false },
-          title: `⚠︰ La categoria no existe`,
-          message: `Por favor, ingresa una categoria valida`,
-          status: HttpStatus.BAD_REQUEST
+          title: '⚠️: Datos existentes',
+          message: 'Ya existe una entrada con los mismos datos',
+          status: HttpStatus.CONFLICT
         }
       }
 
-      const categoryBySupplyExist: CategoryBySupply[] = await this._supplyCategoryBySupplyRepository.find({
+      const categoryBySupplyExist: CategoryBySupply = await this._supplyCategoryBySupplyRepository.findOne({
         where: {
-          supply_category_name,
+          supply_category_id: category_by_supply_id,
           is_active: true
         }
       });
 
-      if (categoryBySupplyExist.length) {
+      if (!categoryBySupplyExist) {
         return {
           response: { valid: false },
-          title: `⚠︰ La categoria ya existe`,
-          status: HttpStatus.BAD_REQUEST
+          title: '⚠ｍ: Categoría no existente',
+          message: 'La categoría no existe',
+          status: HttpStatus.NOT_FOUND
         }
       }
 
-      const newCategoryBySupply: CategoryBySupply = await this._supplyCategoryBySupplyRepository.save({
-        supply_category_name,
-        supply_id,
-        quantity,
-        created_by: user.user_id,
-        last_updated_by: user.user_id
+      const supplyCategory: SupplyCategory = await this._supplyCategoryRepository.findOne({
+        where: {
+          supply_id: supply_category_id,
+          is_active: true
+        },
+        relations: ['supplyType']
       });
 
+      const { supply_name, supplyType } = supplyCategory;
+      const supply_name_prefix = supply_name?.substring(0, 2).toUpperCase();
+      const supply_type_prefix = supplyType?.supply_type_name?.substring(0, 2).toUpperCase();
+      const supplyId = `${supply_type_prefix}-${supply_name_prefix}`;
+
+      const lastId = await this._supplyRepository.count({
+        where: {
+          supply_id: Like(`%${supplyId}%`),
+          is_active: true,
+        }
+      });
+
+      const countId = lastId + 1;
+      const newSupplyId = `${supplyId}-${countId}`;
+
+
+      const newSupply = new Supply()
+      newSupply.supply_category_id = supply_category_id;
+      newSupply.category_by_supply_id = category_by_supply_id;
+      newSupply.provider_id = provider_id;
+      newSupply.acquisition_id = acquisition_id;
+      newSupply.agreement = agreement;
+      newSupply.expiration_date = expiration_date;
+      newSupply.quantity = quantity;
+      newSupply.supply_id = newSupplyId;
+      await this._supplyRepository.save(newSupply);
+
       return {
-        response: newCategoryBySupply,
-        title: `✅ La categoria del insumo ha sido creada`,
-        message: `La categoria del insumo ${name} ha sido creada satisfctoriamente`,
+        response: newSupply,
+        title: '✅: Se creo la entrada',
+        message: 'Hemos creado la entrada satisfactoriamente',
         status: HttpStatus.CREATED
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async updateSupply(id: number, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+    try {
+
+
+      return {
+        response: { valid: true },
+        title: '✅: Se actualizo la entrada',
+        message: 'Hemos actualizado la entrada satisfactoriamente',
+        status: HttpStatus.OK
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });

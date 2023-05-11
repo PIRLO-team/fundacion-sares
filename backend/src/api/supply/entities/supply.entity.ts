@@ -9,10 +9,11 @@ import { AcquisitionType } from "./acquisition-type.entity";
 @Entity('supply')
 export class Supply extends BaseEntity {
     @PrimaryColumn({
-        type: 'bigint',
-        name: 'supply_id'
+        type: 'varchar',
+        name: 'supply_id',
+        length: 50,
     })
-    supply_id: number;
+    supply_id: string;
 
     @Column({
         type: 'bigint',
