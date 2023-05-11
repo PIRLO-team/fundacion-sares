@@ -23,6 +23,7 @@
     }
 
     &__img {
+      object-fit: cover;
       opacity: 1;
       border-radius: 6.25rem;
       min-width: 40px;
