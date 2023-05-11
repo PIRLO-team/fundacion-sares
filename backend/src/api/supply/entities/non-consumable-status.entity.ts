@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 import { BaseEntity } from "../../../shared/entity/base-entity";
 
 @Entity('non_consumable_status')
-export class NonConsumable {
+export class NonConsumableStatus {
     @PrimaryColumn({
         type: 'bigint',
         name: 'non_consumable_status_id'
