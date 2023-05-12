@@ -42,13 +42,15 @@ export class Supply extends BaseEntity {
 
     @Column({
         type: 'text',
-        name: 'agreement'
+        name: 'agreement',
+        nullable: true
     })
     agreement: string;
 
     @Column({
         type: 'date',
-        name: 'expiration_date'
+        name: 'expiration_date',
+        nullable: true
     })
     expiration_date: Date;
 

@@ -92,7 +92,6 @@ export class SupplyController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  // TODO: SUPPLY
   @Get('acquisition-types')
   @UseGuards(JwtMiddleware)
   async getAcquisitionTypes() {
@@ -107,6 +106,15 @@ export class SupplyController {
   async getSupply() {
     const { response, title, message, status } =
       await this.supplyService.getSupply();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('expired')
+  @UseGuards(JwtMiddleware)
+  async getExpired() {
+    const { response, title, message, status } =
+      await this.supplyService.getExpired();
 
     throw new HttpException({ response, title, message, }, status);
   }

@@ -10,8 +10,9 @@ import { CategoryBySupplyRepository } from './repositories/category-by-supply.re
 import { AcquisitionTypeRepository } from './repositories/acquisition-type.repository';
 import { SupplyRepository } from './repositories/supply.repository';
 import { Supply } from './entities/supply.entity';
-import { Like } from 'typeorm';
+import { LessThanOrEqual, Like, MoreThanOrEqual } from 'typeorm';
 import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
+import { AcquisitionType } from './entities/acquisition-type.entity';
 
 @Injectable()
 export class SupplyService {
@@ -26,10 +27,46 @@ export class SupplyService {
 
   async getAcquisitionTypes() {
     try {
-      const acquisitionTypes = await this._acquisitionTypeRepository.find();
+      const acquisitionTypes: AcquisitionType[] = await this._acquisitionTypeRepository.find();
 
       return {
         response: acquisitionTypes,
+        title: '✅: Todos los tipos de adquisición',
+        message: 'Lista de tipos de adquisición',
+        status: HttpStatus.OK
+      };
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async getExpired() {
+    try {
+      const supplyQuery: Supply[] = await this._supplyRepository.find({
+        where: {
+          is_active: true,
+          expiration_date: LessThanOrEqual(new Date())
+
+        },
+        relations: [
+          'supplyCategory',
+          'categoryBySupply',
+          'providerSupply',
+          'acquisitionTypeSupply',
+        ]
+      });
+
+      if (!supplyQuery.length) {
+        return {
+          response: { valid: true },
+          title: '⚠: Sin datos',
+          message: 'No hay elementos caducados',
+          status: HttpStatus.OK
+        }
+      }
+
+      return {
+        response: supplyQuery,
         title: '✅: Todos los tipos de adquisición',
         message: 'Lista de tipos de adquisición',
         status: HttpStatus.OK
