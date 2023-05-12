@@ -111,6 +111,17 @@ export class SupplyController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  @Get(':id')
+  @UseGuards(JwtMiddleware)
+  async getSupplyById(
+    @Param('id') id: string
+  ) {
+    const { response, title, message, status } =
+      await this.supplyService.getSupplyById(id);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
   @Post('create-supply')
   @UseGuards(JwtMiddleware)
   async createSupply(
@@ -127,11 +138,24 @@ export class SupplyController {
   @UseGuards(JwtMiddleware)
   async updateSupply(
     @UserToken() user: TokenDto,
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSupplyDto: UpdateSupplyDto,
   ) {
     const { response, title, message, status } =
       await this.supplyService.updateSupply(id, user, updateSupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Patch('update-quantity-supply/:id')
+  @UseGuards(JwtMiddleware)
+  async updatedQuantity(
+    @UserToken() user: TokenDto,
+    @Param('id') id: string,
+    @Body() updateSupplyDto: UpdateSupplyDto,
+  ) {
+    const { response, title, message, status } =
+      await this.supplyService.updatedQuantity(id, user, updateSupplyDto);
 
     throw new HttpException({ response, title, message, }, status);
   }

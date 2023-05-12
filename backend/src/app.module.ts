@@ -30,6 +30,7 @@ import { CategoryBySupply } from './api/supply/entities/category-by-supply.entit
 import { NonConsumable } from './api/supply/entities/non-consumable.entity';
 import { AcquisitionType } from './api/supply/entities/acquisition-type.entity';
 import { NonConsumableStatus } from './api/supply/entities/non-consumable-status.entity';
+import { DiscountSupply } from './api/supply/entities/discount-supply.entity';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { NonConsumableStatus } from './api/supply/entities/non-consumable-status
         CategoryBySupply,
         AcquisitionType,
         NonConsumable,
-        NonConsumableStatus
+        NonConsumableStatus,
+        DiscountSupply
       ]
     }),
     RouterModule.register(MainRoutes),

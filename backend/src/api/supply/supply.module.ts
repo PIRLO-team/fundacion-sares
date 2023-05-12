@@ -12,6 +12,7 @@ import { NonConsumableStatusRepository } from './repositories/non-consumable-sta
 import { CategoryBySupplyRepository } from './repositories/category-by-supply.repository';
 import { AcquisitionTypeRepository } from './repositories/acquisition-type.repository';
 import { SupplyService } from './supply.service';
+import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
 
 @Module({
   controllers: [SupplyController],
@@ -26,8 +27,8 @@ import { SupplyService } from './supply.service';
     NonConsumableRepository,
     NonConsumableStatusRepository,
     CategoryBySupplyRepository,
-    AcquisitionTypeRepository
-
+    AcquisitionTypeRepository,
+    DiscountSupplyRepository
   ]
 })
 export class SupplyModule implements NestModule {

@@ -15,5 +15,7 @@ export class CategoryBySupply {
     public quantity: number;
 }
 
-export class UpdateSupplyDto extends PartialType(CreateSupplyDto) { }
+export class UpdateSupplyDto extends PartialType(CreateSupplyDto) { 
+    public motive: string;
+}
 

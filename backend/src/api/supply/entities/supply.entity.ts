@@ -5,6 +5,7 @@ import { BaseEntity } from "../../../shared/entity/base-entity";
 import { Provider } from "../../provider/entities/provider.entity";
 import { CategoryBySupply } from "./category-by-supply.entity";
 import { AcquisitionType } from "./acquisition-type.entity";
+import { DiscountSupply } from "./discount-supply.entity";
 
 @Entity('supply')
 export class Supply extends BaseEntity {
@@ -81,4 +82,6 @@ export class Supply extends BaseEntity {
     })
     acquisitionTypeSupply: AcquisitionType;
 
+    @OneToMany(type => DiscountSupply, st => st.supplyDiscount)
+    supplyDiscount: DiscountSupply[];  
 }

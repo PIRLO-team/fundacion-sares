@@ -11,6 +11,7 @@ import { AcquisitionTypeRepository } from './repositories/acquisition-type.repos
 import { SupplyRepository } from './repositories/supply.repository';
 import { Supply } from './entities/supply.entity';
 import { Like } from 'typeorm';
+import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
 
 @Injectable()
 export class SupplyService {
@@ -20,6 +21,7 @@ export class SupplyService {
     private readonly _supplyRepository: SupplyRepository,
     private readonly _supplyCategoryRepository: SupplyCategoryRepository,
     private readonly _supplyCategoryBySupplyRepository: CategoryBySupplyRepository,
+    private readonly _discountSupplyRepository: DiscountSupplyRepository,
   ) { }
 
   async getAcquisitionTypes() {
@@ -83,10 +85,20 @@ export class SupplyService {
         quantity
       } = createSupplyDto
 
+      if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
+        return {
+          response: { valid: false },
+          title: '⚠ｍ: Datos no actualizados',
+          message: 'Faltan campos por completar',
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
       const supplyExist: Supply[] = await this._supplyRepository.find({
         where: {
           supply_category_id,
-          category_by_supply_id
+          category_by_supply_id,
+          acquisition_id
         }
       });
 
@@ -96,22 +108,6 @@ export class SupplyService {
           title: '⚠️: Datos existentes',
           message: 'Ya existe una entrada con los mismos datos',
           status: HttpStatus.CONFLICT
-        }
-      }
-
-      const categoryBySupplyExist: CategoryBySupply = await this._supplyCategoryBySupplyRepository.findOne({
-        where: {
-          supply_category_id: category_by_supply_id,
-          is_active: true
-        }
-      });
-
-      if (!categoryBySupplyExist) {
-        return {
-          response: { valid: false },
-          title: '⚠ｍ: Categoría no existente',
-          message: 'La categoría no existe',
-          status: HttpStatus.NOT_FOUND
         }
       }
 
@@ -131,7 +127,6 @@ export class SupplyService {
       const lastId = await this._supplyRepository.count({
         where: {
           supply_id: Like(`%${supplyId}%`),
-          is_active: true,
         }
       });
 
@@ -148,6 +143,8 @@ export class SupplyService {
       newSupply.expiration_date = expiration_date;
       newSupply.quantity = quantity;
       newSupply.supply_id = newSupplyId;
+      newSupply.created_by = user.user_id;
+      newSupply.last_updated_by = user.user_id;
       await this._supplyRepository.save(newSupply);
 
       return {
@@ -161,16 +158,165 @@ export class SupplyService {
     }
   }
 
-  async updateSupply(id: number, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+  async getSupplyById(id: string) {
     try {
+      const supply: Supply = await this._supplyRepository.findOne({
+        where: {
+          supply_id: id,
+          is_active: true
+        },
+        relations: [
+          'supplyCategory',
+          'categoryBySupply',
+          'providerSupply',
+          'acquisitionTypeSupply',
+        ]
+      });
 
+      if (!supply) {
+        return {
+          response: {},
+          title: '⚠ｍ: Entrada no existente',
+          message: 'La entrada no existe',
+          status: HttpStatus.NOT_FOUND
+        }
+      }
 
       return {
-        response: { valid: true },
+        response: supply,
+        title: '✅: Entrada',
+        message: 'Entrada encontrada',
+        status: HttpStatus.OK
+      }
+    }
+    catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async updateSupply(id: string, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+    try {
+      const {
+        supply_category_id,
+        category_by_supply_id,
+        provider_id,
+        acquisition_id,
+        agreement,
+        expiration_date,
+        quantity
+      } = updateSupplyDto;
+
+      if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
+        return {
+          response: { valid: false },
+          title: '⚠ｍ: Datos no actualizados',
+          message: 'Faltan campos por completar',
+          status: HttpStatus.BAD_REQUEST
+        }
+      };
+
+      const supplyExist: Supply = await this._supplyRepository.findOneBy({
+        supply_id: id,
+        is_active: true
+      });
+
+      if (!supplyExist) {
+        return {
+          response: { valid: false },
+          title: '⚠ｍ: Entrada no existente',
+          message: 'La entrada no existe, por favor verifica los datos',
+          status: HttpStatus.NOT_FOUND
+        }
+      };
+
+      const categoryBySupplyExist: CategoryBySupply = await this._supplyCategoryBySupplyRepository.findOneBy({
+        supply_id: supply_category_id
+      });
+
+      if (!categoryBySupplyExist) {
+        return {
+          response: { valid: false },
+          title: '⚠ｍ: Categoría no existente',
+          message: 'La categoría no existe',
+          status: HttpStatus.NOT_FOUND
+        }
+      };
+
+      await this._supplyRepository.update(id, {
+        supply_category_id,
+        category_by_supply_id,
+        provider_id,
+        acquisition_id,
+        agreement,
+        expiration_date,
+        quantity,
+        last_updated_by: user.user_id,
+      });
+
+      const data = await this.getSupplyById(id);
+
+      return {
+        response: data.response,
         title: '✅: Se actualizo la entrada',
         message: 'Hemos actualizado la entrada satisfactoriamente',
         status: HttpStatus.OK
+      };
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async updatedQuantity(id: string, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+    try {
+      const { quantity, motive } = updateSupplyDto;
+
+      if (!quantity || !motive) {
+        return {
+          response: { valid: false },
+          title: '⚠: Por favor diga la cantidad y el motivo',
+          message: 'Establezca la cantidad a descontar del inventario y el motivo',
+          status: HttpStatus.BAD_REQUEST
+        }
       }
+
+      const supplyExist: Supply = await this._supplyRepository.findOneBy({
+        supply_id: id,
+        is_active: true
+      });
+
+      if (!supplyExist) {
+        return {
+          response: { valid: false },
+          title: '⚠ｍ: Entrada no existente',
+          message: 'La entrada no existe, por favor verifica los datos',
+          status: HttpStatus.NOT_FOUND
+        }
+      };
+
+      const newQuantity = supplyExist.quantity - quantity;
+
+      const discountSupply = await this._discountSupplyRepository.save({
+        supply_id: id,
+        quantity,
+        motive
+      });
+
+      await this._supplyRepository.update(id, {
+        quantity: newQuantity,
+        last_updated_by: user.user_id,
+      });
+
+      const data = await this.getSupplyById(id);
+
+      return {
+        response: {
+          discountSupply,
+          data: data.response
+        },
+        title: '✅: Se actualizo la entrada',
+        message: 'Hemos actualizado la entrada satisfactoriamente',
+        status: HttpStatus.OK
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
