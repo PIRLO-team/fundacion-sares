@@ -16,6 +16,6 @@ export class CategoryBySupply {
 }
 
 export class UpdateSupplyDto extends PartialType(CreateSupplyDto) { 
-    public discount_type_id: string;
+    public discount_type_id: number;
 }
 

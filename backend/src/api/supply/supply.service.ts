@@ -15,6 +15,7 @@ import { DiscountSupplyRepository } from './repositories/discount-supply.reposit
 import { AcquisitionType } from './entities/acquisition-type.entity';
 import { DiscountTypeRepository } from './repositories/discount-type.repository';
 import { DiscountType } from './entities/discount-type.entity';
+import { DiscountSupply } from './entities/discount-supply.entity';
 
 @Injectable()
 export class SupplyService {
@@ -350,12 +351,12 @@ export class SupplyService {
       };
 
       const newQuantity = supplyExist.quantity - quantity;
-
-      const discountSupply = await this._discountSupplyRepository.save({
-        supply_id: id,
-        quantity,
-        motive: discount_type_id
-      });
+      let newSupply: DiscountSupply;
+      const newDiscountSupply = new DiscountSupply();
+      newDiscountSupply.quantity = quantity;
+      newDiscountSupply.discount_type_id = discount_type_id;
+      newDiscountSupply.supply_id = id;
+      newSupply =  await this._discountSupplyRepository.save(newDiscountSupply);
 
       await this._supplyRepository.update(id, {
         quantity: newQuantity,
@@ -366,7 +367,7 @@ export class SupplyService {
 
       return {
         response: {
-          discountSupply,
+          newSupply,
           data: data.response
         },
         title: '✅: Se actualizo la entrada',

@@ -243,16 +243,11 @@ export class SupplyCategoryService {
             await this._supplyCategoryBySupplyRepository.save(existingCategory);
           }
         }
-        return {
-          response: updateSupplyCategory,
-          title: `✅: La categoria ha sido actualizada`,
-          message: `La categoria ${updateSupplyDto?.name}`,
-          status: HttpStatus.OK
-        }
       }
+      const data = await this.getCategoryById(id);
 
       return {
-        response: updateSupplyCategory,
+        response: data.response,
         title: `✅: La categoria ha sido actualizada`,
         message: `La categoria ${id} ha sido desactivada satisfactoriamente`,
         status: HttpStatus.OK
