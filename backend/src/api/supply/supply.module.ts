@@ -14,6 +14,7 @@ import { AcquisitionTypeRepository } from './repositories/acquisition-type.repos
 import { SupplyService } from './supply.service';
 import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
 import { DiscountTypeRepository } from './repositories/discount-type.repository';
+import { NonConsumableService } from './non-consumable.service';
 
 @Module({
   controllers: [SupplyController],
@@ -21,6 +22,7 @@ import { DiscountTypeRepository } from './repositories/discount-type.repository'
     HandlersError,
     SupplyCategoryService,
     SupplyService,
+    NonConsumableService,
     Provider,
     SupplyRepository,
     SupplyCategoryRepository,
