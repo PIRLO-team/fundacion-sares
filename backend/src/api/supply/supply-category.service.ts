@@ -323,4 +323,39 @@ export class SupplyCategoryService {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
+
+  async deleteSupplyCategory(id: number, user: TokenDto) {
+    try {
+      const supplyCategoryExist: SupplyCategory = await this._supplyCategoryRepository.findOne({
+        where: {
+          supply_id: id,
+          is_active: true
+        }
+      });
+
+      if (!supplyCategoryExist) {
+        return {
+          response: { valid: false },
+          title: `⚠︰ La categoria no existe`,
+          message: `Por favor, ingresa una categoria valida`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      await this._supplyCategoryRepository.update(id, {
+        is_active: false,
+        last_updated_by: user.user_id
+      });
+
+      return {
+        response: { valid: true },
+        title: `✅ La categoria ha sido desactivada`,
+        message: `La categoria ${supplyCategoryExist.supply_name} fue desactivada correctamente`,
+        status: HttpStatus.OK
+      }
+
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
 }

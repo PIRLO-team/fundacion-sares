@@ -6,6 +6,7 @@ import { Provider } from "../../provider/entities/provider.entity";
 import { CategoryBySupply } from "./category-by-supply.entity";
 import { AcquisitionType } from "./acquisition-type.entity";
 import { Supply } from "./supply.entity";
+import { DiscountType } from "./discount-type.entity";
 
 @Entity('discount_supply')
 export class DiscountSupply {
@@ -22,11 +23,10 @@ export class DiscountSupply {
     quantity: number;
 
     @Column({
-        type: 'varchar',
-        name: 'motive',
-        length: 100,
+        type: 'bigint',
+        name: 'discount_type_id',
     })
-    motive: string;
+    discount_type_id: number;
 
     @Column({
         type: 'varchar',
@@ -39,5 +39,11 @@ export class DiscountSupply {
         name: 'supply_id'
     })
     supplyDiscount: Supply;
+
+    @ManyToOne(() => DiscountType, dt => dt.discount_type_id)
+    @JoinColumn({
+        name: 'discount_type_id'
+    })
+    discountType: DiscountType;
 }
 

@@ -92,11 +92,32 @@ export class SupplyController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  @Delete('delete/supply-category/:id')
+  @UseGuards(JwtMiddleware)
+  async deleteSupplyCategory(
+    @Param('id') id: number,
+    @UserToken() user: TokenDto,
+  ) {
+    const { response, title, message, status } =
+      await this.supplyCategoryService.deleteSupplyCategory(id, user);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
   @Get('acquisition-types')
   @UseGuards(JwtMiddleware)
   async getAcquisitionTypes() {
     const { response, title, message, status } =
       await this.supplyService.getAcquisitionTypes();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('discount-types')
+  @UseGuards(JwtMiddleware)
+  async getDiscountTypes() {
+    const { response, title, message, status } =
+      await this.supplyService.getDiscountTypes();
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -167,4 +188,17 @@ export class SupplyController {
 
     throw new HttpException({ response, title, message, }, status);
   }
+
+  @Delete('delete/supply/:id')
+  @UseGuards(JwtMiddleware)
+  async deleteSupply(
+    @Param('id') id: string,
+    @UserToken() user: TokenDto,
+  ) {
+    const { response, title, message, status } =
+      await this.supplyService.deleteSupply(id, user);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
 }

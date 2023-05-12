@@ -13,6 +13,7 @@ import { CategoryBySupplyRepository } from './repositories/category-by-supply.re
 import { AcquisitionTypeRepository } from './repositories/acquisition-type.repository';
 import { SupplyService } from './supply.service';
 import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
+import { DiscountTypeRepository } from './repositories/discount-type.repository';
 
 @Module({
   controllers: [SupplyController],
@@ -28,7 +29,8 @@ import { DiscountSupplyRepository } from './repositories/discount-supply.reposit
     NonConsumableStatusRepository,
     CategoryBySupplyRepository,
     AcquisitionTypeRepository,
-    DiscountSupplyRepository
+    DiscountSupplyRepository,
+    DiscountTypeRepository
   ]
 })
 export class SupplyModule implements NestModule {

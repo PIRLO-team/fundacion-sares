@@ -13,6 +13,8 @@ import { Supply } from './entities/supply.entity';
 import { LessThanOrEqual, Like, MoreThanOrEqual } from 'typeorm';
 import { DiscountSupplyRepository } from './repositories/discount-supply.repository';
 import { AcquisitionType } from './entities/acquisition-type.entity';
+import { DiscountTypeRepository } from './repositories/discount-type.repository';
+import { DiscountType } from './entities/discount-type.entity';
 
 @Injectable()
 export class SupplyService {
@@ -23,6 +25,7 @@ export class SupplyService {
     private readonly _supplyCategoryRepository: SupplyCategoryRepository,
     private readonly _supplyCategoryBySupplyRepository: CategoryBySupplyRepository,
     private readonly _discountSupplyRepository: DiscountSupplyRepository,
+    private readonly _discountTypeRepository: DiscountTypeRepository,
   ) { }
 
   async getAcquisitionTypes() {
@@ -31,6 +34,22 @@ export class SupplyService {
 
       return {
         response: acquisitionTypes,
+        title: '✅: Todos los tipos de adquisición',
+        message: 'Lista de tipos de adquisición',
+        status: HttpStatus.OK
+      };
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async getDiscountTypes() {
+    try {
+      const discountTypes: DiscountType[] = await this._discountTypeRepository.find();
+      console.log("🚀 ~ file: supply.service.ts:49 ~ SupplyService ~ getDiscountTypes ~ discountTypes:", discountTypes)
+
+      return {
+        response: discountTypes,
         title: '✅: Todos los tipos de adquisición',
         message: 'Lista de tipos de adquisición',
         status: HttpStatus.OK
@@ -125,7 +144,7 @@ export class SupplyService {
       if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
         return {
           response: { valid: false },
-          title: '⚠ｍ: Datos no actualizados',
+          title: '⚠: Datos no actualizados',
           message: 'Faltan campos por completar',
           status: HttpStatus.BAD_REQUEST
         }
@@ -213,7 +232,7 @@ export class SupplyService {
       if (!supply) {
         return {
           response: {},
-          title: '⚠ｍ: Entrada no existente',
+          title: '⚠: Entrada no existente',
           message: 'La entrada no existe',
           status: HttpStatus.NOT_FOUND
         }
@@ -246,7 +265,7 @@ export class SupplyService {
       if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
         return {
           response: { valid: false },
-          title: '⚠ｍ: Datos no actualizados',
+          title: '⚠: Datos no actualizados',
           message: 'Faltan campos por completar',
           status: HttpStatus.BAD_REQUEST
         }
@@ -260,7 +279,7 @@ export class SupplyService {
       if (!supplyExist) {
         return {
           response: { valid: false },
-          title: '⚠ｍ: Entrada no existente',
+          title: '⚠: Entrada no existente',
           message: 'La entrada no existe, por favor verifica los datos',
           status: HttpStatus.NOT_FOUND
         }
@@ -273,7 +292,7 @@ export class SupplyService {
       if (!categoryBySupplyExist) {
         return {
           response: { valid: false },
-          title: '⚠ｍ: Categoría no existente',
+          title: '⚠: Categoría no existente',
           message: 'La categoría no existe',
           status: HttpStatus.NOT_FOUND
         }
@@ -305,9 +324,9 @@ export class SupplyService {
 
   async updatedQuantity(id: string, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
     try {
-      const { quantity, motive } = updateSupplyDto;
+      const { quantity, discount_type_id } = updateSupplyDto;
 
-      if (!quantity || !motive) {
+      if (!quantity || !discount_type_id) {
         return {
           response: { valid: false },
           title: '⚠: Por favor diga la cantidad y el motivo',
@@ -324,7 +343,7 @@ export class SupplyService {
       if (!supplyExist) {
         return {
           response: { valid: false },
-          title: '⚠ｍ: Entrada no existente',
+          title: '⚠: Entrada no existente',
           message: 'La entrada no existe, por favor verifica los datos',
           status: HttpStatus.NOT_FOUND
         }
@@ -335,7 +354,7 @@ export class SupplyService {
       const discountSupply = await this._discountSupplyRepository.save({
         supply_id: id,
         quantity,
-        motive
+        motive: discount_type_id
       });
 
       await this._supplyRepository.update(id, {
@@ -354,6 +373,44 @@ export class SupplyService {
         message: 'Hemos actualizado la entrada satisfactoriamente',
         status: HttpStatus.OK
       };
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async deleteSupply(id: string, user: TokenDto) {
+    try {
+      const supplyExist: Supply = await this._supplyRepository.findOne({
+        where: {
+          supply_id: id,
+          is_active: true
+        },
+        relations: [
+          'supplyCategory'
+        ]
+      });
+
+      if (!supplyExist) {
+        return {
+          response: { valid: false },
+          title: `⚠︰ La entrada no existe`,
+          message: `Por favor, ingresa una entrada valida`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
+      await this._supplyRepository.update(id, {
+        is_active: false,
+        last_updated_by: user.user_id
+      });
+
+      return {
+        response: { valid: true },
+        title: `✅: El insumo ha sido desactivado`,
+        message: `El insumo ${supplyExist.supplyCategory.supply_name} fue desactivado correctamente`,
+        status: HttpStatus.OK
+      }
+
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
