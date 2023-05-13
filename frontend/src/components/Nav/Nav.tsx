@@ -62,7 +62,7 @@ export function Nav() {
       icon: '/icons/SidebarIcons/voluntarios.svg',
       alt: 'Volutarios Directos',
       link: '/voluntarios',
-      role: '1',
+      role: 'Todos',
     },
     {
       name: 'Botiquines',
