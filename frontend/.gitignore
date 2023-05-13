@@ -38,3 +38,7 @@ next-env.d.ts
 
 # Ignore fake data
 /src/data
+
+# Ignore env files
+.env
+.env.local

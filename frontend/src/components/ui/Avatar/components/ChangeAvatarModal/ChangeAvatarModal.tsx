@@ -30,9 +30,9 @@ import { toast } from 'sonner';
 import s from './ChangeAvatarModal.module.scss';
 
 const s3 = new S3({
-  accessKeyId: 'AKIAWOLATSZ7VIMC5APJ',
-  secretAccessKey: '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',
-  region: 'us-west-1',
+  accessKeyId: process.env.accessKeyId,
+  secretAccessKey: process.env.secretAccessKey,
+  region: process.env.region,
 });
 
 export const ChangeAvatarModal = ({
