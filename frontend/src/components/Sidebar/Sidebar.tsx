@@ -38,13 +38,6 @@ export function Sidebar() {
       role: 'Todos',
     },
     {
-      name: 'Insumos',
-      icon: '/icons/SidebarIcons/insumos.svg',
-      alt: 'Insumos',
-      link: '/insumos',
-      role: 'Todos',
-    },
-    {
       name: 'Proveedores',
       icon: '/icons/SidebarIcons/proveedores.png',
       alt: 'Proveedores',
@@ -71,6 +64,13 @@ export function Sidebar() {
       alt: 'Botiquines',
       link: '/botiquines',
       role: '1',
+    },
+    {
+      name: 'Insumos',
+      icon: '/icons/SidebarIcons/insumos.svg',
+      alt: 'Insumos',
+      link: '/insumos',
+      role: 'Todos',
     },
   ];
 

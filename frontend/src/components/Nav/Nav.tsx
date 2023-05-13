@@ -44,13 +44,6 @@ export function Nav() {
       role: 'Todos',
     },
     {
-      name: 'Insumos',
-      icon: '/icons/SidebarIcons/insumos.svg',
-      alt: 'Insumos',
-      link: '/insumos',
-      role: 'Todos',
-    },
-    {
       name: 'Proveedores',
       icon: '/icons/SidebarIcons/proveedores.svg',
       alt: 'Proveedores',
@@ -77,6 +70,13 @@ export function Nav() {
       alt: 'Botiquines',
       link: '/botiquines',
       role: '1',
+    },
+    {
+      name: 'Insumos',
+      icon: '/icons/SidebarIcons/insumos.svg',
+      alt: 'Insumos',
+      link: '/insumos',
+      role: 'Todos',
     },
   ];
 
