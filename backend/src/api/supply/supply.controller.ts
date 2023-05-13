@@ -1,18 +1,20 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException } from '@nestjs/common';
 import { SupplyCategoryService } from './supply-category.service';
-import { CreateSupplyCategoryDto, CreateSupplyDto } from './dto/create-supply.dto';
+import { CreateNonConsumableCategorySupplyDto, CreateNonConsumableSupplyDto, CreateSupplyCategoryDto, CreateSupplyDto } from './dto/create-supply.dto';
 import { CreateCategoryBySupplyDto } from './dto/create-supply.dto';
-import { UpdateCategoryBySupplyCategoryDto, UpdateSupplyCategoryDto, UpdateSupplyDto } from './dto/update-supply.dto';
+import { UpdateCategoryBySupplyCategoryDto, UpdateNonConsumableSupplyDto, UpdateSupplyCategoryDto, UpdateSupplyDto } from './dto/update-supply.dto';
 import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 import { UserToken } from '../../shared/decorators/user-token.decorator';
 import { TokenDto } from '../../shared/interfaces/token.dto';
 import { SupplyService } from './supply.service';
+import { NonConsumableService } from './non-consumable.service';
 
 @Controller()
 export class SupplyController {
   constructor(
     private readonly supplyCategoryService: SupplyCategoryService,
-    private readonly supplyService: SupplyService
+    private readonly supplyService: SupplyService,
+    private readonly nonConsumableService: NonConsumableService
   ) { }
 
   // * SUPPLY CATEGORY
@@ -201,4 +203,46 @@ export class SupplyController {
     throw new HttpException({ response, title, message, }, status);
   }
 
+  // TODO: Non Consumable
+  @Get('non-consumable-categories')
+  @UseGuards(JwtMiddleware)
+  async getNonCosumableCategories() {
+    const { response, title, message, status } = 
+      await this.nonConsumableService.getNonCosumableCategories();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('non-consumable-types')
+  @UseGuards(JwtMiddleware)
+  async getNonConsumableStatus() {
+    const { response, title, message, status } = 
+      await this.nonConsumableService.getNonConsumableStatus();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('create-non-consumable-supply-category')
+  @UseGuards(JwtMiddleware)
+  async createNonConsumableHeaderSupply(
+    @UserToken() user: TokenDto,
+    @Body() createNonConsumableCategorySupplyDto: CreateNonConsumableCategorySupplyDto
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.createNonConsumableHeaderSupply(user, createNonConsumableCategorySupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Post('create-non-consumable-supply')
+  @UseGuards(JwtMiddleware)
+  async updateNonConsumableSupply(
+    @UserToken() user: TokenDto,
+    @Body() createNonConsumableSupplyDto: CreateNonConsumableSupplyDto
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.createNonConsumableSupply(user, createNonConsumableSupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
 }

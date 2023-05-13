@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateSupplyCategoryDto, CreateSupplyDto } from './create-supply.dto';
+import { CreateNonConsumableSupplyDto, CreateSupplyCategoryDto, CreateSupplyDto } from './create-supply.dto';
 import { CreateCategoryBySupplyDto } from './create-supply.dto';
 
 export class UpdateSupplyCategoryDto extends PartialType(CreateSupplyCategoryDto) {
@@ -19,3 +19,4 @@ export class UpdateSupplyDto extends PartialType(CreateSupplyDto) {
     public discount_type_id: number;
 }
 
+export class UpdateNonConsumableSupplyDto extends PartialType(CreateNonConsumableSupplyDto) {}
