@@ -22,7 +22,7 @@ function ManejoUsuarios() {
   }, []);
 
   return (
-    <Layout pageTitle="Manejo de usuarios">
+    <Layout pageTitle="Manejo de usuarios" roles={['1']}>
       <div className={s.manejoUsuarios}>
         <div className={s.manejoUsuarios__header}>
           <h1 className={s.manejoUsuarios__title}>Usuarios</h1>

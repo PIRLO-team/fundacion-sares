@@ -7,17 +7,14 @@ type TSEO = {
 
 export function SEO({ pageTitle }: TSEO) {
   // Page Title
-  const message = `UAO - ${pageTitle}`;
+  const message = `SARES - ${pageTitle}`;
 
   return (
     <Head>
       <title>{message}</title>
 
       <meta name="title" content={message} />
-      <meta
-        name="description"
-        content={`${pageTitle} - Universidad Autónoma de Occidente`}
-      />
+      <meta name="description" content={`${pageTitle} - Fundación SARES`} />
 
       <meta
         name="viewport"

@@ -21,8 +21,9 @@ function Proveedores() {
   useEffect(() => {
     startLoadingProveedores();
   }, []);
+
   return (
-    <Layout pageTitle="Manejo de usuarios">
+    <Layout pageTitle="Proveedores" roles={['1']}>
       <div className={s.proveedores}>
         <div className={s.proveedores__header}>
           <h1 className={s.proveedores__title}>Proveedores</h1>

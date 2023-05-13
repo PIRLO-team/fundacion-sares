@@ -12,7 +12,7 @@ import { Layout } from '@/components';
 
 function Home() {
   return (
-    <Layout pageTitle="Inicio">
+    <Layout pageTitle="Inicio" roles={['1', '2', '3', '4', '5', '6']}>
       <h1>Inicio</h1>
     </Layout>
   );
