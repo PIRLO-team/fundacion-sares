@@ -18,6 +18,7 @@ import { Button, Input } from '@/components/ui';
 
 // Styles
 import s from './styles/Login.module.scss';
+import Link from 'next/link';
 
 function Login() {
   const { status, currentUser, startLogin } = useAuthStore();
@@ -95,12 +96,12 @@ function Login() {
       <div className={s.login__form__footer}>
         <p className={s.login__form__footer__text}>
           Olvidaste la contraseña?{' '}
-          {/* <a
-            href="https://sac.uao.edu.co/"
-            className={s.login__form__footer__link}
-          > */}
-          Restablecer
-          {/* </a> */}
+          <Link
+            href="/login/steps/step1"
+            className={s.login__form__footer__text__link}
+          >
+            Restablecer
+          </Link>
         </p>
 
         <div className={s.login__form__footer__line} />
@@ -110,7 +111,7 @@ function Login() {
               target="__blank"
               rel="noreferrer noopener"
             > */}
-        <p className={s.login__form__footer__text__link}>
+        <p className={s.login__form__footer__text}>
           Política de tratamiento de Datos Personales
         </p>
         {/* </a> */}

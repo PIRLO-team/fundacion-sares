@@ -11,7 +11,14 @@ import { useRouter } from 'next/router';
 import { projectApi } from '@/api';
 
 // Redux Actions
-import { checkingCredentials, onLogin, onLogout, onLogoutUsers } from '@/store';
+import {
+  checkingCredentials,
+  onLogin,
+  onLogout,
+  onLogoutProveedores,
+  onLogoutUsers,
+  onLogoutVoluntarios,
+} from '@/store';
 
 // Soonner Notifications
 import { toast } from 'sonner';
@@ -34,6 +41,8 @@ export const useAuthStore = () => {
     localStorage.clear();
     dispatch(onLogout());
     dispatch(onLogoutUsers());
+    dispatch(onLogoutVoluntarios());
+    dispatch(onLogoutProveedores());
 
     if (router.pathname !== '/login') {
       router.replace('/login');
@@ -60,10 +69,6 @@ export const useAuthStore = () => {
       const roleData = data.response.userRole;
 
       localStorage.setItem('Authorization', data.response.token);
-      localStorage.setItem(
-        'Authorization-init-date',
-        new Date().getTime().toString()
-      );
 
       dispatch(
         onLogin({
@@ -93,8 +98,116 @@ export const useAuthStore = () => {
         return;
       }
 
-      toast.error(errData.title);
+      toast.error(errData.message);
       startLogout();
+    }
+  };
+
+  // Check if token is valid
+  const checkToken = async () => {
+    const token = localStorage.getItem('Authorization');
+
+    if (!token) {
+      startLogout();
+      return;
+    }
+
+    dispatch(checkingCredentials());
+
+    try {
+      const { data } = await projectApi.get('/auth/check');
+
+      const userData = data.response;
+      const roleData = data.response.userRole;
+
+      dispatch(
+        onLogin({
+          uid: userData.user_id,
+          name: userData.first_name + ' ' + userData.last_name,
+          email: userData.email,
+          username: userData.username,
+          role: roleData,
+          profession: userData.profession,
+          phone: userData.phone,
+          img_profile: userData.img_profile,
+          coverPhotoURL: userData.coverPhotoURL,
+        })
+      );
+    } catch (error: any) {
+      console.log(error);
+      startLogout();
+    }
+  };
+
+  const startResetPasswordStep1 = async (email: string) => {
+    setLoading(true);
+    try {
+      const { data } = await projectApi.post('/auth/password-reset-step-one', {
+        email,
+      });
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      router.push(
+        `/login/steps/step2?user=${data.response.user_id}`,
+        '/login/steps/step2'
+      );
+
+      setLoading(false);
+    } catch (error: any) {
+      const errData = error.response.data;
+      setLoading(false);
+      toast.error(errData.message);
+    }
+  };
+
+  const startResetPasswordStep2 = async ({
+    user,
+    code,
+  }: {
+    user: string;
+    code: number;
+  }) => {
+    setLoading(true);
+
+    try {
+      const { data } = await projectApi.post('/auth/password-reset-step-two', {
+        code,
+      });
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      router.push(`/login/reset?user=${user}&code=${code}`, '/login/reset');
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      const errData = error.response.data;
+      toast.error(errData.title);
+    }
+  };
+
+  // Resend code
+  const resendCode = async (user: string) => {
+    setLoading(true);
+
+    try {
+      const { data } = await projectApi.post(
+        `/auth/regenerate-code?user=${user}`
+      );
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      const errData = error.response.data;
+      toast.error(errData.title);
     }
   };
 
@@ -110,8 +223,6 @@ export const useAuthStore = () => {
     password: string;
     confirmPassword: string;
   }) => {
-    dispatch(checkingCredentials());
-
     try {
       const { data } = await projectApi.patch(
         `/auth/reset?user=${user}&code=${code}`,
@@ -126,12 +237,43 @@ export const useAuthStore = () => {
       });
 
       router.replace('/login');
-      startLogout();
     } catch (error: any) {
       const errData = error.response.data;
 
       toast.error(errData.title);
-      startLogout();
+    }
+  };
+
+  // Update password
+  const startUpdatePassword = async ({
+    user_id,
+    password,
+    new_password,
+    comfirm_password,
+  }: {
+    user_id: string;
+    password: string;
+    new_password: string;
+    comfirm_password: string;
+  }) => {
+    try {
+      const { data } = await projectApi.patch(
+        `/api/user/update-password/${user_id}`,
+        {
+          password,
+          new_password,
+          comfirm_password,
+        }
+      );
+
+      toast.message(data.title, {
+        description: data.message,
+      });
+    } catch (error: any) {
+      console.log(error);
+      const errData = error.response.data;
+
+      toast.error(errData.message);
     }
   };
 
@@ -144,7 +286,12 @@ export const useAuthStore = () => {
 
     // Methods
     startLogin,
+    checkToken,
     startLogout,
+    resendCode,
     startResetPassword,
+    startResetPasswordStep1,
+    startResetPasswordStep2,
+    startUpdatePassword,
   };
 };

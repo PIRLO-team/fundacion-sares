@@ -49,6 +49,7 @@ function InfoCard({ data }: { data: TUser }) {
             />
           </div>
         </td>
+        <td className={s.infoCard__item__roleName}>{data!.profession}</td>
         <td className={s.infoCard__item__roleName}>
           {data!.userRole.role_name}
         </td>
@@ -56,7 +57,7 @@ function InfoCard({ data }: { data: TUser }) {
           <Status status={data!.is_active} />
         </td>
         <td>
-          {data!.username !== currentUser?.username && (
+          {data!.username !== currentUser.username && (
             <div
               className={s.infoCard__item__actions}
               onClick={() => {
@@ -76,51 +77,53 @@ function InfoCard({ data }: { data: TUser }) {
 
       {/* Dropdown */}
       {Open && (
-        <div
-          className={s.infoCard__dropdown}
-          ref={ref as React.RefObject<HTMLDivElement>}
-        >
+        <>
           <div
-            className={s.infoCard__dropdown__item}
-            onClick={() => {
-              startInactiveUser(data!);
-              startLoadingUsers();
-              setOpen(!Open);
-            }}
+            className={s.infoCard__dropdown}
+            ref={ref as React.RefObject<HTMLDivElement>}
           >
-            <Image
-              src={
-                activeUser?.is_active
-                  ? '/icons/Actions/not-complete.svg'
-                  : '/icons/Actions/complete.svg'
-              }
-              alt="Editar"
-              width={24}
-              height={24}
-            />
-            <p className={s.infoCard__dropdown__item__text}>
-              {activeUser?.is_active
-                ? 'Marcar como inactivo'
-                : 'Marcar como activo'}
-            </p>
-          </div>
-          <div
-            className={s.infoCard__dropdown__item}
-            onClick={() => {
-              setOpen(!Open);
-              setActiveUser(data);
-            }}
-          >
-            <Image
-              src="/icons/Actions/edit.svg"
-              alt="Eliminar"
-              width={24}
-              height={24}
-            />
+            <div
+              className={s.infoCard__dropdown__item}
+              onClick={() => {
+                startInactiveUser(data!);
+                startLoadingUsers();
+                setOpen(!Open);
+              }}
+            >
+              <Image
+                src={
+                  data?.is_active
+                    ? '/icons/Actions/not-complete.svg'
+                    : '/icons/Actions/complete.svg'
+                }
+                alt="Editar"
+                width={24}
+                height={24}
+              />
+              <p className={s.infoCard__dropdown__item__text}>
+                {data?.is_active
+                  ? 'Marcar como inactivo'
+                  : 'Marcar como activo'}
+              </p>
+            </div>
+            <div
+              className={s.infoCard__dropdown__item}
+              onClick={() => {
+                setOpen(!Open);
+                setActiveUser(data);
+              }}
+            >
+              <Image
+                src="/icons/Actions/edit.svg"
+                alt="Eliminar"
+                width={24}
+                height={24}
+              />
 
-            <p className={s.infoCard__dropdown__item__text}>Editar usuario</p>
+              <p className={s.infoCard__dropdown__item__text}>Editar usuario</p>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

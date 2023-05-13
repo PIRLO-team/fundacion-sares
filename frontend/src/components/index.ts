@@ -3,3 +3,4 @@ export * from './Loader/Loader';
 export * from './SEO/SEO';
 export * from './Sidebar/Sidebar';
 export * from './Table/Table';
+export * from './Nav/Nav';

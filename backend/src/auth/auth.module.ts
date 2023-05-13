@@ -39,9 +39,15 @@ import { RoleRepository } from './repository/role.repository';
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: '/auth/register',
-      method: RequestMethod.POST
-    });
+    consumer.apply(JwtMiddleware).forRoutes(
+      {
+        path: '/auth/register',
+        method: RequestMethod.POST
+      },
+      {
+        path: '/auth/check',
+        method: RequestMethod.GET
+      }
+    );
   }
 }

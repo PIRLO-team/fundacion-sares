@@ -5,7 +5,7 @@ export const Status = ({
   status,
   className,
 }: {
-  status: boolean | undefined;
+  status: boolean;
   className?: string;
 }) => {
   return (

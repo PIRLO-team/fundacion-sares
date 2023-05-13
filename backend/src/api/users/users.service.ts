@@ -31,8 +31,13 @@ export class UsersService {
             'profession',
             'is_active',
             'created_date',
+            'document',
+            'img_profile'
           ],
-          relations: ['userRole']
+          relations: [
+            'userRole',
+            'userFile'
+          ]
         });
 
         return {
@@ -51,11 +56,18 @@ export class UsersService {
             'email',
             'profession',
             'created_date',
+            'document'
           ],
-          relations: ['userRole'],
+          relations: [
+            'userRole',
+            'userFile'
+          ],
           where: {
             is_active: true,
-            user_role: Not(1)
+            user_role: Not(1),
+            userFile: {
+              is_active: true
+            }
           }
         });
 
@@ -73,7 +85,7 @@ export class UsersService {
 
   async findUserById(user_id: number) {
     try {
-      const userById: User[] = await this._userRepository.find({
+      const userById = await this._userRepository.find({
         select: [
           'user_id',
           'first_name',
@@ -83,26 +95,30 @@ export class UsersService {
           'profession',
           'created_date',
           'img_profile',
-          'phone'
+          'phone',
+          'document'
         ],
-        relations: ['userRole'],
+        relations: [
+          'userRole',
+          'userFile'
+        ],
         where: {
           is_active: true,
-          user_id
+          user_id: user_id
         }
       });
 
-      if(!userById?.length){
+      if (!userById?.length) {
         return {
-          response: {valid: false},
+          response: { valid: false },
           title: '❌ Ocurrio un error',
-          message: 'El usuario que buscas no se encuentra ergistrado',
+          message: 'El usuario que buscas no se encuentra registrado',
           status: HttpStatus.NOT_FOUND
         }
       }
 
       return {
-        response: userById,
+        response: userById[0],
         title: '✅ Todos los usuarios',
         message: 'Listado de todos los usuarios registrados en el aplicativo',
         status: HttpStatus.OK
@@ -130,12 +146,13 @@ export class UsersService {
       const query_user_id: number = userExist.user_id;
       if (+id === query_user_id || +r === 1) {
 
-        const { first_name, last_name, email, document, profession, img_profile, user_role } = userExist;
-        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role } = updateUserDto;
+        const { first_name, last_name, email, document, profession, img_profile, user_role, phone } = userExist;
+        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role, phone: Celular } = updateUserDto;
 
         const updateUserData = await this._userRepository.update(user_id, {
           first_name: fName || first_name,
           last_name: lName || last_name,
+          phone: Celular || phone,
           document: doc || document,
           profession: pro || profession,
           img_profile: url || img_profile,

@@ -6,8 +6,51 @@
   object-fit: cover;
   transition: var(--main-transition);
 
-  &__img {
+  &__container {
+    position: relative;
+    border-radius: 50%;
+    background-color: black;
     border-radius: 6.25rem;
+    transition: var(--main-transition);
+
+    &:hover &__content {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    &:hover &__img {
+      opacity: 0.6;
+    }
+
+    &__img {
+      object-fit: cover;
+      opacity: 1;
+      border-radius: 6.25rem;
+      min-width: 40px;
+      transition: var(--main-transition);
+    }
+
+    &__content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+
+      &__text {
+        text-transform: uppercase;
+        font-size: 12px;
+        width: 50%;
+        text-align: center;
+      }
+    }
   }
 
   &__info {
@@ -15,17 +58,24 @@
     flex-direction: column;
     font-size: 0.875rem;
     font-weight: 500;
+    overflow: hidden;
 
     &__name {
       font-size: 1rem;
       font-weight: 500;
       text-transform: capitalize;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__email {
       font-size: 0.875rem;
       text-transform: lowercase;
       color: var(--accents-5);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }

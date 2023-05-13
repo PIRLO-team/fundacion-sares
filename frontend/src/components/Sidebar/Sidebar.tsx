@@ -5,6 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+// Chakra UI
+import {
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  Tooltip,
+} from '@chakra-ui/react';
+
 // Hooks
 import { useAuthStore } from '@/hooks';
 
@@ -17,7 +27,7 @@ import s from './Sidebar.module.scss';
 export function Sidebar() {
   const router = useRouter();
 
-  const { currentUser } = useAuthStore();
+  const { currentUser, startLogout } = useAuthStore();
 
   const sideBarLinks = [
     {
@@ -28,22 +38,8 @@ export function Sidebar() {
       role: 'Todos',
     },
     {
-      name: 'Insumos',
-      icon: '/icons/SidebarIcons/insumos.svg',
-      alt: 'Insumos',
-      link: '/insumos',
-      role: 'Todos',
-    },
-    {
-      name: 'Solicitudes',
-      icon: '/icons/SidebarIcons/solicitudes.svg',
-      alt: 'Solicitudes',
-      link: '/solicitudes',
-      role: 'Todos',
-    },
-    {
       name: 'Proveedores',
-      icon: '/icons/SidebarIcons/proveedores.svg',
+      icon: '/icons/SidebarIcons/proveedores.png',
       alt: 'Proveedores',
       link: '/proveedores',
       role: '1',
@@ -70,25 +66,11 @@ export function Sidebar() {
       role: '1',
     },
     {
-      name: 'Eventos',
-      icon: '/icons/SidebarIcons/eventos.svg',
-      alt: 'Eventos',
-      link: '/eventos',
-      role: '1',
-    },
-    {
-      name: 'Registro de eventos',
-      icon: '/icons/SidebarIcons/registros.svg',
-      alt: 'Registro de eventos',
-      link: '/registroEventos',
-      role: '1',
-    },
-    {
-      name: 'Reporte de gastos',
-      icon: '/icons/SidebarIcons/reportes.svg',
-      alt: 'Reporte de gastos',
-      link: '/reporteGastos',
-      role: '1',
+      name: 'Insumos',
+      icon: '/icons/SidebarIcons/insumos.svg',
+      alt: 'Insumos',
+      link: '/insumos',
+      role: 'Todos',
     },
   ];
 
@@ -110,48 +92,87 @@ export function Sidebar() {
 
           <ul className={s.sidebar__links}>
             {sideBarLinks.map((link, index) => (
-              <Link href={link.link} key={index}>
-                {link.role === 'Todos' && (
-                  <li
-                    className={`${s.sidebar__links__item} ${
-                      router.pathname === link.link && `${s.active}`
-                    }`}
-                  >
-                    <Image
-                      src={link.icon}
-                      alt={link.alt}
-                      width={24}
-                      height={24}
-                    />
-                  </li>
-                )}
+              <Tooltip label={link.name} placement="right" key={index}>
+                <Link href={link.link}>
+                  {link.role === 'Todos' && (
+                    <li
+                      className={`${s.sidebar__links__item} ${
+                        router.pathname === link.link && `${s.active}`
+                      }`}
+                    >
+                      <Image
+                        src={link.icon}
+                        alt={link.alt}
+                        width={24}
+                        height={24}
+                        className={s.sidebar__links__item__icon}
+                      />
+                    </li>
+                  )}
 
-                {currentUser.role.role_id === link.role && (
-                  <li
-                    className={`${s.sidebar__links__item} ${
-                      router.pathname === link.link && `${s.active}`
-                    }`}
-                  >
-                    <Image
-                      src={link.icon}
-                      alt={link.alt}
-                      width={24}
-                      height={24}
-                    />
-                  </li>
-                )}
-              </Link>
+                  {currentUser.role.role_id === link.role && (
+                    <li
+                      className={`${s.sidebar__links__item} ${
+                        router.pathname === link.link && `${s.active}`
+                      }`}
+                    >
+                      <Image
+                        src={link.icon}
+                        alt={link.alt}
+                        width={24}
+                        height={24}
+                        className={s.sidebar__links__item__icon}
+                      />
+                    </li>
+                  )}
+                </Link>
+              </Tooltip>
             ))}
           </ul>
         </div>
 
         <div className={s.sidebar__footer}>
-          <Link href={`/perfil/${currentUser.username}`}>
-            <Avatar
-              src={`https://source.boringavatars.com/marble/50/${currentUser.username}`}
-              size={45}
-            />
-          </Link>
+          <Menu>
+            <MenuButton>
+              <Avatar
+                src={currentUser.img_profile}
+                size={45}
+                classNameImg={s.sidebar__footer__avatar__img}
+              />
+            </MenuButton>
+            <MenuList
+              style={{
+                padding: '0.5rem 0.5rem',
+                borderRadius: '0.5rem',
+                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.25)',
+              }}
+            >
+              <Link href={`/perfil/${currentUser.uid}`}>
+                <MenuItem
+                  isDisabled={router.asPath === `/perfil/${currentUser.uid}`}
+                  style={{
+                    borderRadius: '5px',
+                  }}
+                >
+                  Mi cuenta
+                </MenuItem>
+              </Link>
+
+              <MenuDivider />
+
+              <MenuItem
+                onClick={startLogout}
+                style={{
+                  color: '#E53E3E',
+                  fontWeight: 500,
+                  backgroundColor: '#FEE2E2',
+                  borderRadius: '5px',
+                }}
+              >
+                Cerrar sesión
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
     </>

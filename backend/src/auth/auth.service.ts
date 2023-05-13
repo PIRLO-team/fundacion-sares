@@ -31,17 +31,17 @@ export class AuthService {
   async registerUser(newUserDto: CreateUserDto, tokenDto: TokenDto) {
     try {
       const { user_id } = tokenDto;
-      const existingUser = await this._userRepository.findOneBy({ user_id });
-      if (!existingUser) {
+      const userExist = await this._userRepository.findOneBy({ user_id });
+      if (!userExist) {
         return {
           response: { valid: false },
-          title: '❌ Error!',
-          message: 'Please log in again.',
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor inicia sesión nuevamente',
           status: HttpStatus.NOT_FOUND
         };
       }
 
-      const role = existingUser.user_role.toString();
+      const role = userExist.user_role.toString();
       if (role !== '1') {
         return {
           response: { valid: false },
@@ -85,7 +85,7 @@ export class AuthService {
         username: newUsername,
         profession,
         user_role,
-        img_profile: `https://source.boringavatars.com/bauhaus/120/${newUsername}?square`,
+        img_profile: `https://source.boringavatars.com/marble/120/${newUsername}`,
         password: hashedPassword,
         created_by: tokenDto.user_role,
         last_updated_by: tokenDto.user_role,
@@ -138,7 +138,7 @@ export class AuthService {
         return {
           response: { valid: false },
           title: '❌ Datos no validos!',
-          message: `El usuario ingresado <b>${user_req}</b> no fue encontrado, por favor verifica los datos`,
+          message: `El usuario ingresado ${user_req} no fue encontrado, por favor verifica los datos`,
           status: HttpStatus.BAD_REQUEST
         }
       }
@@ -201,7 +201,7 @@ export class AuthService {
         response: {
           valid: true,
           token: this._jwtService.sign(
-            { user_id, email, username, first_name, last_name, user_role },
+            { user_id, user_role },
             { secret: env.JWT_SECRET }
           ),
           userData: { user_id, email, username, first_name, last_name, phone, img_profile, profession },
@@ -233,6 +233,7 @@ export class AuthService {
       }
 
       const { user_id, first_name, last_name, email } = userExists;
+      email.trim().toLocaleLowerCase();
       const createCode = await this._resetCodeSnippet.randomCode();
       if (createCode) {
         await this._userRepository.update(user_id, { code: createCode });
@@ -268,7 +269,7 @@ export class AuthService {
     }
   }
 
-  async passwordResetStepTwo(user, UpdateAuthDto: UpdateAuthDto) {
+  async passwordResetStepTwo(user: number, UpdateAuthDto: UpdateAuthDto) {
     try {
       const { code } = UpdateAuthDto;
       if (!code) {
@@ -319,6 +320,7 @@ export class AuthService {
         }
       }
       const { user_id, first_name, last_name, email } = userExists;
+      email.trim().toLocaleLowerCase();
       const createCode = await this._resetCodeSnippet.randomCode();
       if (createCode) {
         await this._userRepository.update(user_id, { code: createCode });
@@ -453,6 +455,46 @@ export class AuthService {
         },
         title: '✅ Todos los usuarios',
         message: 'Listado de todos los usuarios registrados en el aplicativo',
+        status: HttpStatus.OK
+      }
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async checkAuth(user: TokenDto) {
+    try {
+      const userExists: User[] = await this._userRepository.find({
+        select: [
+          'user_id',
+          'first_name',
+          'last_name',
+          'email',
+          'username',
+          'img_profile',
+          'profession',
+          'phone',
+          'is_active'
+        ],
+        where: {
+          user_id: user.user_id,
+          is_active: true
+        },
+        relations: ['userRole']
+      });
+
+      if (!userExists.length) {
+        return {
+          response: { valid: false },
+          title: '❌ Ocurrio un error!',
+          message: 'Por favor inicia sesión nuevamente',
+          status: HttpStatus.NOT_FOUND
+        };
+      }
+
+      return {
+        response: userExists[0],
+        message: 'Usario autenticado correctamente',
         status: HttpStatus.OK
       }
     } catch (error) {

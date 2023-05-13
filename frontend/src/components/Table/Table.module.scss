@@ -10,7 +10,8 @@
     top: 0;
     padding: 0;
     margin: 0;
-    background-color: var(--white);
+    background-color: #fff;
+    z-index: 1;
 
     &__item {
       min-width: 80px;

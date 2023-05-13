@@ -1,5 +1,5 @@
 // Local Components
-import { Sidebar, SEO } from '../';
+import { Sidebar, SEO, Nav } from '../';
 
 // Styles
 import s from './Layout.module.scss';
@@ -15,7 +15,11 @@ export function Layout({ children, pageTitle }: TLayout) {
       <SEO pageTitle={pageTitle} />
       <div className={s.flex}>
         <Sidebar />
-        <div className={s.container}>{children}</div>
+        <div className={s.container}>
+          <Nav />
+
+          {children}
+        </div>
       </div>
     </div>
   );

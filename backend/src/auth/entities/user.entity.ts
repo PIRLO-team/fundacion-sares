@@ -1,6 +1,7 @@
 import { BaseEntity } from '../../shared/entity/base-entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.entity';
+import { File } from '../../api/file/entities/file.entity';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -63,6 +64,13 @@ export class User extends BaseEntity {
     document: string;
 
     @Column({
+        type: 'text',
+        name: 'other_contact',
+        nullable: true
+    })
+    other_contact: string;
+
+    @Column({
         type: 'bigint',
         name: 'phone',
         nullable: true
@@ -103,4 +111,7 @@ export class User extends BaseEntity {
         name: 'user_role'
     })
     userRole!: Role;
+
+    @OneToMany(() => File, f => f.userFile)
+    userFile: File[];
 }

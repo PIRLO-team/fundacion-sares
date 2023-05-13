@@ -12,4 +12,9 @@ export type TUser = {
     role_name: string;
     role_description: string;
   };
+  document: string;
+  phone: string;
+  other_contact: string;
+  img_profile: string;
+  coverPhotoURL: string;
 };

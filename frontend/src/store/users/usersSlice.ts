@@ -38,7 +38,7 @@ export const usersSlice = createSlice({
 
     onSetActiveUser: (state, { payload }) => {
       state.loading = false;
-      state.activeUser = payload || null;
+      state.activeUser = payload;
     },
 
     onUnsetActiveUser: (state) => {
@@ -62,7 +62,7 @@ export const usersSlice = createSlice({
         return user;
       });
 
-      state.activeUser = null;
+      // state.activeUser = null;
     },
 
     onDeleteUser: (state) => {
