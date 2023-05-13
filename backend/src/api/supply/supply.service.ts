@@ -47,7 +47,6 @@ export class SupplyService {
   async getDiscountTypes() {
     try {
       const discountTypes: DiscountType[] = await this._discountTypeRepository.find();
-      console.log("🚀 ~ file: supply.service.ts:49 ~ SupplyService ~ getDiscountTypes ~ discountTypes:", discountTypes)
 
       return {
         response: discountTypes,

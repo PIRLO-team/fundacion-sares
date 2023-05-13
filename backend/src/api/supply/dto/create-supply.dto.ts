@@ -19,3 +19,15 @@ export class CreateSupplyDto {
     public expiration_date: Date;
     public quantity: number;
 }
+export class CreateNonConsumableCategorySupplyDto {
+    public non_consumable_category_supply_name: string;
+    public non_consumable_status_id: number;
+}
+
+export class CreateNonConsumableSupplyDto {
+    public non_consumable_category_supply_id: number;
+    public non_consumable_status_id: number;
+    public provider_id: number;
+    public acquisition_id: number;
+    public agreement: string;
+}
