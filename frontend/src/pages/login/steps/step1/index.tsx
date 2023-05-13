@@ -4,13 +4,13 @@ import { useAuthStore, useForm } from '@/hooks';
 // Local Components
 import LoginLayout from '../../components/LoginLayout';
 import CancelAction from '../../components/CancelAction/CancelAction';
+import { Loader } from '@/components';
 
 // UI Components
 import { Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../../styles/Login.module.scss';
-import { Loader } from '@/components';
 
 export default function Step1() {
   const { email, onInputChange } = useForm({

@@ -104,7 +104,7 @@ export default function ProveedoresDrawer() {
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Nombre"
+                title="Nombre de la organizacion"
                 name="name"
                 value={formState.name}
                 onChange={onInputChange}
@@ -126,7 +126,7 @@ export default function ProveedoresDrawer() {
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="Cedula"
+                title="NIT"
                 name="nit"
                 value={formState.nit}
                 onChange={onInputChange}

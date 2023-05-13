@@ -5,14 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-// Hooks
-import { useAuthStore } from '@/hooks';
-
-// UI Components
-import { Avatar } from '../ui';
-
-// Styles
-import s from './Sidebar.module.scss';
+// Chakra UI
 import {
   Menu,
   MenuButton,
@@ -21,6 +14,15 @@ import {
   MenuList,
   Tooltip,
 } from '@chakra-ui/react';
+
+// Hooks
+import { useAuthStore } from '@/hooks';
+
+// UI Components
+import { Avatar } from '../ui';
+
+// Styles
+import s from './Sidebar.module.scss';
 
 export function Sidebar() {
   const router = useRouter();
@@ -40,13 +42,6 @@ export function Sidebar() {
       icon: '/icons/SidebarIcons/insumos.svg',
       alt: 'Insumos',
       link: '/insumos',
-      role: 'Todos',
-    },
-    {
-      name: 'Solicitudes',
-      icon: '/icons/SidebarIcons/solicitudes.svg',
-      alt: 'Solicitudes',
-      link: '/solicitudes',
       role: 'Todos',
     },
     {
@@ -77,27 +72,6 @@ export function Sidebar() {
       link: '/botiquines',
       role: '1',
     },
-    {
-      name: 'Eventos',
-      icon: '/icons/SidebarIcons/eventos.svg',
-      alt: 'Eventos',
-      link: '/eventos',
-      role: '1',
-    },
-    // {
-    //   name: 'Registro de eventos',
-    //   icon: '/icons/SidebarIcons/registros.svg',
-    //   alt: 'Registro de eventos',
-    //   link: '/registroEventos',
-    //   role: '1',
-    // },
-    // {
-    //   name: 'Reporte de gastos',
-    //   icon: '/icons/SidebarIcons/reportes.svg',
-    //   alt: 'Reporte de gastos',
-    //   link: '/reporteGastos',
-    //   role: '1',
-    // },
   ];
 
   return (

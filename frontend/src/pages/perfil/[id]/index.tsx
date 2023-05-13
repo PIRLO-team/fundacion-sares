@@ -13,13 +13,13 @@ import { useDisclosure } from '@chakra-ui/react';
 // Local Components
 import { withAuth } from '@/auth/withAuth';
 import { Layout, Loader } from '@/components';
+import ChangePassword from '../components/ChangePassword/ChangePassword';
 
 // UI Components
 import { Avatar, Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../styles/Perfil.module.scss';
-import ChangePassword from '../components/ChangePassword/ChangePassword';
 
 // Types
 

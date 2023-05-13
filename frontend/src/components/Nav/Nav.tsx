@@ -1,13 +1,17 @@
-import { ReactNode } from 'react';
-
+// Next
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
+// Hooks
+import { useAuthStore } from '@/hooks';
+
+// Chakra UI
 import {
   Box,
   Flex,
   Avatar,
   HStack,
-  // Link,
   IconButton,
   Button,
   Menu,
@@ -23,82 +27,6 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 // Styles
 import s from './Nav.module.scss';
-import Image from 'next/image';
-import { useAuthStore } from '@/hooks';
-import { useRouter } from 'next/router';
-
-const navLinks = [
-  {
-    name: 'Inicio',
-    icon: '/icons/SidebarIcons/home.svg',
-    alt: 'Inicio',
-    link: '/',
-    role: 'Todos',
-  },
-  {
-    name: 'Insumos',
-    icon: '/icons/SidebarIcons/insumos.svg',
-    alt: 'Insumos',
-    link: '/insumos',
-    role: 'Todos',
-  },
-  {
-    name: 'Solicitudes',
-    icon: '/icons/SidebarIcons/solicitudes.svg',
-    alt: 'Solicitudes',
-    link: '/solicitudes',
-    role: 'Todos',
-  },
-  {
-    name: 'Proveedores',
-    icon: '/icons/SidebarIcons/proveedores.svg',
-    alt: 'Proveedores',
-    link: '/proveedores',
-    role: '1',
-  },
-  {
-    name: 'Manejo de usuarios',
-    icon: '/icons/SidebarIcons/usuarios.svg',
-    alt: 'Manejo de usuarios',
-    link: '/manejoUsuarios',
-    role: '1',
-  },
-  {
-    name: 'Volutarios Directos',
-    icon: '/icons/SidebarIcons/voluntarios.svg',
-    alt: 'Volutarios Directos',
-    link: '/voluntarios',
-    role: '1',
-  },
-  {
-    name: 'Botiquines',
-    icon: '/icons/SidebarIcons/botiquines.svg',
-    alt: 'Botiquines',
-    link: '/botiquines',
-    role: '1',
-  },
-  {
-    name: 'Eventos',
-    icon: '/icons/SidebarIcons/eventos.svg',
-    alt: 'Eventos',
-    link: '/eventos',
-    role: '1',
-  },
-  {
-    name: 'Registro de eventos',
-    icon: '/icons/SidebarIcons/registros.svg',
-    alt: 'Registro de eventos',
-    link: '/registroEventos',
-    role: '1',
-  },
-  {
-    name: 'Reporte de gastos',
-    icon: '/icons/SidebarIcons/reportes.svg',
-    alt: 'Reporte de gastos',
-    link: '/reporteGastos',
-    role: '1',
-  },
-];
 
 export function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,6 +34,51 @@ export function Nav() {
   const { currentUser, startLogout } = useAuthStore();
 
   const router = useRouter();
+
+  const navLinks = [
+    {
+      name: 'Inicio',
+      icon: '/icons/SidebarIcons/home.svg',
+      alt: 'Inicio',
+      link: '/',
+      role: 'Todos',
+    },
+    {
+      name: 'Insumos',
+      icon: '/icons/SidebarIcons/insumos.svg',
+      alt: 'Insumos',
+      link: '/insumos',
+      role: 'Todos',
+    },
+    {
+      name: 'Proveedores',
+      icon: '/icons/SidebarIcons/proveedores.svg',
+      alt: 'Proveedores',
+      link: '/proveedores',
+      role: '1',
+    },
+    {
+      name: 'Manejo de usuarios',
+      icon: '/icons/SidebarIcons/usuarios.svg',
+      alt: 'Manejo de usuarios',
+      link: '/manejoUsuarios',
+      role: '1',
+    },
+    {
+      name: 'Volutarios Directos',
+      icon: '/icons/SidebarIcons/voluntarios.svg',
+      alt: 'Volutarios Directos',
+      link: '/voluntarios',
+      role: '1',
+    },
+    {
+      name: 'Botiquines',
+      icon: '/icons/SidebarIcons/botiquines.svg',
+      alt: 'Botiquines',
+      link: '/botiquines',
+      role: '1',
+    },
+  ];
 
   return (
     <>
