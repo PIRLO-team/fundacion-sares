@@ -7,20 +7,15 @@ import { CategoryBySupply } from "./category-by-supply.entity";
 import { AcquisitionType } from "./acquisition-type.entity";
 import { Supply } from "./supply.entity";
 import { DiscountType } from "./discount-type.entity";
+import { NonConsumable } from "./non-consumable.entity";
 
-@Entity('discount_supply')
-export class DiscountSupply {
+@Entity('discount_non_consumable')
+export class DiscountNonConsumable {
     @PrimaryGeneratedColumn({
         type: 'bigint',
         name: 'discount_supply_id',
     })
     discount_supply_id: string;
-
-    @Column({
-        type: 'bigint',
-        name: 'quantity'
-    })
-    quantity: number;
 
     @Column({
         type: 'bigint',
@@ -30,20 +25,20 @@ export class DiscountSupply {
 
     @Column({
         type: 'varchar',
-        name: 'supply_id',
+        name: 'non_consumable_id',
     })
-    supply_id: string;
+    non_consumable_id: string;
 
-    @ManyToOne(() => Supply, s => s.supply_id)
+    @ManyToOne(() => NonConsumable, nc => nc.non_consumable_id)
     @JoinColumn({
-        name: 'supply_id'
+        name: 'non_consumable_id'
     })
-    supplyDiscount: Supply;
+    nonConsumableDiscount: NonConsumable[];
 
     @ManyToOne(() => DiscountType, dt => dt.discount_type_id)
     @JoinColumn({
         name: 'discount_type_id'
     })
-    discountSupplyType: DiscountType[];
-}
+    discountNonConsumableType: DiscountType[];
+};
 

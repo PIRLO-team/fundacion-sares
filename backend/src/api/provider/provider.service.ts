@@ -49,16 +49,23 @@ export class ProviderService {
   }
 
   async create(providerData: CreateProviderDto) {
-    const provider = new Provider();
-
-    provider.name = providerData.name;
-    provider.email = providerData.email;
-    provider.nit = providerData.nit;
-    provider.phone = providerData.phone;
-    provider.other_contact = providerData.other_contact;
-
     try {
-      const savedProvider = await this._providerRepository.save(provider);
+      const {
+        name,
+        email,
+        nit,
+        phone,
+        other_contact,
+      } = providerData
+
+      const savedProvider = await this._providerRepository.save({
+        name,
+        email,
+        nit,
+        phone,
+        other_contact,
+      });
+
       return {
         response: savedProvider,
         title: `✅ Proveedor creado`,
@@ -107,7 +114,7 @@ export class ProviderService {
 
       if (!provider) {
         return {
-          response: {valid: false},
+          response: { valid: false },
           title: `❌ No se encontro el proveedor con id: ${id}`,
           message: `No se ha encontrado el proveedor, por favor intenta más tarde`,
           status: HttpStatus.NOT_FOUND

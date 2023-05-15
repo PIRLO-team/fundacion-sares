@@ -33,6 +33,7 @@ import { NonConsumableStatus } from './api/supply/entities/non-consumable-status
 import { DiscountSupply } from './api/supply/entities/discount-supply.entity';
 import { DiscountType } from './api/supply/entities/discount-type.entity';
 import { NonConsumableCategory } from './api/supply/entities/non-consumable-category.entity';
+import { DiscountNonConsumable } from './api/supply/entities/discount-non-consumable.entity';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { NonConsumableCategory } from './api/supply/entities/non-consumable-cate
         NonConsumable,
         NonConsumableStatus,
         NonConsumableCategory,
+        DiscountNonConsumable,
         DiscountSupply,
         DiscountType,
       ]

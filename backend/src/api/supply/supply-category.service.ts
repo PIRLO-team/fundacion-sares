@@ -272,7 +272,7 @@ export class SupplyCategoryService {
       }
 
       const supplyCategory = await this._supplyCategoryBySupplyRepository.findOneBy({
-        supply_id: supply_id,
+        supply_id,
         is_active: true
       });
 

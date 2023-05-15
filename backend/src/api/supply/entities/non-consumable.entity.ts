@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { BaseEntity } from "../../../shared/entity/base-entity";
 import { Provider } from "../../provider/entities/provider.entity";
 import { AcquisitionType } from "./acquisition-type.entity";
 import { NonConsumableStatus } from "./non-consumable-status.entity";
 import { NonConsumableCategory } from "./non-consumable-category.entity";
+import { DiscountNonConsumable } from "./discount-non-consumable.entity";
 
 @Entity('non_consumable')
 export class NonConsumable extends BaseEntity {
@@ -72,4 +73,7 @@ export class NonConsumable extends BaseEntity {
         name: 'acquisition_id'
     })
     acquisitionTypeNonConsumable: AcquisitionType[];
+
+    @OneToMany(() => DiscountNonConsumable, ds => ds.nonConsumableDiscount)
+    nonConsumableDiscount: DiscountNonConsumable[];
 }

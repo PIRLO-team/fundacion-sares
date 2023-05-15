@@ -19,4 +19,7 @@ export class UpdateSupplyDto extends PartialType(CreateSupplyDto) {
     public discount_type_id: number;
 }
 
-export class UpdateNonConsumableSupplyDto extends PartialType(CreateNonConsumableSupplyDto) {}
+export class UpdateNonConsumableSupplyDto extends PartialType(CreateNonConsumableSupplyDto) {
+    public discount_type_id: number;
+
+}
