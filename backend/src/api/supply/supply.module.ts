@@ -16,6 +16,7 @@ import { DiscountSupplyRepository } from './repositories/discount-supply.reposit
 import { DiscountTypeRepository } from './repositories/discount-type.repository';
 import { NonConsumableService } from './non-consumable.service';
 import { NonConsumableCategoryRepository } from './repositories/non-consumable-category.repository';
+import { DiscountNonConsumableRepository } from './repositories/discount-non-consumable.repository';
 
 @Module({
   controllers: [SupplyController],
@@ -31,6 +32,7 @@ import { NonConsumableCategoryRepository } from './repositories/non-consumable-c
     NonConsumableRepository,
     NonConsumableCategoryRepository,
     NonConsumableStatusRepository,
+    DiscountNonConsumableRepository,
     CategoryBySupplyRepository,
     AcquisitionTypeRepository,
     DiscountSupplyRepository,

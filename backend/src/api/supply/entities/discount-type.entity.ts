@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Supply } from "./supply.entity";
 import { DiscountSupply } from "./discount-supply.entity";
+import { DiscountNonConsumable } from "./discount-non-consumable.entity";
 
 @Entity('discount_type')
 export class DiscountType {
@@ -16,6 +17,9 @@ export class DiscountType {
     })
     discount_type_name: string;
 
-    @OneToMany(() => DiscountSupply, ds => ds.discountType)
-    discountSupply: DiscountSupply[];
+    @OneToMany(() => DiscountSupply, ds => ds.discountSupplyType)
+    discountSupplyType: DiscountSupply[];
+
+    @OneToMany(() => DiscountNonConsumable, ds => ds.discountNonConsumableType)
+    discountNonConsumableType: DiscountNonConsumable[];
 }

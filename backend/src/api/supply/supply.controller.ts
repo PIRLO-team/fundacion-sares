@@ -17,7 +17,6 @@ export class SupplyController {
     private readonly nonConsumableService: NonConsumableService
   ) { }
 
-  // * SUPPLY CATEGORY
   @Get('types')
   @UseGuards(JwtMiddleware)
   async getSupplyTypes() {
@@ -203,21 +202,40 @@ export class SupplyController {
     throw new HttpException({ response, title, message, }, status);
   }
 
-  // TODO: Non Consumable
-  @Get('non-consumable-categories')
+  @Get('non-consumable/categories')
   @UseGuards(JwtMiddleware)
   async getNonCosumableCategories() {
-    const { response, title, message, status } = 
+    const { response, title, message, status } =
       await this.nonConsumableService.getNonCosumableCategories();
 
     throw new HttpException({ response, title, message, }, status);
   }
 
-  @Get('non-consumable-types')
+  @Get('non-consumable/types')
   @UseGuards(JwtMiddleware)
   async getNonConsumableStatus() {
-    const { response, title, message, status } = 
+    const { response, title, message, status } =
       await this.nonConsumableService.getNonConsumableStatus();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('non-consumable/all')
+  @UseGuards(JwtMiddleware)
+  async getNonConsumableSupplies() {
+    const { response, title, message, status } =
+      await this.nonConsumableService.getNonConsumableSupplies();
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Get('non-consumable/:nonSupplyId')
+  @UseGuards(JwtMiddleware)
+  async getNonConsumableSupplyById(
+    @Param('nonSupplyId') nonSupplyId: string
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.getNonConsumableSupplyById(nonSupplyId);
 
     throw new HttpException({ response, title, message, }, status);
   }
@@ -236,12 +254,50 @@ export class SupplyController {
 
   @Post('create-non-consumable-supply')
   @UseGuards(JwtMiddleware)
-  async updateNonConsumableSupply(
+  async createNonConsumableSupply(
     @UserToken() user: TokenDto,
     @Body() createNonConsumableSupplyDto: CreateNonConsumableSupplyDto
   ) {
     const { response, title, message, status } =
       await this.nonConsumableService.createNonConsumableSupply(user, createNonConsumableSupplyDto);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Patch('update-non-consumable-supply/:nonConsumableId')
+  @UseGuards(JwtMiddleware)
+  async updateNonConsumableSupply(
+    @UserToken() user: TokenDto,
+    @Body() updateNonConsumableSupplyDto: UpdateNonConsumableSupplyDto,
+    @Param('nonConsumableId') nonConsumableId: string
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.updateNonConsumableSupply(user, updateNonConsumableSupplyDto, nonConsumableId);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Patch('discount-non-consumable-supply/:nonConsumableId')
+  @UseGuards(JwtMiddleware)
+  async discountNonConsumableSupply(
+    @UserToken() user: TokenDto,
+    @Body() updateNonConsumableSupplyDto: UpdateNonConsumableSupplyDto,
+    @Param('nonConsumableId') nonConsumableId: string
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.discountNonConsumableSupply(user, updateNonConsumableSupplyDto, nonConsumableId);
+
+    throw new HttpException({ response, title, message, }, status);
+  }
+
+  @Delete('delete-non-consumable-supply/:nonConsumableId')
+  @UseGuards(JwtMiddleware)
+  async deleteNonConsumableSupply(
+    @UserToken() user: TokenDto,
+    @Param('nonConsumableId') nonConsumableId: string
+  ) {
+    const { response, title, message, status } =
+      await this.nonConsumableService.deleteNonConsumableSupply(user, nonConsumableId);
 
     throw new HttpException({ response, title, message, }, status);
   }

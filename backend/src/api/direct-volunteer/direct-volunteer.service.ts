@@ -79,7 +79,6 @@ export class DirectVolunteerService {
   }
 
   async update(user: TokenDto, id: number, updateDirectVolunteerDto: UpdateDirectVolunteerDto) {
-    console.log("🚀 ~ file: direct-volunteer.service.ts:82 ~ DirectVolunteerService ~ update ~ updateDirectVolunteerDto:", updateDirectVolunteerDto)
     const directVolunteer = await this._directVolunteerRepository.findOne({ where: { direct_volunteer_id: id } });
 
     if (!directVolunteer) {
