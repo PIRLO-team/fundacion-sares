@@ -100,7 +100,7 @@ function Perfil() {
   }, [activeUser]);
 
   return (
-    <Layout pageTitle="Perfil">
+    <Layout pageTitle="Perfil" roles={['1', '2', '3', '4', '5', '6']}>
       {loading ? (
         <Loader />
       ) : (

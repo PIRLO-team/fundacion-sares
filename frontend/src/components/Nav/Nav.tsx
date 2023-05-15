@@ -45,40 +45,50 @@ export function Nav() {
     },
     {
       name: 'Proveedores',
-      icon: '/icons/SidebarIcons/proveedores.svg',
+      icon: '/icons/SidebarIcons/proveedores.png',
       alt: 'Proveedores',
       link: '/proveedores',
-      role: '1',
+      role: ['1'],
     },
     {
       name: 'Manejo de usuarios',
       icon: '/icons/SidebarIcons/usuarios.svg',
       alt: 'Manejo de usuarios',
       link: '/manejoUsuarios',
-      role: '1',
+      role: ['1'],
     },
     {
       name: 'Volutarios Directos',
       icon: '/icons/SidebarIcons/voluntarios.svg',
       alt: 'Volutarios Directos',
       link: '/voluntarios',
-      role: 'Todos',
+      role: ['1', '3', '6'],
     },
     {
       name: 'Botiquines',
       icon: '/icons/SidebarIcons/botiquines.svg',
       alt: 'Botiquines',
       link: '/botiquines',
-      role: '1',
+      role: ['1', '2', '3', '4', '6'],
     },
     {
       name: 'Insumos',
       icon: '/icons/SidebarIcons/insumos.svg',
       alt: 'Insumos',
       link: '/insumos',
-      role: 'Todos',
+      role: ['1', '2', '4', '5'],
     },
   ];
+
+  const navLinksFiltered = navLinks.filter((link) => {
+    if (link.role === 'Todos') {
+      return link;
+    }
+
+    if (link.role.includes(currentUser.role.role_id as string)) {
+      return link;
+    }
+  });
 
   return (
     <>
@@ -139,27 +149,15 @@ export function Nav() {
         {isOpen ? (
           <Box pb={4}>
             <Stack as={'nav'}>
-              {navLinks.map((link) => (
+              {navLinksFiltered.map((link) => (
                 <Link key={link.link} href={link.link}>
-                  {link.role === 'Todos' && (
-                    <p
-                      className={`${s.nav__item} ${
-                        router.pathname === link.link && `${s.active}`
-                      }`}
-                    >
-                      {link.name}
-                    </p>
-                  )}
-
-                  {currentUser.role.role_id === link.role && (
-                    <p
-                      className={`${s.nav__item} ${
-                        router.pathname === link.link && `${s.active}`
-                      }`}
-                    >
-                      {link.name}
-                    </p>
-                  )}
+                  <p
+                    className={`${s.nav__item} ${
+                      router.pathname === link.link && `${s.active}`
+                    }`}
+                  >
+                    {link.name}
+                  </p>
                 </Link>
               ))}
             </Stack>

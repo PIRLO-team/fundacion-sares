@@ -2,9 +2,10 @@
 import { useEffect } from 'react';
 
 // Next
+import { useRouter } from 'next/router';
 
 // Hooks
-import { useVoluntariosStore } from '@/hooks';
+import { useAuthStore, useVoluntariosStore } from '@/hooks';
 
 // Local Components
 import { withAuth } from '@/auth/withAuth';
@@ -16,13 +17,17 @@ import VoluntariosTable from './components/VoluntariosTable';
 import s from './styles/Voluntarios.module.scss';
 
 function Voluntarios() {
+  const { currentUser } = useAuthStore();
   const { loading, startLoadingVoluntarios } = useVoluntariosStore();
+
+  const router = useRouter();
 
   useEffect(() => {
     startLoadingVoluntarios();
   }, []);
+
   return (
-    <Layout pageTitle="Manejo de usuarios">
+    <Layout pageTitle="Voluntarios directos" roles={['1', '3', '6']}>
       <div className={s.voluntarios}>
         <div className={s.voluntarios__header}>
           <h1 className={s.voluntarios__title}>Voluntarios Directos</h1>
