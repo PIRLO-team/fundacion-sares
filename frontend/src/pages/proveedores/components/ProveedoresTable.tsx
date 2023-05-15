@@ -1,3 +1,6 @@
+// React
+import { useState } from 'react';
+
 // Next
 
 // Chakra UI Components
@@ -15,16 +18,29 @@ import {
   MenuItem,
   IconButton,
   Divider,
+  Tfoot,
 } from '@chakra-ui/react';
 
 // Chakra Icons
-import { HamburgerIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import {
+  HamburgerIcon,
+  EditIcon,
+  DeleteIcon,
+  ArrowBackIcon,
+  ArrowForwardIcon,
+} from '@chakra-ui/icons';
 
 // Hooks
 import { useUiStore, useProveedoresStore } from '@/hooks';
 
+// UI Components
+import { Select } from '@/components/ui';
+
 // Styles
 import s from '../styles/Proveedores.module.scss';
+
+// Types
+import { TProveedor } from '@/utils/types';
 
 export default function ProveedoresTable() {
   const { proveedores, setActiveProveedor, startDeleteProveedor } =
@@ -32,14 +48,33 @@ export default function ProveedoresTable() {
 
   const { openCloseDrawer } = useUiStore();
 
+  // Pagination
+  const [page, setPage] = useState(0);
+
+  // number to show
+  const [numberToShow, setNumberToShow] = useState(10);
+
+  // Filter activities
+  const filteredData = (proveedor: TProveedor[]) => {
+    return proveedor.slice(page, page + numberToShow);
+  };
+
+  // Pagination functions
+  const nextPage = () => {
+    if (page + numberToShow >= proveedores.length) {
+      return;
+    }
+    setPage(page + numberToShow);
+  };
+
+  const prevPage = () => {
+    if (page > 0) {
+      setPage(page - numberToShow);
+    }
+  };
+
   // Table headers
-  const tableHeaders = [
-    'NOMBRE',
-    'NIT',
-    'CONTACTO',
-    'OTRO CONTACTO',
-    'ACCIONES',
-  ];
+  const tableHeaders = ['NOMBRE', 'NIT', 'CONTACTO', 'OTRO CONTACTO'];
   return (
     <TableContainer>
       <Table variant="simple" fontFamily={'Inter, sans-serif'}>
@@ -48,10 +83,18 @@ export default function ProveedoresTable() {
             {tableHeaders.map((header) => (
               <Th key={header}>{header}</Th>
             ))}
+
+            <Th
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              ACCIONES
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
-          {proveedores.map((proveedor, index) => (
+          {filteredData(proveedores).map((proveedor, index) => (
             <Tr key={index}>
               <Td
                 style={{
@@ -69,7 +112,11 @@ export default function ProveedoresTable() {
 
               <Td>{proveedor?.other_contact}</Td>
 
-              <Td>
+              <Td
+                style={{
+                  textAlign: 'center',
+                }}
+              >
                 <Menu>
                   <MenuButton
                     as={IconButton}
@@ -105,6 +152,60 @@ export default function ProveedoresTable() {
             </Tr>
           ))}
         </Tbody>
+
+        <Tfoot>
+          <Tr>
+            <Td
+              colSpan={1}
+              style={{
+                paddingLeft: '10px',
+              }}
+            >
+              <Select
+                placeholder="Mostrar"
+                SelectType="secondary"
+                value={numberToShow}
+                onChange={(e) => {
+                  setNumberToShow(Number(e.target.value));
+                }}
+                // className={s.pagination__select}
+                style={{
+                  maxWidth: '80px',
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+              </Select>
+            </Td>
+
+            <Td colSpan={3}></Td>
+
+            <Td
+              colSpan={1}
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              <IconButton
+                aria-label="Previous page"
+                icon={<ArrowBackIcon />}
+                variant="outline"
+                onClick={prevPage}
+              />
+
+              <IconButton
+                aria-label="Next page"
+                icon={<ArrowForwardIcon />}
+                variant="outline"
+                onClick={nextPage}
+                style={{
+                  marginLeft: '8px',
+                }}
+              />
+            </Td>
+          </Tr>
+        </Tfoot>
       </Table>
     </TableContainer>
   );

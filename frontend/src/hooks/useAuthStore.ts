@@ -15,9 +15,10 @@ import {
   checkingCredentials,
   onLogin,
   onLogout,
-  onLogoutProveedores,
   onLogoutUsers,
   onLogoutVoluntarios,
+  onLogoutProveedores,
+  onLogoutInsumos,
 } from '@/store';
 
 // Soonner Notifications
@@ -43,6 +44,7 @@ export const useAuthStore = () => {
     dispatch(onLogoutUsers());
     dispatch(onLogoutVoluntarios());
     dispatch(onLogoutProveedores());
+    dispatch(onLogoutInsumos());
 
     if (router.pathname !== '/login') {
       router.replace('/login');

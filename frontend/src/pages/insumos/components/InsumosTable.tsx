@@ -24,9 +24,6 @@ import {
 // Chakra Icons
 import {
   HamburgerIcon,
-  CheckCircleIcon,
-  WarningIcon,
-  ChatIcon,
   EditIcon,
   DeleteIcon,
   ArrowBackIcon,
@@ -34,24 +31,19 @@ import {
 } from '@chakra-ui/icons';
 
 // Hooks
-import { useUiStore, useVoluntariosStore } from '@/hooks';
+import { useUiStore, useInsumosStore } from '@/hooks';
 
-// Local Components
-import { Select, Status } from '@/components/ui';
+// UI Components
+import { Select } from '@/components/ui';
 
 // Styles
-import s from '../styles/Voluntarios.module.scss';
+import s from '../styles/Insumos.module.scss';
 
 // Types
-import { TVoluntario } from '@/utils/types';
+import { TInsumo } from '@/utils/types';
 
-export default function VoluntariosTable() {
-  const {
-    voluntarios,
-    startInactiveVoluntario,
-    setActiveVoluntario,
-    startDeleteVoluntario,
-  } = useVoluntariosStore();
+export default function InsumosTable() {
+  const { insumos, setActiveInsumo, startDeleteInsumo } = useInsumosStore();
 
   const { openCloseDrawer } = useUiStore();
 
@@ -62,13 +54,13 @@ export default function VoluntariosTable() {
   const [numberToShow, setNumberToShow] = useState(10);
 
   // Filter activities
-  const filteredData = (voluntarios: TVoluntario[]) => {
-    return voluntarios.slice(page, page + numberToShow);
+  const filteredData = (insumos: TInsumo[]) => {
+    return insumos.slice(page, page + numberToShow);
   };
 
   // Pagination functions
   const nextPage = () => {
-    if (page + numberToShow >= voluntarios.length) {
+    if (page + numberToShow >= insumos.length) {
       return;
     }
     setPage(page + numberToShow);
@@ -82,12 +74,13 @@ export default function VoluntariosTable() {
 
   // Table headers
   const tableHeaders = [
-    'NOMBRE',
-    'CEDULA',
-    'PROFESION',
-    'CONTACTO',
-    'OTRO CONTACTO',
-    'ESTADO',
+    'ID',
+    'PRODUCTO',
+    'CATEGORIA',
+    'CANTIDAD',
+    'PROVEEDOR',
+    'TIPO DE ADQUISICION',
+    'FECHA DE CADUCIDAD',
   ];
   return (
     <TableContainer>
@@ -108,31 +101,33 @@ export default function VoluntariosTable() {
           </Tr>
         </Thead>
         <Tbody>
-          {filteredData(voluntarios).map((voluntario, index) => (
+          {filteredData(insumos).map((insumo, index) => (
             <Tr key={index}>
               <Td
                 style={{
                   paddingLeft: '5px',
                 }}
               >
-                {voluntario?.first_name} {voluntario?.last_name}
-                <br />
-                <span className={s.voluntarios__email}>
-                  {voluntario?.email}
-                </span>
+                {insumo?.supply_id}
               </Td>
 
-              <Td>{voluntario?.document}</Td>
-
-              <Td>{voluntario?.profession}</Td>
-
-              <Td>{voluntario?.phone}</Td>
-
-              <Td>{voluntario?.other_contact}</Td>
-
-              <Td>
-                <Status status={voluntario!.is_active} />
+              <Td
+                style={{
+                  paddingLeft: '5px',
+                }}
+              >
+                {insumo?.supplyCategory.supply_name}
               </Td>
+
+              <Td>{insumo?.categoryBySupply.supply_category_name}</Td>
+
+              <Td>{insumo?.quantity}</Td>
+
+              <Td>{insumo?.providerSupply.name}</Td>
+
+              <Td>{insumo?.acquisitionTypeSupply.acquisition_name}</Td>
+
+              <Td>{insumo?.expiration_date}</Td>
 
               <Td
                 style={{
@@ -148,35 +143,14 @@ export default function VoluntariosTable() {
                   />
                   <MenuList>
                     <MenuItem
-                      icon={
-                        voluntario?.is_active ? (
-                          <CheckCircleIcon />
-                        ) : (
-                          <WarningIcon />
-                        )
-                      }
-                      onClick={async () => {
-                        await startInactiveVoluntario(voluntario);
-                      }}
-                    >
-                      {voluntario?.is_active
-                        ? 'Marcar como Inactivo'
-                        : 'Marcar como Activo'}
-                    </MenuItem>
-
-                    <MenuItem
                       icon={<EditIcon />}
                       onClick={() => {
-                        setActiveVoluntario(voluntario);
+                        setActiveInsumo(insumo);
                         openCloseDrawer();
                       }}
                     >
-                      Editar voluntario
+                      Editar insumo
                     </MenuItem>
-
-                    {/* <Link href={`/perfil/${voluntario?.voluntario_id}`}> */}
-                    <MenuItem icon={<ChatIcon />}>Hacer observaciones</MenuItem>
-                    {/* </Link> */}
 
                     <Divider />
 
@@ -184,10 +158,10 @@ export default function VoluntariosTable() {
                       icon={<DeleteIcon color="red" />}
                       color="red"
                       onClick={() => {
-                        startDeleteVoluntario(voluntario?.direct_volunteer_id);
+                        startDeleteInsumo(insumo?.supply_id);
                       }}
                     >
-                      Eliminar voluntario
+                      Eliminar insumo
                     </MenuItem>
                   </MenuList>
                 </Menu>
@@ -222,7 +196,7 @@ export default function VoluntariosTable() {
               </Select>
             </Td>
 
-            <Td colSpan={5}></Td>
+            <Td colSpan={6}></Td>
 
             <Td
               colSpan={1}

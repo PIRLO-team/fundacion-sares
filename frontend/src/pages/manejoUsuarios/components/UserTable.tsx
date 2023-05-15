@@ -1,3 +1,6 @@
+// React
+import { useState } from 'react';
+
 // Next
 import Link from 'next/link';
 
@@ -15,6 +18,7 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Tfoot,
 } from '@chakra-ui/react';
 
 // Chakra Icons
@@ -24,16 +28,21 @@ import {
   WarningIcon,
   ExternalLinkIcon,
   EditIcon,
+  ArrowForwardIcon,
+  ArrowBackIcon,
 } from '@chakra-ui/icons';
 
 // Hooks
 import { useAuthStore, useUiStore, useUsersStore } from '@/hooks';
 
 // Local Components
-import { Avatar, Status } from '@/components/ui';
+import { Avatar, Select, Status } from '@/components/ui';
 
 // Styles
 import s from '../styles/manejoUsuarios.module.scss';
+
+// Types
+import { TUser } from '@/utils/types';
 
 export default function UserTable() {
   const { currentUser } = useAuthStore();
@@ -43,14 +52,33 @@ export default function UserTable() {
 
   const { openCloseDrawer } = useUiStore();
 
+  // Pagination
+  const [page, setPage] = useState(0);
+
+  // user to show
+  const [userToShow, setUserToShow] = useState(10);
+
+  // Filter activities
+  const filteredData = (users: TUser[]) => {
+    return users.slice(page, page + userToShow);
+  };
+
+  // Pagination functions
+  const nextPage = () => {
+    if (page + userToShow >= users.length) {
+      return;
+    }
+    setPage(page + userToShow);
+  };
+
+  const prevPage = () => {
+    if (page > 0) {
+      setPage(page - userToShow);
+    }
+  };
+
   // Table headers
-  const tableHeaders = [
-    'NOMBRE',
-    'PROFESION',
-    'ROL DE CARGO',
-    'ESTADO',
-    'ACCIONES',
-  ];
+  const tableHeaders = ['NOMBRE', 'PROFESION', 'ROL DE CARGO', 'ESTADO'];
   return (
     <TableContainer>
       <Table variant="simple" fontFamily={'Inter, sans-serif'}>
@@ -59,14 +87,21 @@ export default function UserTable() {
             {tableHeaders.map((header) => (
               <Th key={header}>{header}</Th>
             ))}
+            <Th
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              ACCIONES
+            </Th>
           </Tr>
         </Thead>
         <Tbody>
-          {users.map((user, index) => (
+          {filteredData(users).map((user, index) => (
             <Tr key={index}>
               <Td
                 style={{
-                  paddingLeft: '5px',
+                  paddingLeft: '10px',
                 }}
               >
                 <Avatar
@@ -82,7 +117,11 @@ export default function UserTable() {
               <Td>
                 <Status status={user?.is_active} />
               </Td>
-              <Td>
+              <Td
+                style={{
+                  textAlign: 'center',
+                }}
+              >
                 <Menu>
                   <MenuButton
                     as={IconButton}
@@ -134,6 +173,59 @@ export default function UserTable() {
             </Tr>
           ))}
         </Tbody>
+        <Tfoot>
+          <Tr>
+            <Td
+              colSpan={1}
+              style={{
+                paddingLeft: '10px',
+              }}
+            >
+              <Select
+                placeholder="Mostrar"
+                SelectType="secondary"
+                value={userToShow}
+                onChange={(e) => {
+                  setUserToShow(Number(e.target.value));
+                }}
+                // className={s.pagination__select}
+                style={{
+                  maxWidth: '80px',
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+              </Select>
+            </Td>
+
+            <Td colSpan={3}></Td>
+
+            <Td
+              colSpan={1}
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              <IconButton
+                aria-label="Previous page"
+                icon={<ArrowBackIcon />}
+                variant="outline"
+                onClick={prevPage}
+              />
+
+              <IconButton
+                aria-label="Next page"
+                icon={<ArrowForwardIcon />}
+                variant="outline"
+                onClick={nextPage}
+                style={{
+                  marginLeft: '8px',
+                }}
+              />
+            </Td>
+          </Tr>
+        </Tfoot>
       </Table>
     </TableContainer>
   );

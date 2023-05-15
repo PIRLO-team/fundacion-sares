@@ -1,6 +1,6 @@
 @import '@/styles/_media_queries.scss';
 
-.insumos {
+.productos {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -40,9 +40,21 @@
     width: 100%;
     max-height: 80vh;
     overflow-x: scroll;
+    transition: var(--main-transition);
+
+    &__category {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      // max-width: 400px;
+      // width: 100%;
+      transition: var(--main-transition);
+    }
   }
 
-  &__createInsumo {
+  &__createProductos {
     width: 100%;
     transition: var(--main-transition);
 

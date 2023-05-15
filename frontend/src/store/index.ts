@@ -4,3 +4,5 @@ export * from './users/usersSlice';
 export * from './ui/uiSlice';
 export * from './voluntarios/voluntariosStore';
 export * from './proveedores/proveedoresStore';
+export * from './insumos/insumosStore';
+export * from './productos/productosStore';
