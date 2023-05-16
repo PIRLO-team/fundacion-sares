@@ -77,7 +77,7 @@ export class SupplyService {
 
       if (!supplyQuery.length) {
         return {
-          response: { valid: true },
+          response: [],
           title: '⚠: Sin datos',
           message: 'No hay elementos caducados',
           status: HttpStatus.OK
@@ -355,7 +355,7 @@ export class SupplyService {
       newDiscountSupply.quantity = quantity;
       newDiscountSupply.discount_type_id = discount_type_id;
       newDiscountSupply.supply_id = id;
-      newSupply =  await this._discountSupplyRepository.save(newDiscountSupply);
+      newSupply = await this._discountSupplyRepository.save(newDiscountSupply);
 
       await this._supplyRepository.update(id, {
         quantity: newQuantity,

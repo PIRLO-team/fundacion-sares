@@ -62,6 +62,15 @@ export class SupplyCategoryService {
         },
       });
 
+      if (!supplyCategoryQuery.length) {
+        return {
+          response: [],
+          title: `⚠︰ No hay categorias`,
+          message: `No hay categorias disponibles`,
+          status: HttpStatus.BAD_REQUEST
+        }
+      }
+
       const supplyCategory: SupplyCategory[] = supplyCategoryQuery.map(supply => ({
         ...supply,
         supplyCategory: supply.supplyCategory.filter(category => category.is_active === true)
@@ -166,7 +175,12 @@ export class SupplyCategoryService {
     }
   }
 
-  async updateSupplyCategory(id: number, user: TokenDto, updateSupplyDto: UpdateSupplyCategoryDto, updateCategoryBySupplyCategoryDto: UpdateCategoryBySupplyCategoryDto) {
+  async updateSupplyCategory(
+    id: number,
+    user: TokenDto,
+    updateSupplyDto: UpdateSupplyCategoryDto,
+    updateCategoryBySupplyCategoryDto: UpdateCategoryBySupplyCategoryDto
+  ) {
     try {
       const supplyExist: SupplyCategory = await this._supplyCategoryRepository.findOneBy({
         supply_id: id,
@@ -182,7 +196,7 @@ export class SupplyCategoryService {
         }
       }
 
-      const updateSupplyCategory = await this._supplyCategoryRepository.update({
+      await this._supplyCategoryRepository.update({
         supply_id: id,
       }, {
         supply_name: updateSupplyDto?.name,
@@ -192,7 +206,7 @@ export class SupplyCategoryService {
         last_updated_by: user.user_id
       });
 
-      const categoryBySupply = updateCategoryBySupplyCategoryDto.category_by_suppply;
+      const categoryBySupply = updateCategoryBySupplyCategoryDto.supplyCategory;
 
       if (updateSupplyDto.is_active === true) {
         if (categoryBySupply.length) {

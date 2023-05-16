@@ -81,7 +81,7 @@ export class NonConsumableService {
 
       if (!nonConsumableSupplies.length) {
         return {
-          response: { valid: true },
+          response: [],
           title: '⚠: No hay insumos No Consumibles',
           message: 'No hay insumos No Consumibles',
           status: HttpStatus.BAD_REQUEST,

@@ -7,7 +7,7 @@ export class UpdateSupplyCategoryDto extends PartialType(CreateSupplyCategoryDto
 }
 
 export class UpdateCategoryBySupplyCategoryDto extends PartialType(CreateCategoryBySupplyDto) {
-    public category_by_suppply: CategoryBySupply[];
+    public supplyCategory: CategoryBySupply[];
 }
 export class CategoryBySupply {
     public supply_category_id: number;
