@@ -192,11 +192,10 @@ export class SupplyCategoryService {
     updateCategoryBySupplyCategoryDto: UpdateCategoryBySupplyCategoryDto,
   ) {
     try {
-      const supplyExist: SupplyCategory =
-        await this._supplyCategoryRepository.findOneBy({
-          supply_id: id,
-          is_active: true,
-        });
+      const supplyExist = await this._supplyCategoryRepository.findOneBy({
+        supply_id: id,
+        is_active: true,
+      });
 
       if (!supplyExist) {
         return {
@@ -207,52 +206,50 @@ export class SupplyCategoryService {
         };
       }
 
-      await this._supplyCategoryRepository.update(id, {
+      const supplyUpdates: Partial<SupplyCategory> = {
         supply_name: updateSupplyDto?.supply_name,
         supply_type_id: updateSupplyDto?.supply_type_id,
         min_quantity: updateSupplyDto?.min_quantity,
         is_active: updateSupplyDto?.is_active,
         last_updated_by: user.user_id,
-      });
+      };
+
+      await this._supplyCategoryRepository.update(id, supplyUpdates);
 
       const categoryBySupply = updateCategoryBySupplyCategoryDto.supplyCategory;
 
       if (updateSupplyDto.is_active === true) {
-        if (categoryBySupply.length) {
-          for (const category of categoryBySupply) {
-            const categoryExists =
-              await this._supplyCategoryBySupplyRepository.findOneBy({
-                supply_id: id,
-                supply_category_name: category?.supply_category_name,
-              });
+        for (const category of categoryBySupply) {
+          const categoryExists =
+            await this._supplyCategoryBySupplyRepository.findOneBy({
+              supply_id: id,
+              supply_category_name: category?.supply_category_name,
+            });
 
-            if (!categoryExists) {
-              const newCategoryBySupply = new CategoryBySupply();
-              newCategoryBySupply.supply_id = id;
-              newCategoryBySupply.supply_category_name =
-                category?.supply_category_name.toUpperCase();
-              newCategoryBySupply.quantity = category?.quantity;
-              newCategoryBySupply.created_by = user.user_id;
-              newCategoryBySupply.last_updated_by = user.user_id;
+          if (!categoryExists) {
+            const newCategoryBySupply = new CategoryBySupply();
+            newCategoryBySupply.supply_id = id;
+            newCategoryBySupply.supply_category_name =
+              category?.supply_category_name.toUpperCase();
+            newCategoryBySupply.quantity = category?.quantity;
+            newCategoryBySupply.created_by = user.user_id;
+            newCategoryBySupply.last_updated_by = user.user_id;
 
-              await this._supplyCategoryBySupplyRepository.save(
-                newCategoryBySupply,
-              );
-            }
+            await this._supplyCategoryBySupplyRepository.save(
+              newCategoryBySupply,
+            );
+          } else {
+            const categoryUpdates: Partial<CategoryBySupply> = {
+              supply_category_name: category.supply_category_name,
+              quantity: category.quantity,
+              last_updated_by: user.user_id,
+              is_active: true,
+            };
 
-            if (categoryExists) {
-              await this._supplyCategoryBySupplyRepository.update(
-                {
-                  supply_category_id: categoryExists.supply_category_id,
-                },
-                {
-                  supply_category_name: category.supply_category_name,
-                  quantity: category.quantity,
-                  last_updated_by: user.user_id,
-                  is_active: true,
-                },
-              );
-            }
+            await this._supplyCategoryBySupplyRepository.update(
+              { supply_category_id: categoryExists.supply_category_id },
+              categoryUpdates,
+            );
           }
         }
 
