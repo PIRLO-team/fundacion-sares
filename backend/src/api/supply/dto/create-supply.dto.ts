@@ -1,27 +1,13 @@
 import { IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateSupplyCategoryDto {
-  @IsNotEmpty({ message: 'El nombre es requerido' })
   public supply_name: string;
-
   public supply_type_id: number;
-
-  @IsNotEmpty({ message: 'La cantidad mínima es requerida' })
-  @IsNumber({}, { message: 'La cantidad mínima debe ser un número' })
-  @Min(0, { message: 'La cantidad mínima debe ser igual o mayor a 0' })
   public min_quantity: number;
 }
 export class CreateCategoryBySupplyDto {
-  @IsNotEmpty({ message: 'El insumo del suministro es requerido' })
-  @IsNumber({}, { message: 'El insumo del suministro debe ser un número' })
   public supply_id: number;
-
-  @IsNotEmpty({ message: 'El nombre de la categoría de suministro es requerido' })
   public supply_category_name: string;
-
-  @IsNotEmpty({ message: 'La cantidad es requerida' })
-  @IsNumber({}, { message: 'La cantidad debe ser un número' })
-  @Min(0, { message: 'La cantidad debe ser igual o mayor a 0' })
   public quantity: number;
 }
 

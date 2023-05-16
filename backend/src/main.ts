@@ -3,11 +3,9 @@ import { AppModule } from './app.module';
 import { env } from 'process';
 import { dataSource } from './config/ormconfig';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
   const port = env.PORT || 3000;
 
   const corsOptions: CorsOptions = {
