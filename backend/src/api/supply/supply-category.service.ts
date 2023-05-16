@@ -224,11 +224,11 @@ export class SupplyCategoryService {
               newCategoryBySupply.created_by = user.user_id;
               newCategoryBySupply.last_updated_by = user.user_id;
 
-              await this._supplyCategoryBySupplyRepository.save(newCategoryBySupply);
+              this._supplyCategoryBySupplyRepository.save(newCategoryBySupply);
             }
 
             if (categoryExists) {
-              await this._supplyCategoryBySupplyRepository.update(
+              this._supplyCategoryBySupplyRepository.update(
                 {
                   supply_category_id: categoryExists.supply_category_id,
                 },
