@@ -130,9 +130,9 @@ export class SupplyCategoryService {
 
   async createSupplyCategory(user: TokenDto, createSupplyDto: CreateSupplyCategoryDto) {
     try {
-      const { name, type, min_quantity } = createSupplyDto;
+      const { supply_name, supply_type_id, min_quantity } = createSupplyDto;
 
-      if (!name || !type || !min_quantity) {
+      if (!supply_name || !supply_type_id || !min_quantity) {
         return {
           response: { valid: false },
           title: `⚠︰ Campos incompletos`,
@@ -143,7 +143,7 @@ export class SupplyCategoryService {
 
       const nameExist: SupplyCategory[] = await this._supplyCategoryRepository.find({
         where: {
-          supply_name: name,
+          supply_name,
           is_active: true
         }
       });
@@ -157,8 +157,8 @@ export class SupplyCategoryService {
       }
 
       const supplyCategory: SupplyCategory = await this._supplyCategoryRepository.save({
-        supply_name: name,
-        supply_type_id: type,
+        supply_name,
+        supply_type_id,
         min_quantity: min_quantity,
         created_by: user.user_id,
         last_updated_by: user.user_id
@@ -199,8 +199,8 @@ export class SupplyCategoryService {
       await this._supplyCategoryRepository.update({
         supply_id: id,
       }, {
-        supply_name: updateSupplyDto?.name,
-        supply_type_id: updateSupplyDto?.type,
+        supply_name: updateSupplyDto?.supply_name,
+        supply_type_id: updateSupplyDto?.supply_type_id,
         min_quantity: updateSupplyDto?.min_quantity,
         is_active: updateSupplyDto?.is_active,
         last_updated_by: user.user_id

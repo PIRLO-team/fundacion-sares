@@ -1,3 +1,20 @@
+import {
+  AcquisitionType,
+  CategoryBySupply,
+  DiscountNonConsumable,
+  DiscountSupply,
+  DiscountType,
+  NonConsumable,
+  NonConsumableCategory,
+  NonConsumableStatus,
+  Supply,
+  SupplyCategory,
+  SupplyType
+} from './api/supply/entities/';
+import {
+  User,
+  Role
+} from './auth/entities/'
 import { Module } from '@nestjs/common';
 import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -8,10 +25,7 @@ import { AuthModule } from './auth/auth.module';
 import { dataSource } from './config/ormconfig';
 import { MainRoutes } from './main.routes';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { MailerService } from '@nestjs-modules/mailer';
 import { env } from 'process';
-import { User } from './auth/entities/user.entity';
-import { Role } from './auth/entities/role.entity';
 import { UsersModule } from './api/users/users.module';
 import { DirectVolunteerModule } from './api/direct-volunteer/direct-volunteer.module';
 import { Repository } from 'typeorm';
@@ -21,19 +35,7 @@ import { File } from './api/file/entities/file.entity';
 import { DirectVolunteer } from './api/direct-volunteer/entities/direct-volunteer.entity';
 import { Provider } from './api/provider/entities/provider.entity';
 import { ProviderModule } from './api/provider/provider.module';
-import { Supply } from './api/supply/entities/supply.entity';
 import { SupplyModule } from './api/supply/supply.module';
-import { JwtMiddleware } from './auth/middleware/jwt.middleware';
-import { SupplyCategory } from './api/supply/entities/supply-category.entity';
-import { SupplyType } from './api/supply/entities/supply-type.entity';
-import { CategoryBySupply } from './api/supply/entities/category-by-supply.entity';
-import { NonConsumable } from './api/supply/entities/non-consumable.entity';
-import { AcquisitionType } from './api/supply/entities/acquisition-type.entity';
-import { NonConsumableStatus } from './api/supply/entities/non-consumable-status.entity';
-import { DiscountSupply } from './api/supply/entities/discount-supply.entity';
-import { DiscountType } from './api/supply/entities/discount-type.entity';
-import { NonConsumableCategory } from './api/supply/entities/non-consumable-category.entity';
-import { DiscountNonConsumable } from './api/supply/entities/discount-non-consumable.entity';
 
 @Module({
   imports: [
@@ -59,7 +61,7 @@ import { DiscountNonConsumable } from './api/supply/entities/discount-non-consum
         DiscountNonConsumable,
         DiscountSupply,
         DiscountType,
-      ]
+      ],
     }),
     RouterModule.register(MainRoutes),
     AuthModule,
@@ -81,7 +83,7 @@ import { DiscountNonConsumable } from './api/supply/entities/discount-non-consum
       defaults: {
         from: env.SMTP_FROM,
       },
-    })
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -94,4 +96,4 @@ import { DiscountNonConsumable } from './api/supply/entities/discount-non-consum
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

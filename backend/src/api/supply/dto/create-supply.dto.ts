@@ -2,9 +2,9 @@ import { IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateSupplyCategoryDto {
   @IsNotEmpty({ message: 'El nombre es requerido' })
-  public name: string;
+  public supply_name: string;
 
-  public type: number;
+  public supply_type_id: number;
 
   @IsNotEmpty({ message: 'La cantidad mínima es requerida' })
   @IsNumber({}, { message: 'La cantidad mínima debe ser un número' })
