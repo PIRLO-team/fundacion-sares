@@ -174,10 +174,10 @@ export class SupplyCategoryService {
           last_updated_by: user.user_id,
         });
 
-      const data = await this.getCategoryById(supplyCategory.supply_id);
+      const { response } = await this.getCategoryById(supplyCategory.supply_id);
 
       return {
-        response: data.message,
+        response: response,
         title: `✅: La categoria ha sido creada`,
         message: `La categoria ${supply_name} ha sido creada satisfctoriamente`,
         status: HttpStatus.CREATED,
