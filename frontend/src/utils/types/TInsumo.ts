@@ -4,7 +4,6 @@ export type TInsumo = {
   last_updated_date: string;
   created_by: string;
   last_updated_by: string;
-
   supply_id: string;
   supply_category_id: string;
   category_by_supply_id: string;
@@ -13,7 +12,6 @@ export type TInsumo = {
   agreement?: string;
   expiration_date: string;
   quantity: string;
-
   supplyCategory: {
     is_active: boolean;
     created_date: string;
@@ -25,7 +23,6 @@ export type TInsumo = {
     min_quantity: string;
     supply_type_id: string;
   };
-
   categoryBySupply: {
     is_active: boolean;
     created_date: string;

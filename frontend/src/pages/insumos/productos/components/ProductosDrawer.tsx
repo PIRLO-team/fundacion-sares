@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 
 // UI Local Components
 import { Loader } from '@/components';
-import { Button, Input, Select } from '@/components/ui';
+import { Button, Category, Input, Select } from '@/components/ui';
 
 // Styles
 import s from '../Productos.module.scss';
@@ -28,9 +28,10 @@ import s from '../Productos.module.scss';
 interface IFormState {
   supply_name: string;
   supply_type_id: string;
-  min_quantity: string;
+  min_quantity: number;
   supplyCategory: {
     supply_category_name: string;
+    quantity: number;
   }[];
 }
 
@@ -52,12 +53,8 @@ export default function ProductosDrawer() {
   const [formState, setFormState] = useState({
     supply_name: '',
     supply_type_id: '',
-    min_quantity: '',
-    supplyCategory: [
-      {
-        supply_category_name: '',
-      },
-    ],
+    min_quantity: 10,
+    supplyCategory: [],
   } as IFormState);
 
   // OnInputChange
@@ -78,16 +75,17 @@ export default function ProductosDrawer() {
 
     if (Object.values(formState).some((value) => value === '')) {
       toast.error('Todos los campos son obligatorios');
-      // console.log(formState);
       return;
     }
 
-    await startSavingProducto(formState);
+    await startSavingProducto({
+      ...formState,
+      min_quantity: Number(formState.min_quantity),
+    });
+
     await startLoadingProductos();
     // openCloseDrawer();
     // handleClearForm();
-
-    console.log(formState);
   };
 
   // Clear form
@@ -95,7 +93,7 @@ export default function ProductosDrawer() {
     setFormState({
       supply_name: '',
       supply_type_id: '',
-      min_quantity: '',
+      min_quantity: 10,
       supplyCategory: [],
     });
 
@@ -115,19 +113,19 @@ export default function ProductosDrawer() {
     }
 
     if (
-      formState.supplyCategory.some((t) => t.supply_category_name === category)
+      formState?.supplyCategory?.some(
+        (t) => t.supply_category_name === category
+      )
     ) {
       toast.error('La categoria ya existe');
       return;
     }
 
-    // trim
-
     setFormState({
       ...formState,
       supplyCategory: [
-        ...formState.supplyCategory,
-        { supply_category_name: category },
+        ...formState?.supplyCategory,
+        { supply_category_name: category, quantity: 10 },
       ],
     });
 
@@ -137,7 +135,7 @@ export default function ProductosDrawer() {
   const onCategoryDeleteClick = (category: string) => {
     setFormState({
       ...formState,
-      supplyCategory: formState.supplyCategory.filter(
+      supplyCategory: formState?.supplyCategory?.filter(
         (t) => t.supply_category_name !== category
       ),
     });
@@ -152,7 +150,9 @@ export default function ProductosDrawer() {
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear productos</Button>
+      <Button onClick={openCloseDrawer} className={s.productos__header__button}>
+        Crear productos
+      </Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -201,6 +201,7 @@ export default function ProductosDrawer() {
                 SelectType="secondary"
                 value={formState?.supply_type_id}
                 onChange={onInputChange}
+                className={s.productos__createProducto__input}
               >
                 <option value=""> -- Elegir tipo de producto -- </option>
                 <option value="1">Consumible</option>
@@ -218,45 +219,56 @@ export default function ProductosDrawer() {
                 className={s.productos__createProducto__input}
               />
 
-              {productCreated && (
+              {activeProducto && (
                 <>
-                  <div>
-                    <Input
-                      readOnly={loadingCreate}
-                      inputType="secondary"
-                      type="text"
-                      title="Categorias"
-                      value={category}
-                      onChange={onCategoryInputChange}
-                      className={s.productos__createProducto__input}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          onCategoryAddClick();
-                        }
-                      }}
-                    />
+                  <div className={s.productos__createProducto__category}>
+                    <div>
+                      <Input
+                        readOnly={loadingCreate}
+                        inputType="secondary"
+                        type="text"
+                        title="Categorias"
+                        value={category}
+                        onChange={onCategoryInputChange}
+                        className={s.productos__createProducto__input}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            onCategoryAddClick();
+                          }
+                        }}
+                      />
+                    </div>
 
                     <Button
                       type="button"
-                      buttonType="secondary"
                       onClick={onCategoryAddClick}
+                      className={s.productos__createProducto__category__button}
                     >
-                      Agregar categoria
+                      Agregar
                     </Button>
                   </div>
 
-                  <div>
-                    {formState.supplyCategory.length === 0 ? (
+                  <div
+                    className={
+                      s.productos__createProducto__category__categories
+                    }
+                  >
+                    {formState?.supplyCategory?.length === 0 ? (
                       <p>Aun no hay categorias</p>
                     ) : (
-                      formState.supplyCategory.map((category) => (
+                      formState?.supplyCategory?.map((category, index) => (
                         <div
-                          key={category.supply_category_name}
+                          key={index}
                           onClick={() =>
                             onCategoryDeleteClick(category.supply_category_name)
                           }
+                          className={
+                            s.productos__createProducto__category__item
+                          }
                         >
-                          <p>{category.supply_category_name}</p>
+                          <Category
+                            category_name={category.supply_category_name}
+                          />
                         </div>
                       ))
                     )}
@@ -281,7 +293,10 @@ export default function ProductosDrawer() {
               >
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button
+                type="submit"
+                className={s.productos__createProducto__button__create}
+              >
                 {activeProducto ? 'Actualizar insumo' : 'Crear insumo'}
               </Button>
             </DrawerFooter>

@@ -24,7 +24,6 @@
     transition: var(--main-transition);
 
     @include midDeskTablet {
-      margin-top: 2rem;
       margin-bottom: 1rem;
     }
   }
@@ -34,6 +33,10 @@
     font-weight: 700;
     color: var(--black);
     transition: var(--main-transition);
+
+    @include midDeskTablet {
+      margin-top: 1rem;
+    }
   }
 
   &__table {
@@ -79,6 +82,7 @@
       }
 
       &__cancel {
+        font-size: 0.875rem;
         background-color: var(--color-not-started);
         color: var(--white);
         border-color: var(--color-not-started);

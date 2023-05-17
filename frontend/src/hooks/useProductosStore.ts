@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/store/app/hooks';
 // Store actions
 import {
   onAddNewProducto,
+  onLoadExpireProductos,
   onLoadProductos,
   onSetActiveProducto,
   onSetLoadingProductos,
@@ -23,12 +24,11 @@ import { toast } from 'sonner';
 import { projectApi } from '@/api';
 
 // Types
-import { TProducto } from '@/utils/types/';
+import { TInsumo, TProducto } from '@/utils/types/';
 
 export const useProductosStore = () => {
-  const { productos, activeProducto, loading } = useAppSelector(
-    (state) => state.productos
-  );
+  const { productos, expiredProductos, activeProducto, loading } =
+    useAppSelector((state) => state.productos);
 
   // Dispatch
   const dispatch = useAppDispatch();
@@ -53,8 +53,23 @@ export const useProductosStore = () => {
     }
   };
 
+  // Get expired productos
+  const startLoadingExpiredProductos = async () => {
+    dispatch(onSetLoadingProductos(true));
+
+    try {
+      const { data } = await projectApi.get('/api/supply/expired');
+
+      dispatch(onLoadExpireProductos(data.response));
+    } catch (error) {
+      dispatch(onSetLoadingProductos(false));
+      console.log('Error cargando los productos');
+      console.log(error);
+    }
+  };
+
   // Set active producto
-  const setActiveProducto = (producto: TProducto | null) => {
+  const setActiveProducto = (producto: TProducto | TInsumo | null) => {
     dispatch(onSetActiveProducto(producto));
   };
 
@@ -90,7 +105,7 @@ export const useProductosStore = () => {
       );
 
       setLoadingCreate(false);
-      setProductCreated(true);
+      setActiveProducto(data.response);
 
       toast.message(data.title, {
         description: data.message,
@@ -177,6 +192,7 @@ export const useProductosStore = () => {
   return {
     // Properties
     productos,
+    expiredProductos,
     activeProducto,
     loading,
     loadingCreate,
@@ -188,6 +204,7 @@ export const useProductosStore = () => {
     setActiveProducto,
     startInactiveProducto,
     startLoadingProductos,
+    startLoadingExpiredProductos,
     startSavingProducto,
     startGetProductoById,
     startDeleteProducto,

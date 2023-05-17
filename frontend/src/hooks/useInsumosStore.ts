@@ -163,6 +163,34 @@ export const useInsumosStore = () => {
     }
   };
 
+  // Discount amount insumo
+  const startDiscountInsumo = async (
+    supply_id: string,
+    quantity: string,
+    discount_type_id: string
+  ) => {
+    dispatch(onSetLoadingInsumos(true));
+
+    try {
+      await projectApi.patch(
+        `/api/supply/update-quantity-supply/${supply_id}`,
+        {
+          quantity,
+          discount_type_id,
+        }
+      );
+
+      await startLoadingInsumos();
+      dispatch(onSetLoadingInsumos(false));
+
+      toast.success('Insumo descontado con éxito');
+    } catch (error: any) {
+      const errData = error.response.data;
+      console.log(error);
+      toast.error(errData.title);
+    }
+  };
+
   return {
     // Properties
     insumos,
@@ -178,5 +206,6 @@ export const useInsumosStore = () => {
     startSavingInsumo,
     startGetInsumoById,
     startDeleteInsumo,
+    startDiscountInsumo,
   };
 };

@@ -34,16 +34,16 @@ import {
 import { useUiStore, useProductosStore } from '@/hooks';
 
 // UI Components
-import { Category, Select } from '@/components/ui';
+import { Select } from '@/components/ui';
 
 // Styles
-import s from '../Productos.module.scss';
+import s from '../Caducados.module.scss';
 
 // Types
-import { TProducto } from '@/utils/types';
+import { TInsumo, TProducto } from '@/utils/types';
 
-export default function ProductosTable() {
-  const { productos, setActiveProducto, startDeleteProducto } =
+export default function CaducadosTable() {
+  const { expiredProductos, setActiveProducto, startDeleteProducto } =
     useProductosStore();
 
   const { openCloseDrawer } = useUiStore();
@@ -55,13 +55,13 @@ export default function ProductosTable() {
   const [userToShow, setUserToShow] = useState(10);
 
   // Filter activities
-  const filteredData = (productos: TProducto[]) => {
-    return productos.slice(page, page + userToShow);
+  const filteredData = (expiredProductos: TInsumo[]) => {
+    return expiredProductos.slice(page, page + userToShow);
   };
 
   // Pagination functions
   const nextPage = () => {
-    if (page + userToShow >= productos.length) {
+    if (page + userToShow >= expiredProductos.length) {
       return;
     }
     setPage(page + userToShow);
@@ -74,56 +74,51 @@ export default function ProductosTable() {
   };
 
   // Table headers
-  const tableHeaders = ['PRODUCTO', 'CATEGORIA', 'TIPO', 'CANTIDAD MINIMA'];
+  const tableHeaders = [
+    'ID',
+    'PRODUCTO',
+    'CATEGORIA',
+    'CANTIDAD',
+    'PROVEEDOR',
+    'TIPO DE ADQUISICION',
+    'F. DE CADUCIDAD',
+  ];
 
   return (
     <TableContainer>
       <Table variant="simple" fontFamily={'Inter, sans-serif'}>
         <Thead>
           <Tr>
-            {tableHeaders.map((header, index) => (
-              <Th key={index}>{header}</Th>
+            {tableHeaders.map((header) => (
+              <Th key={header}>{header}</Th>
             ))}
-
-            <Th
-              style={{
-                textAlign: 'center',
-              }}
-            >
-              ACCIONES
-            </Th>
           </Tr>
         </Thead>
         <Tbody>
-          {productos.length === 0 ? (
+          {expiredProductos.length === 0 ? (
             <Tr>
-              <Td colSpan={5}>No hay productos registrados</Td>
+              <Td colSpan={8}>No hay productos caducados</Td>
             </Tr>
           ) : (
-            filteredData(productos).map((producto) => (
-              <Tr key={producto?.created_date}>
+            filteredData(expiredProductos).map((producto, index) => (
+              <Tr key={index}>
                 <Td
                   style={{
                     paddingLeft: '5px',
                   }}
                 >
-                  {producto?.supply_name}
+                  {producto?.supply_id}
                 </Td>
 
-                <Td>
-                  <div className={s.productos__table__category}>
-                    {producto?.supplyCategory?.map((category, index) => {
-                      return (
-                        <Category
-                          key={category?.supply_category_name}
-                          category_name={category?.supply_category_name}
-                        />
-                      );
-                    })}
-                  </div>
-                </Td>
+                <Td>{producto?.supplyCategory?.supply_name}</Td>
 
-                <Td>{producto?.supplyType?.supply_type_name}</Td>
+                <Td>{producto?.categoryBySupply?.supply_category_name}</Td>
+
+                <Td>{producto?.quantity}</Td>
+
+                <Td>{producto?.providerSupply?.name}</Td>
+
+                <Td>{producto?.acquisitionTypeSupply?.acquisition_name}</Td>
 
                 <Td
                   style={{
@@ -131,47 +126,7 @@ export default function ProductosTable() {
                     // textAlign: 'center',
                   }}
                 >
-                  {producto?.min_quantity}
-                </Td>
-
-                <Td
-                  style={{
-                    width: '170px',
-
-                    textAlign: 'center',
-                  }}
-                >
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<HamburgerIcon />}
-                      variant="outline"
-                    />
-                    <MenuList>
-                      <MenuItem
-                        icon={<EditIcon />}
-                        onClick={() => {
-                          setActiveProducto(producto);
-                          openCloseDrawer();
-                        }}
-                      >
-                        Editar producto
-                      </MenuItem>
-
-                      <Divider />
-
-                      <MenuItem
-                        icon={<DeleteIcon color="red" />}
-                        color="red"
-                        onClick={() => {
-                          startDeleteProducto(producto?.supply_id);
-                        }}
-                      >
-                        Eliminar producto
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
+                  {producto?.expiration_date}
                 </Td>
               </Tr>
             ))
@@ -204,7 +159,7 @@ export default function ProductosTable() {
               </Select>
             </Td>
 
-            <Td colSpan={3}></Td>
+            <Td colSpan={5}></Td>
 
             <Td
               colSpan={1}

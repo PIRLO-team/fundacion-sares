@@ -1,0 +1,37 @@
+.insumosHeader {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 480px;
+  transition: var(--main-transition);
+
+  &__link {
+    padding: 0.5rem 1rem;
+    background-color: var(--accents-2);
+    border-radius: var(--border-radius);
+    transition: var(--main-transition);
+
+    &:hover {
+      // background-color: var(--accents-3);
+      background-color: var(--color-primary);
+      color: var(--white);
+      transition: var(--main-transition);
+    }
+
+    &__active {
+      background-color: var(--color-primary);
+      color: var(--white);
+      transition: var(--main-transition);
+    }
+
+    &__text {
+      font-family: var(--font-inter);
+      font-size: 1rem;
+      font-weight: 600;
+      // color: var(--black);
+      // transition: var(--main-transition);
+    }
+  }
+}

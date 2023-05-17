@@ -1,0 +1,14 @@
+.category {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;
+  background-color: var(--color-primary);
+  border-radius: 5px;
+  color: white;
+  transition: var(--main-transition);
+
+  &__name {
+    font-size: 0.875rem;
+  }
+}

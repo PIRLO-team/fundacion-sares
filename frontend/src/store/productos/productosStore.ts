@@ -6,11 +6,12 @@ import {
 } from '@reduxjs/toolkit';
 
 // Types
-import { TProducto } from '@/utils/types';
+import { TInsumo, TProducto } from '@/utils/types';
 
 interface productosState {
   loading: boolean;
   productos: TProducto[];
+  expiredProductos: TInsumo[];
   activeProducto: TProducto | null;
   errorMessage?: string | undefined;
 }
@@ -18,6 +19,7 @@ interface productosState {
 const initialState: productosState = {
   loading: false,
   productos: [],
+  expiredProductos: [],
   activeProducto: null,
   errorMessage: undefined,
 };
@@ -33,6 +35,11 @@ export const productosSlice = createSlice({
     onLoadProductos: (state, { payload }) => {
       state.loading = false;
       state.productos = payload;
+    },
+
+    onLoadExpireProductos: (state, { payload }) => {
+      state.loading = false;
+      state.expiredProductos = payload;
       state.activeProducto = null;
     },
 
@@ -80,6 +87,7 @@ export const productosSlice = createSlice({
 export const {
   onSetLoadingProductos,
   onLoadProductos,
+  onLoadExpireProductos,
   onSetActiveProducto,
   onUnsetActiveProducto,
   onAddNewProducto,

@@ -1,10 +1,10 @@
 @import '@/styles/_media_queries.scss';
 
-.productos {
+.caducados {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   transition: var(--main-transition);
 
   &__email {
@@ -25,10 +25,6 @@
 
     @include midDeskTablet {
       margin-bottom: 1rem;
-    }
-
-    &__button {
-      // font-size: 0.875rem;
     }
   }
 
@@ -61,40 +57,9 @@
     }
   }
 
-  &__createProducto {
+  &__createCaducados {
     width: 100%;
     transition: var(--main-transition);
-
-    &__input {
-      // font-size: 0.875rem;
-    }
-
-    &__category {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin: 1.5rem 0;
-      transition: var(--main-transition);
-
-      &__button {
-        font-size: 0.875rem;
-      }
-
-      &__categories {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        width: 100%;
-        min-height: 150px;
-        padding: 8px;
-        border-radius: 10px;
-        background-color: var(--accents-2);
-        transition: var(--main-transition);
-      }
-    }
 
     &__button {
       display: flex;
@@ -115,8 +80,20 @@
         }
       }
 
+      &__clear {
+        max-width: 50px;
+        width: 100%;
+        min-height: 38px;
+        // animation: animation 500ms ease-in-out;
+        transition: var(--main-transition);
+
+        &:hover {
+          background-color: var(--color-primary-dark);
+          border-color: var(--color-primary-dark);
+        }
+      }
+
       &__cancel {
-        font-size: 0.875rem;
         background-color: var(--color-not-started);
         color: var(--white);
         border-color: var(--color-not-started);

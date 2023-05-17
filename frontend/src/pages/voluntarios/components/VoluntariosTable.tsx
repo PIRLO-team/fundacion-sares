@@ -213,7 +213,7 @@ export default function VoluntariosTable() {
                 }}
                 // className={s.pagination__select}
                 style={{
-                  maxWidth: '80px',
+                  width: '80px',
                 }}
               >
                 <option value={5}>5</option>

@@ -6,6 +6,7 @@ import {
   useInsumosStore,
   useForm,
   useProductosStore,
+  useProveedoresStore,
 } from '@/hooks';
 
 // Chakra UI Components
@@ -34,6 +35,8 @@ export default function InsumosDrawer() {
 
   const { productos } = useProductosStore();
 
+  const { proveedores } = useProveedoresStore();
+
   const {
     activeInsumo,
     loadingCreate,
@@ -44,28 +47,35 @@ export default function InsumosDrawer() {
 
   const { formState, onInputChange, onResetForm, setFormState } = useForm({
     supply_category_id: '',
-    email: '',
-    nit: '',
-    phone: '',
-    other_contact: '',
+    category_by_supply_id: '',
+    provider_id: '',
+    acquisition_id: '',
+    agreement: '-',
+    expiration_date: new Date().toISOString().split('T')[0],
+    quantity: '',
   });
 
   // OnSubmit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // if (Object.values(formState).some((value) => value === '')) {
-    //   toast.error('Todos los campos son obligatorios');
-    //   // console.log(formState);
-    //   return;
-    // }
+    // show error if any field is empty except agreement
 
-    // await startSavingInsumo(formState);
-    // await startLoadingInsumos();
-    // openCloseDrawer();
-    // handleClearForm();
+    if (
+      Object.values(formState).some((value) => value === '' && value !== '') ||
+      formState.supply_category_id === '' ||
+      formState.category_by_supply_id === '' ||
+      formState.provider_id === '' ||
+      formState.acquisition_id === ''
+    ) {
+      toast.error('Todos los campos son obligatorios');
+      return;
+    }
 
-    console.log(formState);
+    await startSavingInsumo(formState);
+    await startLoadingInsumos();
+    openCloseDrawer();
+    handleClearForm();
   };
 
   // Clear form
@@ -109,77 +119,117 @@ export default function InsumosDrawer() {
             </DrawerHeader>
 
             <DrawerBody>
+              {!activeInsumo && (
+                <Select
+                  title="Tipo de producto"
+                  name="supply_category_id"
+                  SelectType="secondary"
+                  value={formState?.supply_category_id}
+                  onChange={onInputChange}
+                >
+                  <option value="">-- Elegir tipo de producto --</option>
+                  {productos.map((producto) => (
+                    <option key={producto.supply_id} value={producto.supply_id}>
+                      {producto.supply_name}
+                    </option>
+                  ))}
+                </Select>
+              )}
+
               <Select
-                title="Tipo de producto"
-                name="supply_category_id"
+                title="Categoria"
+                name="category_by_supply_id"
                 SelectType="secondary"
+                value={formState?.category_by_supply_id}
                 onChange={onInputChange}
               >
-                {productos.map((producto) => (
-                  <option key={producto.supply_id} value={producto.supply_id}>
-                    {producto.supply_name}
+                <option value="">-- Elegir tipo de producto --</option>
+                {productos
+                  .filter(
+                    (product) =>
+                      product.supply_id === formState.supply_category_id
+                  )
+                  .map((category) => {
+                    return category.supplyCategory.map((category) => {
+                      return (
+                        <option
+                          key={category.supply_category_id}
+                          value={category.supply_category_id}
+                        >
+                          {category.supply_category_name}
+                        </option>
+                      );
+                    });
+                  })}
+              </Select>
+
+              <Input
+                readOnly={loadingCreate}
+                inputType="secondary"
+                type="number"
+                title="Cantidad"
+                name="quantity"
+                value={formState?.quantity}
+                onChange={onInputChange}
+                className={s.insumos__createInsumo__input}
+              />
+
+              <Input
+                readOnly={loadingCreate}
+                inputType="secondary"
+                type="date"
+                title="Fecha de vencimiento"
+                name="expiration_date"
+                value={formState?.expiration_date}
+                onChange={onInputChange}
+                className={s.insumos__createInsumo__input}
+              />
+
+              <Select
+                title="Proveedor"
+                name="provider_id"
+                SelectType="secondary"
+                value={formState?.provider_id}
+                onChange={onInputChange}
+              >
+                <option value="">-- Elegir proveedor --</option>
+
+                {proveedores?.map((proveedor) => (
+                  <option
+                    key={proveedor.provider_id}
+                    value={proveedor.provider_id}
+                  >
+                    {proveedor.name}
                   </option>
                 ))}
               </Select>
 
               <Select
-                title="Tipo de producto"
-                name="supply_category_id"
+                title="Tipo de adquisición"
+                name="acquisition_id"
                 SelectType="secondary"
+                value={formState?.acquisition_id}
                 onChange={onInputChange}
               >
-                {/* {productos?.map((producto) => (
-                  <option key={producto.supply_id} value={producto.supply_id}>
-                    {producto.supply_name}
-                  </option>
-                ))} */}
-                <option value="">-- Elegir tipo de producto --</option>
+                <option value="">-- Elegir tipo de adquisición --</option>
+                <option value="1">Por compra</option>
+                <option value="2">Intercambio de bienes</option>
+                <option value="3">Donativo</option>
               </Select>
 
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="email"
-                title="Correo electrónico"
-                name="email"
-                value={formState.email}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-              />
-
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="number"
-                title="NIT"
-                name="nit"
-                value={formState.nit}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-              />
-
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="number"
-                title="Contacto"
-                name="phone"
-                value={formState.phone}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-              />
-
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="text"
-                title="Otro contacto"
-                name="other_contact"
-                value={formState.other_contact}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-                style={{ marginBottom: '20px' }}
-              />
+              {formState?.acquisition_id === '2' && (
+                <Input
+                  readOnly={loadingCreate}
+                  inputType="secondary"
+                  type="text"
+                  title="Acuerdo de intercambio"
+                  name="agreement"
+                  value={formState?.agreement}
+                  onChange={onInputChange}
+                  className={s.insumos__createInsumo__input}
+                  style={{ marginBottom: '20px' }}
+                />
+              )}
 
               <br />
 
@@ -198,8 +248,11 @@ export default function InsumosDrawer() {
               >
                 Cancelar
               </Button>
-              <Button type="submit">
-                {activeInsumo ? 'Actualizar insumo' : 'Crear insumo'}
+              <Button
+                type="submit"
+                className={s.insumos__createInsumo__button__create}
+              >
+                {activeInsumo ? 'Actualizar' : 'Crear insumo'}
               </Button>
             </DrawerFooter>
           </DrawerContent>
