@@ -18,6 +18,9 @@ import { Avatar, Button, Input } from '@/components/ui';
 // Styles
 import s from '../styles/Perfil.module.scss';
 
+// Sonner notification
+import { toast } from 'sonner';
+
 function Perfil() {
   const router = useRouter();
   const userID = router.query.id;
@@ -62,6 +65,16 @@ function Perfil() {
 
     // If data is equal to activeUser, do not update
     if (formUserState === activeUser) {
+      return;
+    }
+
+    if (formUserState.document.toString().length > 10) {
+      toast.error('La cedula debe tener máximo 10 digitos');
+      return;
+    }
+
+    if (formUserState.phone.toString().length > 10) {
+      toast.error('El contacto debe tener máximo 10 digitos');
       return;
     }
 
@@ -142,6 +155,7 @@ function Perfil() {
                     type="text"
                     name="first_name"
                     defaultValue={activeUser?.first_name}
+                    maxLength={50}
                     inputType="secondary"
                     title="Nombre"
                     placeholder="Nombre"
@@ -156,6 +170,7 @@ function Perfil() {
                     type="text"
                     name="last_name"
                     defaultValue={activeUser?.last_name}
+                    maxLength={50}
                     inputType="secondary"
                     title="Apellido(s)"
                     placeholder="Apellido(s)"
@@ -172,6 +187,7 @@ function Perfil() {
                     type="text"
                     name="email"
                     defaultValue={activeUser?.email}
+                    maxLength={50}
                     inputType="secondary"
                     title="Correo electrónico"
                     placeholder="Correo electrónico"
@@ -202,6 +218,7 @@ function Perfil() {
                     type="text"
                     name="profession"
                     defaultValue={activeUser?.profession}
+                    maxLength={50}
                     inputType="secondary"
                     title="Profesión"
                     placeholder="Profesión"
@@ -228,7 +245,7 @@ function Perfil() {
                   <Input
                     disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
-                    type="tel"
+                    type="number"
                     name="phone"
                     defaultValue={activeUser?.phone}
                     inputType="secondary"
@@ -242,9 +259,10 @@ function Perfil() {
                   <Input
                     disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
-                    type="tel"
+                    type="text"
                     name="other_contact"
                     defaultValue={activeUser?.other_contact}
+                    maxLength={50}
                     inputType="secondary"
                     title="Otro medio de contacto"
                     placeholder="Otro medio de contacto"

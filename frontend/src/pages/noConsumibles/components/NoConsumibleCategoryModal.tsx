@@ -81,6 +81,7 @@ export default function NoConsumibleCategoryModal() {
                 name="non_consumable_category_supply_name"
                 type="text"
                 value={formState?.non_consumable_category_supply_name}
+                maxLength={50}
                 onChange={onInputChange}
                 inputType="secondary"
                 placeholder="Nombre de la categoria"

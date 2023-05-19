@@ -69,6 +69,16 @@ export default function VoluntariosDrawer() {
       return;
     }
 
+    if (formState.document.toString().length > 10) {
+      toast.error('La cedula debe tener máximo 10 digitos');
+      return;
+    }
+
+    if (formState.phone.toString().length > 10) {
+      toast.error('El contacto debe tener máximo 10 digitos');
+      return;
+    }
+
     await startSavingVoluntario(formState);
     await startLoadingVoluntarios();
     openCloseDrawer();
@@ -130,6 +140,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Nombre*"
                 name="first_name"
+                maxLength={50}
                 value={formState.first_name}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -142,6 +153,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Apellido*"
                 name="last_name"
+                maxLength={50}
                 value={formState.last_name}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -155,6 +167,7 @@ export default function VoluntariosDrawer() {
                 type="email"
                 title="Correo electrónico*"
                 name="email"
+                maxLength={50}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -167,6 +180,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Profesión*"
                 name="profession"
+                maxLength={50}
                 value={formState.profession}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -202,6 +216,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Otro contacto (opcional)"
                 name="other_contact"
+                maxLength={50}
                 value={formState.other_contact}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -223,6 +238,7 @@ export default function VoluntariosDrawer() {
                 style={{
                   marginBottom: '20px',
                 }}
+                maxLength={250}
               />
 
               <div

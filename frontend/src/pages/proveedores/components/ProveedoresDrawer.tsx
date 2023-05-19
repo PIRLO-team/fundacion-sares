@@ -141,8 +141,7 @@ export default function ProveedoresDrawer() {
                 type="email"
                 title="Correo electrónico*"
                 name="email"
-                max={75}
-                // maxLength={75}
+                maxLength={50}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}

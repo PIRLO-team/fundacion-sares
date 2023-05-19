@@ -189,6 +189,7 @@ export default function ProductosDrawer() {
                 type="text"
                 title="Nombre del producto*"
                 name="supply_name"
+                maxLength={75}
                 value={formState?.supply_name}
                 onChange={onInputChange}
                 className={s.productos__createProducto__input}

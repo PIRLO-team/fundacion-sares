@@ -187,7 +187,7 @@ export default function InsumosDrawer() {
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="date"
-                title="Fecha de vencimiento (opcional)"
+                title="Fecha de vencimiento*"
                 name="expiration_date"
                 value={formState?.expiration_date}
                 onChange={onInputChange}
@@ -236,6 +236,7 @@ export default function InsumosDrawer() {
                   title="Acuerdo de intercambio"
                   name="agreement"
                   value={formState?.agreement}
+                  maxLength={250}
                   onChange={onInputChange}
                   className={s.insumos__createInsumo__input}
                   style={{ marginBottom: '20px' }}
