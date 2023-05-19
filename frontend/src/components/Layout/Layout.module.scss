@@ -4,7 +4,7 @@
   width: 100%;
   padding: 2rem;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 
   @include midDeskTablet {

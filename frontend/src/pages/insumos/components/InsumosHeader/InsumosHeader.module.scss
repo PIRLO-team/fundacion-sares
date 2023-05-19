@@ -1,11 +1,21 @@
+@import '@/styles/_media_queries.scss';
+
 .insumosHeader {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  max-width: 480px;
+  gap: 0.5rem;
+  // max-width: 480px;
   transition: var(--main-transition);
+
+  @include mediaquery(575px) {
+    // justify-content: space-between;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+  }
 
   &__link {
     padding: 0.5rem 1rem;
@@ -20,6 +30,10 @@
       transition: var(--main-transition);
     }
 
+    @include mobile {
+      padding: 0.5rem 0.6rem;
+    }
+
     &__active {
       background-color: var(--color-primary);
       color: var(--white);
@@ -30,8 +44,11 @@
       font-family: var(--font-inter);
       font-size: 1rem;
       font-weight: 600;
-      // color: var(--black);
-      // transition: var(--main-transition);
+      transition: var(--main-transition);
+
+      @include mediaquery(575px) {
+        font-size: 0.875rem;
+      }
     }
   }
 }

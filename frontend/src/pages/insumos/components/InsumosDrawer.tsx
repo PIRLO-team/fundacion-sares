@@ -92,7 +92,12 @@ export default function InsumosDrawer() {
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear insumo</Button>
+      <Button
+        onClick={openCloseDrawer}
+        className={s.insumos__createInsumo__button}
+      >
+        Crear insumo
+      </Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
