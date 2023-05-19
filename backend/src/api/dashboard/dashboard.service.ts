@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { HandlersError } from '../../shared/handlers/error.utils';
+import { UserRepository } from '../../auth/repository/user.repository';
+import { DirectVolunteerRepository } from '../direct-volunteer/direct-volunteer.repository';
+import { SupplyCategoryRepository } from '../supply/repositories/supply-category.repository';
 
 @Injectable()
 export class DashboardService {
-  create(createDashboardDto: CreateDashboardDto) {
-    return 'This action adds a new dashboard';
+  constructor(
+    private readonly _handlerError: HandlersError,
+    private readonly _userRepository: UserRepository,
+    private readonly _directVolunteerRepository: DirectVolunteerRepository,
+    private readonly _supplyCategoryRepository: SupplyCategoryRepository,
+  ) {}
+
+  async findDataDashboard() {
+    try {
+      const userCount = await this.userData();
+      const volunteerCount = await this.directVolunteerData();
+      const supplyCategoryData = await this.supplyCategoryData();
+
+      return {
+        response: {
+          userCount,
+          volunteerCount,
+          supplyCategoryData
+        },
+        title: 'Información del dashboard',
+        message:
+          'Información detallada sobre las diferentes secciones del aplicativo',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
   }
 
-  findAll() {
-    return `This action returns all dashboard`;
+  async userData() {
+    try {
+      const userData = this._userRepository.userData();
+
+      return userData;
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dashboard`;
+  async directVolunteerData() {
+    try {
+      const directVolunteerData = this._directVolunteerRepository.count({
+        where: {
+          is_active: true,
+        },
+      });
+
+      if (!directVolunteerData) {
+        return [];
+      }
+
+      return directVolunteerData;
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
   }
 
-  update(id: number, updateDashboardDto: UpdateDashboardDto) {
-    return `This action updates a #${id} dashboard`;
-  }
+  async supplyCategoryData() {
+    try {
+      const supplyCategoryData =
+        this._supplyCategoryRepository.supplyCategoryData();
 
-  remove(id: number) {
-    return `This action removes a #${id} dashboard`;
+      return supplyCategoryData;
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
   }
 }

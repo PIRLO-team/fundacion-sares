@@ -9,12 +9,9 @@ import {
   NonConsumableStatus,
   Supply,
   SupplyCategory,
-  SupplyType
+  SupplyType,
 } from './api/supply/entities/';
-import {
-  User,
-  Role
-} from './auth/entities/'
+import { User, Role } from './auth/entities/';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -36,6 +33,7 @@ import { DirectVolunteer } from './api/direct-volunteer/entities/direct-voluntee
 import { Provider } from './api/provider/entities/provider.entity';
 import { ProviderModule } from './api/provider/provider.module';
 import { SupplyModule } from './api/supply/supply.module';
+import { DashboardModule } from './api/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -70,6 +68,7 @@ import { SupplyModule } from './api/supply/supply.module';
     FileModule,
     ProviderModule,
     SupplyModule,
+    DashboardModule,
     MailerModule.forRoot({
       transport: {
         host: env.SMTP_HOST,
