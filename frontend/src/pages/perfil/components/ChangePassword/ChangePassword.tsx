@@ -1,6 +1,5 @@
-import { useAuthStore, useForm } from '@/hooks';
+// Chakra UI
 import {
-  Button,
   FormControl,
   FormLabel,
   Input,
@@ -11,18 +10,22 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+
+// Sonner notification
 import { toast } from 'sonner';
 
-function ChangePassword({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
+// Hooks
+import { useAuthStore, useForm } from '@/hooks';
+
+// Styles
+import s from '../../styles/Perfil.module.scss';
+import { Button } from '@/components/ui';
+
+function ChangePassword() {
   const { currentUser, startUpdatePassword } = useAuthStore();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     password,
@@ -74,58 +77,80 @@ function ChangePassword({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
-      <ModalOverlay />
-      <form onSubmit={handleSubmit} autoComplete="off">
-        <ModalContent>
-          <ModalHeader>Actualiza tu contraseña</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel>Contraseña actual</FormLabel>
-              <Input
-                required
-                name="password"
-                value={password}
-                onChange={onInputChange}
-                placeholder="Contraseña actual"
-              />
-            </FormControl>
+    <>
+      <Button
+        onClick={onOpen}
+        className={s.profile__personalInfo__form__group__button__item}
+      >
+        Cambiar contraseña
+      </Button>
 
-            <FormControl mt={4}>
-              <FormLabel>Nueva contraseña</FormLabel>
-              <Input
-                required
-                name="new_password"
-                value={new_password}
-                onChange={onInputChange}
-                placeholder="Nueva contraseña"
-              />
-            </FormControl>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <form onSubmit={handleSubmit} autoComplete="off">
+          <ModalContent>
+            <ModalHeader>Actualiza tu contraseña</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <FormControl>
+                <FormLabel>Contraseña actual</FormLabel>
+                <Input
+                  required
+                  name="password"
+                  value={password}
+                  onChange={onInputChange}
+                  placeholder="Contraseña actual"
+                />
+              </FormControl>
 
-            <FormControl mt={4}>
-              <FormLabel>Confirmar nueva contraseña</FormLabel>
-              <Input
-                required
-                name="comfirm_password"
-                value={comfirm_password}
-                onChange={onInputChange}
-                placeholder="Confirmar nueva contraseña"
-              />
-            </FormControl>
-          </ModalBody>
+              <FormControl mt={4}>
+                <FormLabel>Nueva contraseña</FormLabel>
+                <Input
+                  required
+                  name="new_password"
+                  value={new_password}
+                  onChange={onInputChange}
+                  placeholder="Nueva contraseña"
+                />
+              </FormControl>
 
-          <ModalFooter>
-            <Button onClick={handleCloseModal} mr={3}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue" type="submit">
-              Guardar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </form>
-    </Modal>
+              <FormControl mt={4}>
+                <FormLabel>Confirmar nueva contraseña</FormLabel>
+                <Input
+                  required
+                  name="comfirm_password"
+                  value={comfirm_password}
+                  onChange={onInputChange}
+                  placeholder="Confirmar nueva contraseña"
+                />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                onClick={handleCloseModal}
+                className={
+                  s.profile__personalInfo__form__group__button__item__cancel
+                }
+                style={{
+                  marginRight: '1rem',
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className={
+                  s.profile__personalInfo__form__group__button__item__create
+                }
+              >
+                Guardar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+    </>
   );
 }
 

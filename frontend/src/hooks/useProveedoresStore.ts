@@ -44,10 +44,10 @@ export const useProveedoresStore = () => {
       const { data } = await projectApi.get('/api/provider');
 
       dispatch(onLoadProveedores(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingProveedores(false));
-      console.log('Error cargando los Proveedors');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
@@ -94,9 +94,9 @@ export const useProveedoresStore = () => {
 
       //
     } catch (error: any) {
+      dispatch(onSetLoadingProveedores(false));
       setLoadingCreate(false);
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -123,9 +123,9 @@ export const useProveedoresStore = () => {
         return;
       }
     } catch (error: any) {
+      dispatch(onSetLoadingProveedores(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -139,8 +139,8 @@ export const useProveedoresStore = () => {
       dispatch(onSetActiveProveedor(data.response));
       dispatch(onSetLoadingProveedores(false));
     } catch (error: any) {
+      dispatch(onSetLoadingProveedores(false));
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -157,9 +157,9 @@ export const useProveedoresStore = () => {
 
       toast.success('Proveedor eliminado con éxito');
     } catch (error: any) {
+      dispatch(onSetLoadingProveedores(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 

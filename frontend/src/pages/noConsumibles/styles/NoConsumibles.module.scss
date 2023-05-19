@@ -1,10 +1,10 @@
 @import '@/styles/_media_queries.scss';
 
-.voluntarios {
+.noConsumibles {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   transition: var(--main-transition);
 
   &__email {
@@ -24,8 +24,22 @@
     transition: var(--main-transition);
 
     @include midDeskTablet {
-      margin-top: 2rem;
+      margin-top: 1rem;
+    }
+
+    @include midDeskTablet {
       margin-bottom: 1rem;
+    }
+
+    &__buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      transition: var(--main-transition);
+
+      @include mediaquery(575px) {
+        width: 100%;
+      }
     }
   }
 
@@ -42,13 +56,9 @@
     overflow-x: auto;
   }
 
-  &__createVoluntario {
+  &__createNoConsumible {
     width: 100%;
     transition: var(--main-transition);
-
-    &__input {
-      // font-size: 0.875rem;
-    }
 
     &__button {
       padding: 0.5rem 1rem;
@@ -71,6 +81,19 @@
         }
       }
 
+      &__clear {
+        max-width: 50px;
+        width: 100%;
+        min-height: 38px;
+        // animation: animation 500ms ease-in-out;
+        transition: var(--main-transition);
+
+        &:hover {
+          background-color: var(--color-primary-dark);
+          border-color: var(--color-primary-dark);
+        }
+      }
+
       &__cancel {
         font-size: 0.875rem;
         background-color: var(--color-not-started);
@@ -84,5 +107,16 @@
         }
       }
     }
+  }
+}
+
+@keyframes animation {
+  0% {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

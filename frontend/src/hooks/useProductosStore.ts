@@ -2,7 +2,6 @@
 import { useState } from 'react';
 
 // Next
-// import { productoouter } from 'next/router';
 
 // Redux hooks
 import { useAppDispatch, useAppSelector } from '@/store/app/hooks';
@@ -46,10 +45,10 @@ export const useProductosStore = () => {
       const { data } = await projectApi.get('/api/supply/all-categories');
 
       dispatch(onLoadProductos(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingProductos(false));
-      console.log('Error cargando los productos');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
@@ -61,10 +60,10 @@ export const useProductosStore = () => {
       const { data } = await projectApi.get('/api/supply/expired');
 
       dispatch(onLoadExpireProductos(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingProductos(false));
-      console.log('Error cargando los productos');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
@@ -113,9 +112,9 @@ export const useProductosStore = () => {
 
       //
     } catch (error: any) {
+      dispatch(onSetLoadingProductos(false));
       setLoadingCreate(false);
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -145,9 +144,9 @@ export const useProductosStore = () => {
         return;
       }
     } catch (error: any) {
+      dispatch(onSetLoadingProductos(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -163,8 +162,8 @@ export const useProductosStore = () => {
       dispatch(onSetActiveProducto(data.response));
       dispatch(onSetLoadingProductos(false));
     } catch (error: any) {
+      dispatch(onSetLoadingProductos(false));
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -183,9 +182,9 @@ export const useProductosStore = () => {
 
       toast.success('Producto eliminado con éxito');
     } catch (error: any) {
+      dispatch(onSetLoadingProductos(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 

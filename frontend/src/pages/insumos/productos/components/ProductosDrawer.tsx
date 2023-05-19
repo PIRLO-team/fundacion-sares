@@ -40,8 +40,6 @@ export default function ProductosDrawer() {
   const [category, setCategory] = useState<string>('');
 
   const {
-    productos,
-    productCreated,
     activeProducto,
     loadingCreate,
     setProductCreated,
@@ -185,10 +183,11 @@ export default function ProductosDrawer() {
 
             <DrawerBody>
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Nombre del producto"
+                title="Nombre del producto*"
                 name="supply_name"
                 value={formState?.supply_name}
                 onChange={onInputChange}
@@ -196,7 +195,8 @@ export default function ProductosDrawer() {
               />
 
               <Select
-                title="Tipo de producto"
+                required
+                title="Tipo de producto*"
                 name="supply_type_id"
                 SelectType="secondary"
                 value={formState?.supply_type_id}
@@ -209,10 +209,11 @@ export default function ProductosDrawer() {
               </Select>
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="Cantidad minima"
+                title="Cantidad minima*"
                 name="min_quantity"
                 value={formState?.min_quantity}
                 onChange={onInputChange}

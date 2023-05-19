@@ -20,42 +20,52 @@ import {
   Divider,
   Tfoot,
   useDisclosure,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
 } from '@chakra-ui/react';
 
 // Chakra Icons
 import {
   HamburgerIcon,
-  CheckCircleIcon,
-  WarningIcon,
-  ChatIcon,
   EditIcon,
   DeleteIcon,
   ArrowBackIcon,
   ArrowForwardIcon,
+  ArrowLeftIcon,
+  CheckIcon,
+  CloseIcon,
+  InfoIcon,
 } from '@chakra-ui/icons';
 
 // Hooks
-import { useUiStore, useVoluntariosStore } from '@/hooks';
+import { useUiStore, useNoConsumiblesStore } from '@/hooks';
 
-// Local Components
+// UI Components
+import NoConsumiblesDiscountModal from './NoConsumiblesDiscountModal';
 import { Select, Status } from '@/components/ui';
-import VoluntariosObservationModal from './VoluntariosObservationModal';
 
 // Styles
-import s from '../styles/Voluntarios.module.scss';
+import s from '../styles/NoConsumibles.module.scss';
 
 // Types
-import { TVoluntario } from '@/utils/types';
+import { TNoConsumible } from '@/utils/types';
 
-export default function VoluntariosTable() {
-  const {
-    voluntarios,
-    startInactiveVoluntario,
-    setActiveVoluntario,
-    startDeleteVoluntario,
-  } = useVoluntariosStore();
+export default function InsumosTable() {
+  const { noConsumibles, setActiveNoConsumible, startDeleteNoConsumible } =
+    useNoConsumiblesStore();
 
   const { openCloseDrawer } = useUiStore();
+
+  // Discount modal
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // insumoSelected
+  const [noConsumible, setNoConsumible] = useState({
+    non_consumable_id: '',
+  });
 
   // Pagination
   const [page, setPage] = useState(0);
@@ -63,18 +73,14 @@ export default function VoluntariosTable() {
   // number to show
   const [numberToShow, setNumberToShow] = useState(10);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [voluntario, setVoluntario] = useState<TVoluntario | null>(null);
-
   // Filter activities
-  const filteredData = (voluntarios: TVoluntario[]) => {
-    return voluntarios.slice(page, page + numberToShow);
+  const filteredData = (noConsumibles: TNoConsumible[]) => {
+    return noConsumibles.slice(page, page + numberToShow);
   };
 
   // Pagination functions
   const nextPage = () => {
-    if (page + numberToShow >= voluntarios.length) {
+    if (page + numberToShow >= noConsumibles.length) {
       return;
     }
     setPage(page + numberToShow);
@@ -88,11 +94,11 @@ export default function VoluntariosTable() {
 
   // Table headers
   const tableHeaders = [
-    'NOMBRE',
-    'CEDULA',
-    'PROFESION',
-    'CONTACTO',
-    'OTRO CONTACTO',
+    'ID',
+    'NO CONSUMIBLE',
+    'PROVEEDOR',
+    'TIPO DE ADQUISICIÓN',
+    'SE ESTERILIZA',
     'ESTADO',
   ];
   return (
@@ -115,30 +121,85 @@ export default function VoluntariosTable() {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredData(voluntarios).map((voluntario, index) => (
+            {filteredData(noConsumibles).map((noConsumible, index) => (
               <Tr key={index}>
                 <Td
                   style={{
-                    paddingLeft: '5px',
+                    paddingLeft: '10px',
                   }}
                 >
-                  {voluntario?.first_name} {voluntario?.last_name}
-                  <br />
-                  <span className={s.voluntarios__email}>
-                    {voluntario?.email}
-                  </span>
+                  {noConsumible?.non_consumable_id}
                 </Td>
 
-                <Td>{voluntario?.document}</Td>
+                <Td
+                  style={{
+                    paddingLeft: '10px',
+                  }}
+                >
+                  {
+                    noConsumible?.nonConsumableCategory
+                      ?.non_consumable_category_supply_name
+                  }
+                </Td>
 
-                <Td>{voluntario?.profession}</Td>
-
-                <Td>{voluntario?.phone}</Td>
-
-                <Td>{voluntario?.other_contact}</Td>
+                <Td>{noConsumible?.providerNonConsumable?.name}</Td>
 
                 <Td>
-                  <Status status={voluntario!.is_active} />
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                  >
+                    <p>
+                      {
+                        noConsumible?.acquisitionTypeNonConsumable
+                          ?.acquisition_name
+                      }
+                    </p>
+
+                    {noConsumible?.acquisition_id === '2' && (
+                      <Popover>
+                        <PopoverTrigger>
+                          <InfoIcon
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                          />
+                        </PopoverTrigger>
+
+                        <PopoverContent>
+                          <PopoverArrow />
+                          <PopoverBody
+                            style={{
+                              textAlign: 'center',
+                              whiteSpace: 'pre-wrap',
+                            }}
+                          >
+                            {noConsumible?.agreement}
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  </div>
+                </Td>
+
+                <Td
+                  style={{
+                    paddingLeft: '50px',
+                  }}
+                >
+                  {noConsumible?.nonConsumableCategory
+                    ?.non_consumable_status_id === '1' ? (
+                    <CheckIcon color="green" />
+                  ) : (
+                    <CloseIcon color="red" />
+                  )}
+                </Td>
+
+                <Td>
+                  <Status status={noConsumible?.is_active} />
                 </Td>
 
                 <Td
@@ -155,43 +216,28 @@ export default function VoluntariosTable() {
                     />
                     <MenuList>
                       <MenuItem
-                        icon={
-                          voluntario?.is_active ? (
-                            <CheckCircleIcon />
-                          ) : (
-                            <WarningIcon />
-                          )
-                        }
-                        onClick={async () => {
-                          await startInactiveVoluntario(voluntario);
-                        }}
-                      >
-                        {voluntario?.is_active
-                          ? 'Marcar como Inactivo'
-                          : 'Marcar como Activo'}
-                      </MenuItem>
-
-                      <MenuItem
                         icon={<EditIcon />}
                         onClick={() => {
-                          setActiveVoluntario(voluntario);
+                          setActiveNoConsumible(noConsumible);
                           openCloseDrawer();
                         }}
                       >
-                        Editar voluntario
+                        Editar insumo
                       </MenuItem>
 
-                      {/* <Link href={`/perfil/${voluntario?.voluntario_id}`}> */}
+                      <Divider />
+
                       <MenuItem
-                        icon={<ChatIcon />}
+                        icon={<ArrowLeftIcon />}
                         onClick={() => {
                           onOpen();
-                          setVoluntario(voluntario);
+                          setNoConsumible({
+                            non_consumable_id: noConsumible?.non_consumable_id,
+                          });
                         }}
                       >
-                        Hacer observaciones
+                        Descontar
                       </MenuItem>
-                      {/* </Link> */}
 
                       <Divider />
 
@@ -199,12 +245,12 @@ export default function VoluntariosTable() {
                         icon={<DeleteIcon color="red" />}
                         color="red"
                         onClick={() => {
-                          startDeleteVoluntario(
-                            voluntario?.direct_volunteer_id
+                          startDeleteNoConsumible(
+                            noConsumible?.non_consumable_id
                           );
                         }}
                       >
-                        Eliminar voluntario
+                        Eliminar insumo
                       </MenuItem>
                     </MenuList>
                   </Menu>
@@ -269,11 +315,10 @@ export default function VoluntariosTable() {
         </Table>
       </TableContainer>
 
-      <VoluntariosObservationModal
+      <NoConsumiblesDiscountModal
         isOpen={isOpen}
         onClose={onClose}
-        voluntario={voluntario}
-        setVoluntario={setVoluntario}
+        noConsumible={noConsumible}
       />
     </>
   );

@@ -7,9 +7,6 @@ import { useRouter } from 'next/router';
 // Hooks
 import { useAuthStore, useUsersStore } from '@/hooks';
 
-// Chakra UI
-import { useDisclosure } from '@chakra-ui/react';
-
 // Local Components
 import { withAuth } from '@/auth/withAuth';
 import { Layout, Loader } from '@/components';
@@ -20,8 +17,6 @@ import { Avatar, Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../styles/Perfil.module.scss';
-
-// Types
 
 function Perfil() {
   const router = useRouter();
@@ -37,8 +32,6 @@ function Perfil() {
     startSavingUser,
   } = useUsersStore();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const FULLNAME = `${activeUser?.first_name} ${activeUser?.last_name}`;
 
   const [formUserState, setFormUserState] = useState({
@@ -49,6 +42,7 @@ function Perfil() {
     document: '',
     profession: '',
     phone: '',
+    other_contact: '',
   });
 
   // onInputChange
@@ -95,6 +89,7 @@ function Perfil() {
         document: activeUser.document,
         profession: activeUser.profession,
         phone: activeUser.phone,
+        other_contact: activeUser.other_contact,
       });
     }
   }, [activeUser]);
@@ -233,7 +228,7 @@ function Perfil() {
                   <Input
                     disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
-                    type="number"
+                    type="tel"
                     name="phone"
                     defaultValue={activeUser?.phone}
                     inputType="secondary"
@@ -245,7 +240,7 @@ function Perfil() {
 
                 <div>
                   <Input
-                    disabled
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
                     type="tel"
                     name="other_contact"
@@ -272,20 +267,17 @@ function Perfil() {
               )}
             </form>
 
-            {userID === currentUser.uid && (
-              <div className={s.profile__personalInfo__security}>
-                <p className={s.profile__personalInfo__form__text}>Seguridad</p>
+            <div className={s.profile__personalInfo__security}>
+              {userID === currentUser.uid && (
+                <>
+                  <p className={s.profile__personalInfo__form__text}>
+                    Seguridad
+                  </p>
 
-                <Button
-                  onClick={onOpen}
-                  className={s.profile__personalInfo__form__group__button__item}
-                >
-                  Cambiar contraseña
-                </Button>
-
-                <ChangePassword isOpen={isOpen} onClose={onClose} />
-              </div>
-            )}
+                  <ChangePassword />
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

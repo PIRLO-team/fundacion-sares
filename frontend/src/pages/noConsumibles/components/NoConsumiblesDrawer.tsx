@@ -3,10 +3,9 @@ import { useEffect } from 'react';
 // Hooks
 import {
   useUiStore,
-  useInsumosStore,
   useForm,
-  useProductosStore,
   useProveedoresStore,
+  useNoConsumiblesStore,
 } from '@/hooks';
 
 // Chakra UI Components
@@ -28,31 +27,30 @@ import { Loader } from '@/components';
 import { Button, Input, Select } from '@/components/ui';
 
 // Styles
-import s from '../styles/Insumos.module.scss';
+import s from '../styles/NoConsumibles.module.scss';
+
+// Types
+import { TCategories, TNoConsumible } from '@/utils/types';
 
 export default function InsumosDrawer() {
   const { isDrawerOpen, openCloseDrawer } = useUiStore();
 
-  const { productos } = useProductosStore();
-
   const { proveedores } = useProveedoresStore();
 
   const {
-    activeInsumo,
+    categories,
+    activeNoConsumible,
     loadingCreate,
-    startSavingInsumo,
-    startLoadingInsumos,
-    setActiveInsumo,
-  } = useInsumosStore();
+    startSavingNoConsumible,
+    startLoadingNoConsumible,
+    setActiveNoConsumible,
+  } = useNoConsumiblesStore();
 
   const { formState, onInputChange, onResetForm, setFormState } = useForm({
-    supply_category_id: '',
-    category_by_supply_id: '',
+    non_consumable_category_supply_id: '',
     provider_id: '',
     acquisition_id: '',
-    agreement: '-',
-    expiration_date: new Date().toISOString().split('T')[0],
-    quantity: '',
+    agreement: ' ',
   });
 
   // OnSubmit
@@ -63,8 +61,7 @@ export default function InsumosDrawer() {
 
     if (
       Object.values(formState).some((value) => value === '' && value !== '') ||
-      formState.supply_category_id === '' ||
-      formState.category_by_supply_id === '' ||
+      formState.non_consumable_category_supply_id === '' ||
       formState.provider_id === '' ||
       formState.acquisition_id === ''
     ) {
@@ -72,8 +69,8 @@ export default function InsumosDrawer() {
       return;
     }
 
-    await startSavingInsumo(formState);
-    await startLoadingInsumos();
+    await startSavingNoConsumible(formState);
+    await startLoadingNoConsumible();
     openCloseDrawer();
     handleClearForm();
   };
@@ -81,20 +78,20 @@ export default function InsumosDrawer() {
   // Clear form
   const handleClearForm = () => {
     onResetForm();
-    setActiveInsumo(null);
+    setActiveNoConsumible(null);
   };
 
   useEffect(() => {
-    if (activeInsumo !== null) {
-      setFormState(activeInsumo as any);
+    if (activeNoConsumible !== null) {
+      setFormState(activeNoConsumible as TNoConsumible);
     }
-  }, [activeInsumo]);
+  }, [activeNoConsumible]);
 
   return (
     <>
       <Button
         onClick={openCloseDrawer}
-        className={s.insumos__createInsumo__button}
+        className={s.noConsumibles__createNoConsumible__button}
       >
         Crear insumo
       </Button>
@@ -108,7 +105,7 @@ export default function InsumosDrawer() {
         <DrawerOverlay />
 
         <form
-          className={s.insumos__createInsumo}
+          className={s.noConsumibles__createNoConsumible}
           onSubmit={handleSubmit}
           autoComplete="off"
         >
@@ -120,79 +117,30 @@ export default function InsumosDrawer() {
             />
 
             <DrawerHeader borderBottomWidth="1px">
-              {activeInsumo ? 'Actualizar insumo' : 'Crear insumo'}
+              {activeNoConsumible ? 'Actualizar insumo' : 'Crear insumo'}
             </DrawerHeader>
 
             <DrawerBody>
-              {!activeInsumo && (
+              {!activeNoConsumible && (
                 <Select
                   required
                   title="Tipo de producto*"
-                  name="supply_category_id"
+                  name="non_consumable_category_supply_id"
                   SelectType="secondary"
-                  value={formState?.supply_category_id}
+                  value={formState?.non_consumable_category_supply_id}
                   onChange={onInputChange}
                 >
-                  <option value="">-- Elegir tipo de producto --</option>
-                  {productos.map((producto) => (
-                    <option key={producto.supply_id} value={producto.supply_id}>
-                      {producto.supply_name}
+                  <option value="">-- Elegir tipo de insumo --</option>
+                  {categories.map((insumo: TCategories) => (
+                    <option
+                      key={insumo.non_consumable_category_supply_id}
+                      value={insumo.non_consumable_category_supply_id}
+                    >
+                      {insumo.non_consumable_category_supply_name}
                     </option>
                   ))}
                 </Select>
               )}
-
-              <Select
-                required
-                title="Categoria*"
-                name="category_by_supply_id"
-                SelectType="secondary"
-                value={formState?.category_by_supply_id}
-                onChange={onInputChange}
-              >
-                <option value="">-- Elegir tipo de producto --</option>
-                {productos
-                  .filter(
-                    (product) =>
-                      product.supply_id === formState.supply_category_id
-                  )
-                  .map((category) => {
-                    return category.supplyCategory.map((category) => {
-                      return (
-                        <option
-                          key={category.supply_category_id}
-                          value={category.supply_category_id}
-                        >
-                          {category.supply_category_name}
-                        </option>
-                      );
-                    });
-                  })}
-              </Select>
-
-              <Input
-                required
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="number"
-                title="Cantidad"
-                name="quantity"
-                max={1000000}
-                value={formState?.quantity}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-              />
-
-              <Input
-                readOnly={loadingCreate}
-                inputType="secondary"
-                type="date"
-                title="Fecha de vencimiento (opcional)"
-                name="expiration_date"
-                value={formState?.expiration_date}
-                onChange={onInputChange}
-                className={s.insumos__createInsumo__input}
-              />
 
               <Select
                 required
@@ -237,7 +185,7 @@ export default function InsumosDrawer() {
                   name="agreement"
                   value={formState?.agreement}
                   onChange={onInputChange}
-                  className={s.insumos__createInsumo__input}
+                  className={s.noConsumibles__createNoConsumible__input}
                   style={{ marginBottom: '20px' }}
                 />
               )}
@@ -255,15 +203,15 @@ export default function InsumosDrawer() {
                   openCloseDrawer();
                   handleClearForm();
                 }}
-                className={s.insumos__createInsumo__button__cancel}
+                className={s.noConsumibles__createNoConsumible__button__cancel}
               >
                 Cancelar
               </Button>
               <Button
                 type="submit"
-                className={s.insumos__createInsumo__button__create}
+                className={s.noConsumibles__createNoConsumible__button__create}
               >
-                {activeInsumo ? 'Actualizar' : 'Crear insumo'}
+                {activeNoConsumible ? 'Actualizar insumo' : 'Crear insumo'}
               </Button>
             </DrawerFooter>
           </DrawerContent>

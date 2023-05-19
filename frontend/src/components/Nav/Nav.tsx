@@ -65,17 +65,17 @@ export function Nav() {
       role: ['1', '3', '6'],
     },
     {
-      name: 'Botiquines',
-      icon: '/icons/SidebarIcons/botiquines.svg',
-      alt: 'Botiquines',
-      link: '/botiquines',
-      role: ['1', '2', '3', '4', '6'],
-    },
-    {
       name: 'Insumos',
       icon: '/icons/SidebarIcons/insumos.svg',
       alt: 'Insumos',
       link: '/insumos',
+      role: ['1', '2', '4', '5'],
+    },
+    {
+      name: 'No consumibles',
+      icon: '/icons/SidebarIcons/botiquines.svg',
+      alt: 'No consumibles',
+      link: '/noConsumibles',
       role: ['1', '2', '4', '5'],
     },
   ];

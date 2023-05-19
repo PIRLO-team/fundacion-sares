@@ -12,6 +12,8 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Textarea,
+  Text,
 } from '@chakra-ui/react';
 
 // Sonner notification
@@ -23,6 +25,9 @@ import { Button, Input } from '@/components/ui';
 
 // Styles
 import s from '../styles/Voluntarios.module.scss';
+
+// Types
+import { TVoluntario } from '@/utils/types';
 
 export default function VoluntariosDrawer() {
   // Global state for drawer
@@ -44,15 +49,23 @@ export default function VoluntariosDrawer() {
     document: '',
     phone: '',
     other_contact: '',
+    observation: '',
   });
 
   // OnSubmit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (Object.values(formState).some((value) => value === '')) {
+    // dont allow empty fields except for observation
+    if (
+      !formState.first_name ||
+      !formState.last_name ||
+      !formState.email ||
+      !formState.profession ||
+      !formState.document ||
+      !formState.phone
+    ) {
       toast.error('Todos los campos son obligatorios');
-      // console.log(formState);
       return;
     }
 
@@ -72,13 +85,18 @@ export default function VoluntariosDrawer() {
   // Set form state if activeVoluntario
   useEffect(() => {
     if (activeVoluntario !== null) {
-      setFormState(activeVoluntario as any);
+      setFormState(activeVoluntario as TVoluntario);
     }
   }, [activeVoluntario]);
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear voluntario</Button>
+      <Button
+        onClick={openCloseDrawer}
+        className={s.voluntarios__createVoluntario__button}
+      >
+        Crear voluntario
+      </Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -106,10 +124,11 @@ export default function VoluntariosDrawer() {
 
             <DrawerBody>
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Nombre"
+                title="Nombre*"
                 name="first_name"
                 value={formState.first_name}
                 onChange={onInputChange}
@@ -117,10 +136,11 @@ export default function VoluntariosDrawer() {
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Apellido"
+                title="Apellido*"
                 name="last_name"
                 value={formState.last_name}
                 onChange={onInputChange}
@@ -129,10 +149,11 @@ export default function VoluntariosDrawer() {
 
               <Input
                 // disabled={!!activeVoluntario}
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="email"
-                title="Correo electrónico"
+                title="Correo electrónico*"
                 name="email"
                 value={formState.email}
                 onChange={onInputChange}
@@ -140,10 +161,11 @@ export default function VoluntariosDrawer() {
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Profesión"
+                title="Profesión*"
                 name="profession"
                 value={formState.profession}
                 onChange={onInputChange}
@@ -151,10 +173,11 @@ export default function VoluntariosDrawer() {
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="Cedula"
+                title="Cedula*"
                 name="document"
                 value={formState.document}
                 onChange={onInputChange}
@@ -162,10 +185,11 @@ export default function VoluntariosDrawer() {
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="Contacto"
+                title="Contacto*"
                 name="phone"
                 value={formState.phone}
                 onChange={onInputChange}
@@ -176,15 +200,36 @@ export default function VoluntariosDrawer() {
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Otro contacto"
+                title="Otro contacto (opcional)"
                 name="other_contact"
                 value={formState.other_contact}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
-                style={{ marginBottom: '20px' }}
               />
 
-              <br />
+              <Text
+                style={{
+                  fontSize: '15px',
+                  fontWeight: '500',
+                  margin: '1.5rem 0px 1rem 0px',
+                }}
+              >
+                Observaciones (opcional)
+              </Text>
+              <Textarea
+                name="observation"
+                value={formState?.observation}
+                onChange={onInputChange}
+                style={{
+                  marginBottom: '20px',
+                }}
+              />
+
+              <div
+                style={{
+                  margin: '1rem',
+                }}
+              />
 
               {loadingCreate && <Loader />}
             </DrawerBody>
@@ -201,7 +246,10 @@ export default function VoluntariosDrawer() {
               >
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button
+                type="submit"
+                className={s.voluntarios__createVoluntario__button__create}
+              >
                 {activeVoluntario
                   ? 'Actualizar voluntario'
                   : 'Crear voluntario'}

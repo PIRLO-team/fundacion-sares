@@ -36,7 +36,7 @@ export const useVoluntariosStore = () => {
   const [error, setError] = useState<string | null>();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
-  // Get Users
+  // Get voluntarios
   const startLoadingVoluntarios = async () => {
     dispatch(onSetLoadingVoluntarios(true));
 
@@ -44,34 +44,34 @@ export const useVoluntariosStore = () => {
       const { data } = await projectApi.get('/api/direct-volunteer');
 
       dispatch(onLoadVoluntarios(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingVoluntarios(false));
-      console.log('Error cargando los Voluntarios');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
-  // Set active user
-  const setActiveVoluntario = (user: TVoluntario | null) => {
-    dispatch(onSetActiveVoluntario(user));
+  // Set active voluntario
+  const setActiveVoluntario = (voluntario: TVoluntario | null) => {
+    dispatch(onSetActiveVoluntario(voluntario));
   };
 
-  // Saving user
-  const startSavingVoluntario = async (userForm: any) => {
+  // Saving voluntario
+  const startSavingVoluntario = async (voluntarioForm: any) => {
     setLoadingCreate(true);
 
     try {
-      if (userForm.direct_volunteer_id) {
-        // Update user
+      if (voluntarioForm.direct_volunteer_id) {
+        // Update voluntario
         await projectApi.patch(
-          `/api/direct-volunteer/${userForm.direct_volunteer_id}`,
-          userForm
+          `/api/direct-volunteer/${voluntarioForm.direct_volunteer_id}`,
+          voluntarioForm
         );
 
-        dispatch(onUpdateVoluntario(userForm));
+        dispatch(onUpdateVoluntario(voluntarioForm));
         setLoadingCreate(false);
 
-        // update user notification
+        // update voluntario notification
         toast.success('Voluntario actualizado con éxito');
         return;
       }
@@ -79,11 +79,11 @@ export const useVoluntariosStore = () => {
       // Create activity
       const { data } = await projectApi.post(
         '/api/direct-volunteer/register',
-        userForm
+        voluntarioForm
       );
       dispatch(
         onAddNewVoluntario({
-          ...userForm,
+          ...voluntarioForm,
         })
       );
       setLoadingCreate(false);
@@ -94,14 +94,14 @@ export const useVoluntariosStore = () => {
 
       //
     } catch (error: any) {
+      dispatch(onSetLoadingVoluntarios(false));
       setLoadingCreate(false);
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
 
-  // Inactive user
+  // Inactive voluntario
   const startInactiveVoluntario = async (voluntario: any) => {
     dispatch(onSetLoadingVoluntarios(true));
 
@@ -126,13 +126,13 @@ export const useVoluntariosStore = () => {
         return;
       }
     } catch (error: any) {
+      dispatch(onSetLoadingVoluntarios(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
-  // User by id
+  // voluntario by id
   const startGetVoluntarioById = async (direct_volunteer_id: string) => {
     dispatch(onSetLoadingVoluntarios(true));
 
@@ -144,8 +144,8 @@ export const useVoluntariosStore = () => {
       dispatch(onSetActiveVoluntario(data.response));
       dispatch(onSetLoadingVoluntarios(false));
     } catch (error: any) {
+      dispatch(onSetLoadingVoluntarios(false));
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -164,9 +164,9 @@ export const useVoluntariosStore = () => {
 
       toast.success('Voluntario eliminado con éxito');
     } catch (error: any) {
+      dispatch(onSetLoadingVoluntarios(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 

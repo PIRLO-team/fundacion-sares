@@ -42,10 +42,10 @@ export const useUsersStore = () => {
       const { data } = await projectApi.get('/api/user/all');
 
       dispatch(onLoadUsers(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingUsers(false));
-      console.log('Error cargando los usuarios');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
@@ -89,9 +89,9 @@ export const useUsersStore = () => {
 
       //
     } catch (error: any) {
+      dispatch(onSetLoadingUsers(false));
       setLoadingCreate(false);
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -122,9 +122,9 @@ export const useUsersStore = () => {
         return;
       }
     } catch (error: any) {
+      dispatch(onSetLoadingUsers(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -138,8 +138,8 @@ export const useUsersStore = () => {
       dispatch(onSetActiveUser(data.response));
       dispatch(onSetLoadingUsers(false));
     } catch (error: any) {
+      dispatch(onSetLoadingUsers(false));
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };

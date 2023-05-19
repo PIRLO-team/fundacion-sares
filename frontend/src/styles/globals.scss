@@ -39,8 +39,8 @@
 
   --max-width: 1200px;
 
-  --scrollbarBG: #eaeaea;
-  --thumbBG: #fafafa;
+  --scrollbarBG: var(--accents-2);
+  --thumbBG: var(--accents-1);
 }
 
 @keyframes fadeIn {
@@ -80,7 +80,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar {

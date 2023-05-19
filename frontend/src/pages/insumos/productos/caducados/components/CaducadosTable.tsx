@@ -80,7 +80,7 @@ export default function CaducadosTable() {
     'CATEGORIA',
     'CANTIDAD',
     'PROVEEDOR',
-    'TIPO DE ADQUISICION',
+    'TIPO DE ADQUISICIÓN',
     'F. DE CADUCIDAD',
   ];
 
