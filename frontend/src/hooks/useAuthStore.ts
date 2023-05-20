@@ -20,6 +20,7 @@ import {
   onLogoutProveedores,
   onLogoutInsumos,
   onLogoutNoConsumible,
+  onLogoutProductos,
 } from '@/store';
 
 // Soonner Notifications
@@ -45,6 +46,7 @@ export const useAuthStore = () => {
     dispatch(onLogoutUsers());
     dispatch(onLogoutVoluntarios());
     dispatch(onLogoutProveedores());
+    dispatch(onLogoutProductos());
     dispatch(onLogoutInsumos());
     dispatch(onLogoutNoConsumible());
 

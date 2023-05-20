@@ -135,34 +135,6 @@ export const useNoConsumiblesStore = () => {
     }
   };
 
-  // Inactive no consumible
-  const startInactiveNoConsumible = async (insumo: any) => {
-    dispatch(onSetLoadingNoConsumibles(true));
-
-    try {
-      await projectApi.patch(`/api/supply/update-supply/${insumo.supply_id}`, {
-        ...insumo,
-        is_active: !insumo.is_active,
-      });
-
-      await startLoadingNoConsumible();
-
-      dispatch(onSetLoadingNoConsumibles(false));
-
-      if (!insumo.is_active) {
-        toast.success('Insumo activado con éxito');
-        return;
-      } else {
-        toast.error('Insumo desactivado con éxito');
-        return;
-      }
-    } catch (error: any) {
-      dispatch(onSetLoadingNoConsumibles(false));
-      const errData = error.response.data;
-      toast.error(errData.message);
-    }
-  };
-
   // no consumible by id
   const startGetNoConsumibleById = async (supply_id: string) => {
     dispatch(onSetLoadingNoConsumibles(true));
@@ -208,8 +180,6 @@ export const useNoConsumiblesStore = () => {
   ) => {
     dispatch(onSetLoadingNoConsumibles(true));
 
-    console.log(non_consumable_id, discount_type_id);
-
     try {
       await projectApi.patch(
         `/api/supply/discount-non-consumable-supply/${non_consumable_id}`,
@@ -240,7 +210,6 @@ export const useNoConsumiblesStore = () => {
 
     // Methods
     setActiveNoConsumible,
-    startInactiveNoConsumible,
     startLoadingNoConsumible,
     startSavingNoConsumible,
     startGetNoConsumibleById,

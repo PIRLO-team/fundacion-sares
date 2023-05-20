@@ -10,9 +10,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-// Sonner notification
-import { toast } from 'sonner';
-
 // Hooks
 import { useForm, useNoConsumiblesStore } from '@/hooks';
 
@@ -36,15 +33,9 @@ export default function NoConsumibleCategoryModal() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      await startCreatingCategory(formState);
+    await startCreatingCategory(formState);
 
-      // toast.success('Categoria creada correctamente');
-
-      handleClearForm();
-    } catch (error) {
-      console.log(error);
-    }
+    handleClearForm();
   };
 
   // Clear form

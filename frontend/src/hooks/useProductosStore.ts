@@ -119,37 +119,6 @@ export const useProductosStore = () => {
     }
   };
 
-  // Inactive producto
-  const startInactiveProducto = async (producto: any) => {
-    dispatch(onSetLoadingProductos(true));
-
-    try {
-      await projectApi.patch(
-        `/api/supply/update-supply-category/${producto.supply_id}`,
-        {
-          ...producto,
-          is_active: !producto.is_active,
-        }
-      );
-
-      await startLoadingProductos();
-
-      dispatch(onSetLoadingProductos(false));
-
-      if (!producto.is_active) {
-        toast.success('Producto activado con éxito');
-        return;
-      } else {
-        toast.error('Producto desactivado con éxito');
-        return;
-      }
-    } catch (error: any) {
-      dispatch(onSetLoadingProductos(false));
-      const errData = error.response.data;
-      toast.error(errData.message);
-    }
-  };
-
   // producto by id
   const startGetProductoById = async (supply_id: string) => {
     dispatch(onSetLoadingProductos(true));
@@ -201,7 +170,6 @@ export const useProductosStore = () => {
     // Methods
     setProductCreated,
     setActiveProducto,
-    startInactiveProducto,
     startLoadingProductos,
     startLoadingExpiredProductos,
     startSavingProducto,

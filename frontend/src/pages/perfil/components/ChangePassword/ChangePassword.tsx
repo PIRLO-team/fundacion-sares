@@ -19,9 +19,11 @@ import { toast } from 'sonner';
 // Hooks
 import { useAuthStore, useForm } from '@/hooks';
 
+// UI Local Components
+import { Button } from '@/components/ui';
+
 // Styles
 import s from '../../styles/Perfil.module.scss';
-import { Button } from '@/components/ui';
 
 function ChangePassword() {
   const { currentUser, startUpdatePassword } = useAuthStore();

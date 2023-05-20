@@ -15,14 +15,7 @@ function LoginLayout({ children, SEOTitle }: TLoginLayout) {
       <SEO pageTitle={SEOTitle} />
 
       <div className={s.login}>
-        <div className={s.login__content}>
-          {/* <img
-            src="/images/login.png"
-            alt="logo"
-            className={s.login__content__img}
-            width="100%
-          /> */}
-        </div>
+        <div className={s.login__content} />
         <div className={s.login__form}>{children}</div>
       </div>
     </>

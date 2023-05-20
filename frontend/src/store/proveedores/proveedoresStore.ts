@@ -41,11 +41,6 @@ export const proveedoresSlice = createSlice({
       state.activeProveedor = payload || null;
     },
 
-    onUnsetActiveProveedor: (state) => {
-      state.loading = false;
-      state.activeProveedor = null;
-    },
-
     onAddNewProveedor: (state, { payload }) => {
       state.loading = false;
       state.proveedores.push(payload);
@@ -81,7 +76,6 @@ export const {
   onSetLoadingProveedores,
   onLoadProveedores,
   onSetActiveProveedor,
-  onUnsetActiveProveedor,
   onAddNewProveedor,
   onUpdateProveedor,
   onDeleteProveedor,

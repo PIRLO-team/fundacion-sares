@@ -41,11 +41,6 @@ export const usersSlice = createSlice({
       state.activeUser = payload;
     },
 
-    onUnsetActiveUser: (state) => {
-      state.loading = false;
-      state.activeUser = null;
-    },
-
     onAddNewUser: (state, { payload }) => {
       state.loading = false;
       state.users.push(payload);
@@ -81,7 +76,6 @@ export const {
   onSetLoadingUsers,
   onLoadUsers,
   onSetActiveUser,
-  onUnsetActiveUser,
   onAddNewUser,
   onUpdateUser,
   onDeleteUser,

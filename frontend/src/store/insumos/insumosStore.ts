@@ -41,11 +41,6 @@ export const insumosSlice = createSlice({
       state.activeInsumo = payload || null;
     },
 
-    onUnsetActiveInsumo: (state) => {
-      state.loading = false;
-      state.activeInsumo = null;
-    },
-
     onAddNewInsumo: (state, { payload }) => {
       state.loading = false;
       state.insumos.push(payload);
@@ -81,7 +76,6 @@ export const {
   onSetLoadingInsumos,
   onLoadInsumos,
   onSetActiveInsumo,
-  onUnsetActiveInsumo,
   onAddNewInsumo,
   onUpdateInsumo,
   onDeleteInsumo,

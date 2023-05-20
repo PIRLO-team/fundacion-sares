@@ -101,34 +101,6 @@ export const useProveedoresStore = () => {
     }
   };
 
-  // Inactive user
-  const startInactiveProveedor = async (Proveedor: any) => {
-    dispatch(onSetLoadingProveedores(true));
-
-    try {
-      await projectApi.patch(`/api/provider/${Proveedor.provider_id}`, {
-        ...Proveedor,
-        is_active: !Proveedor.is_active,
-      });
-
-      await startLoadingProveedores();
-
-      dispatch(onSetLoadingProveedores(false));
-
-      if (!Proveedor.is_active) {
-        toast.success('Proveedor activado con éxito');
-        return;
-      } else {
-        toast.error('Proveedor desactivado con éxito');
-        return;
-      }
-    } catch (error: any) {
-      dispatch(onSetLoadingProveedores(false));
-      const errData = error.response.data;
-      toast.error(errData.message);
-    }
-  };
-
   // User by id
   const startGetProveedorById = async (provider_id: string) => {
     dispatch(onSetLoadingProveedores(true));
@@ -173,7 +145,6 @@ export const useProveedoresStore = () => {
 
     // Methods
     setActiveProveedor,
-    startInactiveProveedor,
     startLoadingProveedores,
     startSavingProveedor,
     startGetProveedorById,

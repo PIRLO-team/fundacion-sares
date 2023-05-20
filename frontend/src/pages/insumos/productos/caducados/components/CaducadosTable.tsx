@@ -12,41 +12,24 @@ import {
   Th,
   Td,
   TableContainer,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   IconButton,
-  Divider,
   Tfoot,
 } from '@chakra-ui/react';
 
 // Chakra Icons
-import {
-  HamburgerIcon,
-  EditIcon,
-  DeleteIcon,
-  ArrowBackIcon,
-  ArrowForwardIcon,
-} from '@chakra-ui/icons';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 
 // Hooks
-import { useUiStore, useProductosStore } from '@/hooks';
+import { useProductosStore } from '@/hooks';
 
 // UI Components
 import { Select } from '@/components/ui';
 
-// Styles
-import s from '../Caducados.module.scss';
-
 // Types
-import { TInsumo, TProducto } from '@/utils/types';
+import { TInsumo } from '@/utils/types';
 
 export default function CaducadosTable() {
-  const { expiredProductos, setActiveProducto, startDeleteProducto } =
-    useProductosStore();
-
-  const { openCloseDrawer } = useUiStore();
+  const { expiredProductos } = useProductosStore();
 
   // Pagination
   const [page, setPage] = useState(0);
@@ -123,7 +106,6 @@ export default function CaducadosTable() {
                 <Td
                   style={{
                     width: '150px',
-                    // textAlign: 'center',
                   }}
                 >
                   {producto?.expiration_date}
@@ -148,7 +130,6 @@ export default function CaducadosTable() {
                 onChange={(e) => {
                   setUserToShow(Number(e.target.value));
                 }}
-                // className={s.pagination__select}
                 style={{
                   width: '80px',
                 }}

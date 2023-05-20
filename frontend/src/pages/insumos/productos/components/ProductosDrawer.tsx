@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // Hooks
-import { useUiStore, useProductosStore, useForm } from '@/hooks';
+import { useUiStore, useProductosStore } from '@/hooks';
 
 // Chakra UI Components
 import {
@@ -82,8 +82,8 @@ export default function ProductosDrawer() {
     });
 
     await startLoadingProductos();
-    // openCloseDrawer();
-    // handleClearForm();
+    openCloseDrawer();
+    handleClearForm();
   };
 
   // Clear form
