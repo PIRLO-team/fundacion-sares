@@ -96,23 +96,6 @@ export class DashboardService {
   }
   async expiredSupplyData() {
     try {
-      // const expiredSupplyData: Supply[] = await this._supplyRepository.find({
-      //   // select: [
-      //   //   'supply_id',
-      //   //   'categoryBySupply'
-      //   // ],
-      //   where: {
-      //     is_active: true,
-      //     expiration_date: LessThanOrEqual(new Date()),
-      //   },
-      //   relations: [
-      //     'supplyCategory',
-      //     'categoryBySupply',
-      //     'providerSupply',
-      //     'acquisitionTypeSupply',
-      //   ],
-      // });
-
       const expiredSupplyData: Supply[] = await this._supplyRepository
         .createQueryBuilder('supply')
         .select([
@@ -125,6 +108,10 @@ export class DashboardService {
         .where('supply.is_active = :isActive', { isActive: true })
         .andWhere('supply.expiration_date <= :today', { today: new Date() })
         .getMany();
+
+        if(!expiredSupplyData.length) {
+          return [];
+        }
 
       return expiredSupplyData;
     } catch (error) {
