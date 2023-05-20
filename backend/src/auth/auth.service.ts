@@ -526,6 +526,7 @@ export class AuthService {
           'profession',
           'phone',
           'is_active',
+          'other_contact'
         ],
         where: {
           user_id: user.user_id,
