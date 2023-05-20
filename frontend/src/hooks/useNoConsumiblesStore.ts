@@ -204,17 +204,17 @@ export const useNoConsumiblesStore = () => {
   // Discount amount insumo
   const startDiscountNoConsumible = async (
     non_consumable_id: string,
-    discount_supply_id: number
+    discount_type_id: number
   ) => {
     dispatch(onSetLoadingNoConsumibles(true));
 
-    console.log(non_consumable_id, discount_supply_id);
+    console.log(non_consumable_id, discount_type_id);
 
     try {
       await projectApi.patch(
         `/api/supply/discount-non-consumable-supply/${non_consumable_id}`,
         {
-          discount_supply_id: discount_supply_id,
+          discount_type_id: discount_type_id,
         }
       );
 

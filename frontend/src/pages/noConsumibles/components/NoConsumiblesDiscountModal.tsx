@@ -75,7 +75,7 @@ export default function InsumosDiscountModal({
       <ModalOverlay />
       <form onSubmit={handleSubmit} autoComplete="off">
         <ModalContent>
-          <ModalHeader>Descontar noConsumible</ModalHeader>
+          <ModalHeader>Descontar insumo</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Select
@@ -86,10 +86,11 @@ export default function InsumosDiscountModal({
               onChange={onInputChange}
             >
               <option value="">-- Elegir un motivo --</option>
-              <option value="1">Por donaci&oacute;n</option>
-              <option value="2">Por formaci&oacute;n</option>
-              <option value="3">Por perdida</option>
-              <option value="5">Mal estado</option>
+              <option value={1}>Por donaci&oacute;n</option>
+              <option value={2}>Por formaci&oacute;n</option>
+              <option value={3}>Por perdida</option>
+              <option value={4}>Mal estado</option>
+              <option value={5}>Por atenci&oacute;n</option>
             </Select>
           </ModalBody>
 
