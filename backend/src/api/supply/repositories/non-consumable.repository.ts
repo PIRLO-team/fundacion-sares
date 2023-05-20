@@ -11,4 +11,33 @@ export class NonConsumableRepository extends Repository<NonConsumable>{
     ) {
         super(NonConsumable, dataSource.createEntityManager());
     }
+
+    async nonConsumableData(){
+        try {
+            const nonConsumableQuery = `
+            SELECT
+                ncc.non_consumable_category_supply_name AS name,
+                nc.non_consumable_id
+            FROM
+                non_consumable nc
+                LEFT JOIN non_consumable_category ncc ON ncc.non_consumable_category_supply_id = nc.non_consumable_category_supply_id
+            WHERE
+                nc.is_active = TRUE;
+            `;
+    
+            const nonConsumableData = await this.dataSource.query(nonConsumableQuery);
+    
+            if(!nonConsumableData.length) {
+                return [];
+            }
+    
+            return nonConsumableData;
+        } catch (error) {
+          throw this._handlersError.returnErrorRepository({
+            className: NonConsumableRepository.name,
+            error: error,
+            debug: true,
+          });
+        }
+    }
 }

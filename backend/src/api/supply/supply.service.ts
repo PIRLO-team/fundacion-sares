@@ -27,17 +27,18 @@ export class SupplyService {
     private readonly _supplyCategoryBySupplyRepository: CategoryBySupplyRepository,
     private readonly _discountSupplyRepository: DiscountSupplyRepository,
     private readonly _discountTypeRepository: DiscountTypeRepository,
-  ) { }
+  ) {}
 
   async getAcquisitionTypes() {
     try {
-      const acquisitionTypes: AcquisitionType[] = await this._acquisitionTypeRepository.find();
+      const acquisitionTypes: AcquisitionType[] =
+        await this._acquisitionTypeRepository.find();
 
       return {
         response: acquisitionTypes,
         title: '✅: Todos los tipos de adquisición',
         message: 'Lista de tipos de adquisición',
-        status: HttpStatus.OK
+        status: HttpStatus.OK,
       };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
@@ -46,13 +47,14 @@ export class SupplyService {
 
   async getDiscountTypes() {
     try {
-      const discountTypes: DiscountType[] = await this._discountTypeRepository.find();
+      const discountTypes: DiscountType[] =
+        await this._discountTypeRepository.find();
 
       return {
         response: discountTypes,
         title: '✅: Todos los tipos de adquisición',
         message: 'Lista de tipos de adquisición',
-        status: HttpStatus.OK
+        status: HttpStatus.OK,
       };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
@@ -64,15 +66,14 @@ export class SupplyService {
       const supplyQuery: Supply[] = await this._supplyRepository.find({
         where: {
           is_active: true,
-          expiration_date: LessThanOrEqual(new Date())
-
+          expiration_date: LessThanOrEqual(new Date()),
         },
         relations: [
           'supplyCategory',
           'categoryBySupply',
           'providerSupply',
           'acquisitionTypeSupply',
-        ]
+        ],
       });
 
       if (!supplyQuery.length) {
@@ -80,15 +81,15 @@ export class SupplyService {
           response: [],
           title: '⚠: Sin datos',
           message: 'No hay elementos caducados',
-          status: HttpStatus.OK
-        }
+          status: HttpStatus.OK,
+        };
       }
 
       return {
         response: supplyQuery,
         title: '✅: Todos los tipos de adquisición',
         message: 'Lista de tipos de adquisición',
-        status: HttpStatus.OK
+        status: HttpStatus.OK,
       };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
@@ -105,7 +106,7 @@ export class SupplyService {
           'acquisitionTypeSupply',
         ],
         where: {
-          is_active: true
+          is_active: true,
         },
       });
 
@@ -114,16 +115,16 @@ export class SupplyService {
           response: [],
           title: '⚠: Sin datos',
           message: 'No hay datos',
-          status: HttpStatus.NOT_FOUND
-        }
+          status: HttpStatus.NOT_FOUND,
+        };
       }
 
       return {
         response: supplyQuery,
         title: '✅: Todas las categorias',
         message: 'Lista de todas las categorias',
-        status: HttpStatus.OK
-      }
+        status: HttpStatus.OK,
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
@@ -138,24 +139,30 @@ export class SupplyService {
         acquisition_id,
         agreement,
         expiration_date,
-        quantity
-      } = createSupplyDto
+        quantity,
+      } = createSupplyDto;
 
-      if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
+      if (
+        !supply_category_id ||
+        !category_by_supply_id ||
+        !provider_id ||
+        !acquisition_id ||
+        !quantity
+      ) {
         return {
           response: { valid: false },
           title: '⚠: Datos no actualizados',
           message: 'Faltan campos por completar',
-          status: HttpStatus.BAD_REQUEST
-        }
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
       const supplyExist: Supply[] = await this._supplyRepository.find({
         where: {
           supply_category_id,
           category_by_supply_id,
-          acquisition_id
-        }
+          acquisition_id,
+        },
       });
 
       if (supplyExist.length) {
@@ -163,34 +170,36 @@ export class SupplyService {
           response: { valid: false },
           title: '⚠️: Datos existentes',
           message: 'Ya existe una entrada con los mismos datos',
-          status: HttpStatus.CONFLICT
-        }
+          status: HttpStatus.CONFLICT,
+        };
       }
 
-      const supplyCategory: SupplyCategory = await this._supplyCategoryRepository.findOne({
-        where: {
-          supply_id: supply_category_id,
-          is_active: true
-        },
-        relations: ['supplyType']
-      });
+      const supplyCategory: SupplyCategory =
+        await this._supplyCategoryRepository.findOne({
+          where: {
+            supply_id: supply_category_id,
+            is_active: true,
+          },
+          relations: ['supplyType'],
+        });
 
       const { supply_name, supplyType } = supplyCategory;
       const supply_name_prefix = supply_name?.substring(0, 2).toUpperCase();
-      const supply_type_prefix = supplyType?.supply_type_name?.substring(0, 2).toUpperCase();
+      const supply_type_prefix = supplyType?.supply_type_name
+        ?.substring(0, 2)
+        .toUpperCase();
       const supplyId = `${supply_type_prefix}-${supply_name_prefix}`;
 
       const lastId = await this._supplyRepository.count({
         where: {
           supply_id: Like(`%${supplyId}%`),
-        }
+        },
       });
 
       const countId = lastId + 1;
       const newSupplyId = `${supplyId}-${countId}`;
 
-
-      const newSupply = new Supply()
+      const newSupply = new Supply();
       newSupply.supply_category_id = supply_category_id;
       newSupply.category_by_supply_id = category_by_supply_id;
       newSupply.provider_id = provider_id;
@@ -207,8 +216,8 @@ export class SupplyService {
         response: newSupply,
         title: '✅: Se creo la entrada',
         message: 'Hemos creado la entrada satisfactoriamente',
-        status: HttpStatus.CREATED
-      }
+        status: HttpStatus.CREATED,
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
@@ -219,14 +228,14 @@ export class SupplyService {
       const supply: Supply = await this._supplyRepository.findOne({
         where: {
           supply_id: id,
-          is_active: true
+          is_active: true,
         },
         relations: [
           'supplyCategory',
           'categoryBySupply',
           'providerSupply',
           'acquisitionTypeSupply',
-        ]
+        ],
       });
 
       if (!supply) {
@@ -234,23 +243,26 @@ export class SupplyService {
           response: {},
           title: '⚠: Entrada no existente',
           message: 'La entrada no existe',
-          status: HttpStatus.NOT_FOUND
-        }
+          status: HttpStatus.NOT_FOUND,
+        };
       }
 
       return {
         response: supply,
         title: '✅: Entrada',
         message: 'Entrada encontrada',
-        status: HttpStatus.OK
-      }
-    }
-    catch (error) {
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async updateSupply(id: string, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+  async updateSupply(
+    id: string,
+    user: TokenDto,
+    updateSupplyDto: UpdateSupplyDto,
+  ) {
     try {
       const {
         supply_category_id,
@@ -259,21 +271,27 @@ export class SupplyService {
         acquisition_id,
         agreement,
         expiration_date,
-        quantity
+        quantity,
       } = updateSupplyDto;
 
-      if (!supply_category_id || !category_by_supply_id || !provider_id || !acquisition_id || !quantity) {
+      if (
+        !supply_category_id ||
+        !category_by_supply_id ||
+        !provider_id ||
+        !acquisition_id ||
+        !quantity
+      ) {
         return {
           response: { valid: false },
           title: '⚠: Datos no actualizados',
           message: 'Faltan campos por completar',
-          status: HttpStatus.BAD_REQUEST
-        }
-      };
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
 
       const supplyExist: Supply = await this._supplyRepository.findOneBy({
         supply_id: id,
-        is_active: true
+        is_active: true,
       });
 
       if (!supplyExist) {
@@ -281,22 +299,23 @@ export class SupplyService {
           response: { valid: false },
           title: '⚠: Entrada no existente',
           message: 'La entrada no existe, por favor verifica los datos',
-          status: HttpStatus.NOT_FOUND
-        }
-      };
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
 
-      const categoryBySupplyExist: CategoryBySupply = await this._supplyCategoryBySupplyRepository.findOneBy({
-        supply_id: supply_category_id
-      });
+      const categoryBySupplyExist: CategoryBySupply =
+        await this._supplyCategoryBySupplyRepository.findOneBy({
+          supply_id: supply_category_id,
+        });
 
       if (!categoryBySupplyExist) {
         return {
           response: { valid: false },
           title: '⚠: Categoría no existente',
           message: 'La categoría no existe',
-          status: HttpStatus.NOT_FOUND
-        }
-      };
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
 
       await this._supplyRepository.update(id, {
         supply_category_id,
@@ -315,14 +334,18 @@ export class SupplyService {
         response: data.response,
         title: '✅: Se actualizo la entrada',
         message: 'Hemos actualizado la entrada satisfactoriamente',
-        status: HttpStatus.OK
+        status: HttpStatus.OK,
       };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async updatedQuantity(id: string, user: TokenDto, updateSupplyDto: UpdateSupplyDto) {
+  async updatedQuantity(
+    id: string,
+    user: TokenDto,
+    updateSupplyDto: UpdateSupplyDto,
+  ) {
     try {
       const { quantity, discount_type_id } = updateSupplyDto;
 
@@ -330,14 +353,15 @@ export class SupplyService {
         return {
           response: { valid: false },
           title: '⚠: Por favor diga la cantidad y el motivo',
-          message: 'Establezca la cantidad a descontar del inventario y el motivo',
-          status: HttpStatus.BAD_REQUEST
-        }
+          message:
+            'Establezca la cantidad a descontar del inventario y el motivo',
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
       const supplyExist: Supply = await this._supplyRepository.findOneBy({
         supply_id: id,
-        is_active: true
+        is_active: true,
       });
 
       if (!supplyExist) {
@@ -345,9 +369,9 @@ export class SupplyService {
           response: { valid: false },
           title: '⚠: Entrada no existente',
           message: 'La entrada no existe, por favor verifica los datos',
-          status: HttpStatus.NOT_FOUND
-        }
-      };
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
 
       const newQuantity = supplyExist.quantity - quantity;
       let newSupply: DiscountSupply;
@@ -367,11 +391,11 @@ export class SupplyService {
       return {
         response: {
           newSupply,
-          data: data.response
+          data: data.response,
         },
         title: '✅: Se actualizo la entrada',
         message: 'Hemos actualizado la entrada satisfactoriamente',
-        status: HttpStatus.OK
+        status: HttpStatus.OK,
       };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
@@ -383,11 +407,9 @@ export class SupplyService {
       const supplyExist: Supply = await this._supplyRepository.findOne({
         where: {
           supply_id: id,
-          is_active: true
+          is_active: true,
         },
-        relations: [
-          'supplyCategory'
-        ]
+        relations: ['supplyCategory'],
       });
 
       if (!supplyExist) {
@@ -395,22 +417,21 @@ export class SupplyService {
           response: { valid: false },
           title: `⚠︰ La entrada no existe`,
           message: `Por favor, ingresa una entrada valida`,
-          status: HttpStatus.BAD_REQUEST
-        }
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
       await this._supplyRepository.update(id, {
         is_active: false,
-        last_updated_by: user.user_id
+        last_updated_by: user.user_id,
       });
 
       return {
         response: { valid: true },
         title: `✅: El insumo ha sido desactivado`,
         message: `El insumo ${supplyExist.supplyCategory.supply_name} fue desactivado correctamente`,
-        status: HttpStatus.OK
-      }
-
+        status: HttpStatus.OK,
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
