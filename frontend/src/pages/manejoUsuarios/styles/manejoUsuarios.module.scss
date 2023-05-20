@@ -40,10 +40,12 @@
     transition: var(--main-transition);
 
     &__button {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
+      padding: 0.5rem 1rem;
+
+      @include mediaquery(575px) {
+        width: 100%;
+        font-size: 0.875rem;
+      }
 
       &__create {
         width: 100%;
@@ -58,20 +60,8 @@
         }
       }
 
-      &__clear {
-        max-width: 50px;
-        width: 100%;
-        min-height: 38px;
-        // animation: animation 500ms ease-in-out;
-        transition: var(--main-transition);
-
-        &:hover {
-          background-color: var(--color-primary-dark);
-          border-color: var(--color-primary-dark);
-        }
-      }
-
       &__cancel {
+        font-size: 0.875rem;
         background-color: var(--color-not-started);
         color: var(--white);
         border-color: var(--color-not-started);

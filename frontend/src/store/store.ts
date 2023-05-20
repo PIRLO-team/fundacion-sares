@@ -8,6 +8,7 @@ import { voluntariosSlice } from './voluntarios/voluntariosStore';
 import { proveedoresSlice } from './proveedores/proveedoresStore';
 import { insumosSlice } from './insumos/insumosStore';
 import { productosSlice } from './productos/productosStore';
+import { noConsumibleSlice } from './noConsumibles/noConsumiblesStore';
 // ...
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     voluntarios: voluntariosSlice.reducer,
     proveedores: proveedoresSlice.reducer,
     insumos: insumosSlice.reducer,
+    noConsumibles: noConsumibleSlice.reducer,
     productos: productosSlice.reducer,
     ui: uiSlice.reducer,
   },

@@ -9,4 +9,5 @@ export type TVoluntario = {
   document: string;
   phone: string;
   other_contact: string;
+  observation: string;
 };

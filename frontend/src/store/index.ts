@@ -6,3 +6,4 @@ export * from './voluntarios/voluntariosStore';
 export * from './proveedores/proveedoresStore';
 export * from './insumos/insumosStore';
 export * from './productos/productosStore';
+export * from './noConsumibles/noConsumiblesStore';

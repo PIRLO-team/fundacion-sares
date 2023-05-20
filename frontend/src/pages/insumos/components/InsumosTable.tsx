@@ -99,7 +99,7 @@ export default function InsumosTable() {
     'CATEGORIA',
     'CANTIDAD',
     'PROVEEDOR',
-    'TIPO DE ADQUISICION',
+    'TIPO DE ADQUISICIÓN',
     'FECHA DE CADUCIDAD',
   ];
   return (
@@ -168,8 +168,14 @@ export default function InsumosTable() {
 
                         <PopoverContent>
                           <PopoverArrow />
-                          {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
-                          <PopoverBody>{insumo?.agreement}</PopoverBody>
+                          <PopoverBody
+                            style={{
+                              textAlign: 'center',
+                              whiteSpace: 'pre-wrap',
+                            }}
+                          >
+                            {insumo?.agreement}
+                          </PopoverBody>
                         </PopoverContent>
                       </Popover>
                     )}

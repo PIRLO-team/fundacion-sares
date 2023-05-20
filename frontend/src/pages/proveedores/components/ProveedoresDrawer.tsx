@@ -47,9 +47,25 @@ export default function ProveedoresDrawer() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (Object.values(formState).some((value) => value === '')) {
+    // dont allow empty fields except for other_contact
+    if (
+      !formState.name ||
+      !formState.email ||
+      !formState.nit ||
+      !formState.phone
+    ) {
       toast.error('Todos los campos son obligatorios');
       // console.log(formState);
+      return;
+    }
+
+    if (formState.nit.length > 10) {
+      toast.error('El NIT no puede tener más de 10 dígitos');
+      return;
+    }
+
+    if (formState.phone.length > 10) {
+      toast.error('El número de contacto no puede tener más de 10 dígitos');
       return;
     }
 
@@ -73,7 +89,12 @@ export default function ProveedoresDrawer() {
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear proveedor</Button>
+      <Button
+        onClick={openCloseDrawer}
+        className={s.proveedores__createProveedor__button}
+      >
+        Crear proveedor
+      </Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -101,32 +122,37 @@ export default function ProveedoresDrawer() {
 
             <DrawerBody>
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Nombre de la organizacion"
+                title="Nombre de la organizacion*"
                 name="name"
                 value={formState.name}
+                maxLength={75}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="email"
-                title="Correo electrónico"
+                title="Correo electrónico*"
                 name="email"
+                maxLength={50}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="NIT"
+                title="NIT*"
                 name="nit"
                 value={formState.nit}
                 onChange={onInputChange}
@@ -134,10 +160,11 @@ export default function ProveedoresDrawer() {
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="number"
-                title="Contacto"
+                title="Contacto*"
                 name="phone"
                 value={formState.phone}
                 onChange={onInputChange}
@@ -148,8 +175,9 @@ export default function ProveedoresDrawer() {
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Otro contacto"
+                title="Otro contacto (opcional)"
                 name="other_contact"
+                maxLength={50}
                 value={formState.other_contact}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}

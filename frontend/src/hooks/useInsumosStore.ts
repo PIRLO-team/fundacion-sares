@@ -36,7 +36,7 @@ export const useInsumosStore = () => {
   const [error, setError] = useState<string | null>();
   const [loadingCreate, setLoadingCreate] = useState(false);
 
-  // Get Users
+  // Get insumos
   const startLoadingInsumos = async () => {
     dispatch(onSetLoadingInsumos(true));
 
@@ -44,34 +44,34 @@ export const useInsumosStore = () => {
       const { data } = await projectApi.get('/api/supply/all');
 
       dispatch(onLoadInsumos(data.response));
-    } catch (error) {
+    } catch (error: any) {
       dispatch(onSetLoadingInsumos(false));
-      console.log('Error cargando los insumos');
-      console.log(error);
+      const errData = error.response.data;
+      toast.error(errData.message);
     }
   };
 
-  // Set active user
-  const setActiveInsumo = (user: TInsumo | null) => {
-    dispatch(onSetActiveInsumo(user));
+  // Set active insumo
+  const setActiveInsumo = (insumo: TInsumo | null) => {
+    dispatch(onSetActiveInsumo(insumo));
   };
 
-  // Saving user
-  const startSavingInsumo = async (userForm: any) => {
+  // Saving insumo
+  const startSavingInsumo = async (insumoForm: any) => {
     setLoadingCreate(true);
 
     try {
-      if (userForm.supply_id) {
-        // Update user
+      if (insumoForm.supply_id) {
+        // Update insumo
         await projectApi.patch(
-          `/api/supply/update-supply/${userForm.supply_id}`,
-          userForm
+          `/api/supply/update-supply/${insumoForm.supply_id}`,
+          insumoForm
         );
 
-        dispatch(onUpdateInsumo(userForm));
+        dispatch(onUpdateInsumo(insumoForm));
         setLoadingCreate(false);
 
-        // update user notification
+        // update insumo notification
         toast.success('Insumo actualizado con éxito');
         return;
       }
@@ -79,11 +79,11 @@ export const useInsumosStore = () => {
       // Create activity
       const { data } = await projectApi.post(
         '/api/supply/create-supply',
-        userForm
+        insumoForm
       );
       dispatch(
         onAddNewInsumo({
-          ...userForm,
+          ...insumoForm,
         })
       );
       setLoadingCreate(false);
@@ -94,14 +94,14 @@ export const useInsumosStore = () => {
 
       //
     } catch (error: any) {
+      dispatch(onSetLoadingInsumos(false));
       setLoadingCreate(false);
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
 
-  // Inactive user
+  // Inactive insumo
   const startInactiveInsumo = async (insumo: any) => {
     dispatch(onSetLoadingInsumos(true));
 
@@ -123,13 +123,13 @@ export const useInsumosStore = () => {
         return;
       }
     } catch (error: any) {
+      dispatch(onSetLoadingInsumos(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
-  // User by id
+  // insumo by id
   const startGetInsumoById = async (supply_id: string) => {
     dispatch(onSetLoadingInsumos(true));
 
@@ -139,8 +139,8 @@ export const useInsumosStore = () => {
       dispatch(onSetActiveInsumo(data.response));
       dispatch(onSetLoadingInsumos(false));
     } catch (error: any) {
+      dispatch(onSetLoadingInsumos(false));
       const errData = error.response.data;
-      console.log(error);
       toast.error(errData.message);
     }
   };
@@ -157,9 +157,9 @@ export const useInsumosStore = () => {
 
       toast.success('Insumo eliminado con éxito');
     } catch (error: any) {
+      dispatch(onSetLoadingInsumos(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -185,9 +185,9 @@ export const useInsumosStore = () => {
 
       toast.success('Insumo descontado con éxito');
     } catch (error: any) {
+      dispatch(onSetLoadingInsumos(false));
       const errData = error.response.data;
-      console.log(error);
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 

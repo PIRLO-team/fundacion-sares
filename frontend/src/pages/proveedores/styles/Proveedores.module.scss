@@ -47,10 +47,12 @@
     transition: var(--main-transition);
 
     &__button {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
+      padding: 0.5rem 1rem;
+
+      @include mediaquery(575px) {
+        width: 100%;
+        font-size: 0.875rem;
+      }
 
       &__create {
         width: 100%;

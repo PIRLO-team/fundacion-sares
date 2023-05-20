@@ -61,51 +61,6 @@
   &__createCaducados {
     width: 100%;
     transition: var(--main-transition);
-
-    &__button {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-
-      &__create {
-        width: 100%;
-        font-size: 0.875rem;
-        min-height: 38px;
-        transition: var(--main-transition);
-
-        &:hover {
-          background-color: var(--color-primary-dark);
-          border-color: var(--color-primary-dark);
-          color: white;
-        }
-      }
-
-      &__clear {
-        max-width: 50px;
-        width: 100%;
-        min-height: 38px;
-        // animation: animation 500ms ease-in-out;
-        transition: var(--main-transition);
-
-        &:hover {
-          background-color: var(--color-primary-dark);
-          border-color: var(--color-primary-dark);
-        }
-      }
-
-      &__cancel {
-        background-color: var(--color-not-started);
-        color: var(--white);
-        border-color: var(--color-not-started);
-
-        &:hover {
-          background-color: var(--accents-3);
-          color: var(--white);
-          border-color: var(--accents-3);
-        }
-      }
-    }
   }
 }
 

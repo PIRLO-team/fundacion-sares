@@ -102,7 +102,12 @@ export default function UserDrawer() {
 
   return (
     <>
-      <Button onClick={openCloseDrawer}>Crear usuario</Button>
+      <Button
+        onClick={openCloseDrawer}
+        className={s.manejoUsuarios__createUser__button}
+      >
+        Crear usuario
+      </Button>
       <Drawer
         isOpen={isDrawerOpen}
         placement="right"
@@ -130,55 +135,64 @@ export default function UserDrawer() {
 
             <DrawerBody>
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Nombre"
+                title="Nombre*"
                 name="first_name"
+                maxLength={50}
                 value={formState.first_name}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Apellido"
+                title="Apellido*"
                 name="last_name"
+                maxLength={50}
                 value={formState.last_name}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}
               />
 
               <Input
+                required
                 disabled={!!activeUser}
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="email"
-                title="Correo electrónico"
+                title="Correo electrónico*"
                 name="email"
+                maxLength={50}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}
               />
 
               <Input
+                required
                 readOnly={loadingCreate}
                 inputType="secondary"
                 type="text"
-                title="Profesión"
+                title="Profesión*"
                 name="profession"
+                maxLength={50}
                 value={formState.profession}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}
               />
 
               <Select
+                required
                 readOnly={loadingCreate}
                 disabled={activeUser?.userRole?.role_id === '1'}
                 SelectType="secondary"
-                title="Perfil profesional"
+                title="Perfil profesional*"
                 name="user_role"
                 value={
                   activeUser ? formState.userRole.role_id : formState?.user_role
@@ -211,7 +225,10 @@ export default function UserDrawer() {
               >
                 Cancelar
               </Button>
-              <Button type="submit">
+              <Button
+                type="submit"
+                className={s.manejoUsuarios__createUser__button__create}
+              >
                 {activeUser ? 'Actualizar usuario' : 'Crear usuario'}
               </Button>
             </DrawerFooter>

@@ -7,9 +7,6 @@ import { useRouter } from 'next/router';
 // Hooks
 import { useAuthStore, useUsersStore } from '@/hooks';
 
-// Chakra UI
-import { useDisclosure } from '@chakra-ui/react';
-
 // Local Components
 import { withAuth } from '@/auth/withAuth';
 import { Layout, Loader } from '@/components';
@@ -21,7 +18,8 @@ import { Avatar, Button, Input } from '@/components/ui';
 // Styles
 import s from '../styles/Perfil.module.scss';
 
-// Types
+// Sonner notification
+import { toast } from 'sonner';
 
 function Perfil() {
   const router = useRouter();
@@ -37,8 +35,6 @@ function Perfil() {
     startSavingUser,
   } = useUsersStore();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const FULLNAME = `${activeUser?.first_name} ${activeUser?.last_name}`;
 
   const [formUserState, setFormUserState] = useState({
@@ -49,6 +45,7 @@ function Perfil() {
     document: '',
     profession: '',
     phone: '',
+    other_contact: '',
   });
 
   // onInputChange
@@ -68,6 +65,16 @@ function Perfil() {
 
     // If data is equal to activeUser, do not update
     if (formUserState === activeUser) {
+      return;
+    }
+
+    if (formUserState.document.toString().length > 10) {
+      toast.error('La cedula debe tener máximo 10 digitos');
+      return;
+    }
+
+    if (formUserState.phone.toString().length > 10) {
+      toast.error('El contacto debe tener máximo 10 digitos');
       return;
     }
 
@@ -95,6 +102,7 @@ function Perfil() {
         document: activeUser.document,
         profession: activeUser.profession,
         phone: activeUser.phone,
+        other_contact: activeUser.other_contact,
       });
     }
   }, [activeUser]);
@@ -147,6 +155,7 @@ function Perfil() {
                     type="text"
                     name="first_name"
                     defaultValue={activeUser?.first_name}
+                    maxLength={50}
                     inputType="secondary"
                     title="Nombre"
                     placeholder="Nombre"
@@ -161,6 +170,7 @@ function Perfil() {
                     type="text"
                     name="last_name"
                     defaultValue={activeUser?.last_name}
+                    maxLength={50}
                     inputType="secondary"
                     title="Apellido(s)"
                     placeholder="Apellido(s)"
@@ -177,6 +187,7 @@ function Perfil() {
                     type="text"
                     name="email"
                     defaultValue={activeUser?.email}
+                    maxLength={50}
                     inputType="secondary"
                     title="Correo electrónico"
                     placeholder="Correo electrónico"
@@ -207,6 +218,7 @@ function Perfil() {
                     type="text"
                     name="profession"
                     defaultValue={activeUser?.profession}
+                    maxLength={50}
                     inputType="secondary"
                     title="Profesión"
                     placeholder="Profesión"
@@ -245,11 +257,12 @@ function Perfil() {
 
                 <div>
                   <Input
-                    disabled
+                    disabled={userID !== currentUser.uid}
                     className={s.profile__personalInfo__form__group__input}
-                    type="tel"
+                    type="text"
                     name="other_contact"
                     defaultValue={activeUser?.other_contact}
+                    maxLength={50}
                     inputType="secondary"
                     title="Otro medio de contacto"
                     placeholder="Otro medio de contacto"
@@ -272,20 +285,17 @@ function Perfil() {
               )}
             </form>
 
-            {userID === currentUser.uid && (
-              <div className={s.profile__personalInfo__security}>
-                <p className={s.profile__personalInfo__form__text}>Seguridad</p>
+            <div className={s.profile__personalInfo__security}>
+              {userID === currentUser.uid && (
+                <>
+                  <p className={s.profile__personalInfo__form__text}>
+                    Seguridad
+                  </p>
 
-                <Button
-                  onClick={onOpen}
-                  className={s.profile__personalInfo__form__group__button__item}
-                >
-                  Cambiar contraseña
-                </Button>
-
-                <ChangePassword isOpen={isOpen} onClose={onClose} />
-              </div>
-            )}
+                  <ChangePassword />
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

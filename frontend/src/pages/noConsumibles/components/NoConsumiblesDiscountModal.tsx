@@ -12,28 +12,29 @@ import {
 // Sonner notification
 import { toast } from 'sonner';
 
-// hooks
-import { useForm, useInsumosStore } from '@/hooks';
+// Hooks
+import { useForm, useNoConsumiblesStore } from '@/hooks';
 
 // UI Local Components
-import { Button, Input, Select } from '@/components/ui';
+import { Select, Button } from '@/components/ui';
 
 // Styles
-import s from '../styles/Insumos.module.scss';
+import s from '../styles/NoConsumibles.module.scss';
 
 export default function InsumosDiscountModal({
   isOpen,
   onClose,
-  insumo,
+  noConsumible,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  insumo: any;
+  noConsumible: {
+    non_consumable_id: string;
+  };
 }) {
-  const { startDiscountInsumo } = useInsumosStore();
+  const { startDiscountNoConsumible } = useNoConsumiblesStore();
 
-  const { formState, onResetForm, onInputChange } = useForm({
-    quantity: '',
+  const { discount_type_id, formState, onResetForm, onInputChange } = useForm({
     discount_type_id: '',
   });
 
@@ -41,34 +42,15 @@ export default function InsumosDiscountModal({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { quantity, discount_type_id } = formState;
-
-    if (quantity === '') {
-      toast.error('La cantidad es obligatoria');
-      return;
-    }
-
     if (discount_type_id === '') {
       toast.error('El motivo de descuento es obligatorio');
       return;
     }
 
-    if (Number(quantity) > Number(insumo.stock)) {
-      toast.error(
-        'La cantidad a descontar no puede ser mayor a la cantidad actual'
-      );
-      return;
-    }
-
-    try {
-      await startDiscountInsumo(insumo.supply_id, quantity, discount_type_id);
-
-      onClose();
-      handleClearForm();
-    } catch (error) {
-      console.log(error);
-      onClose();
-    }
+    await startDiscountNoConsumible(
+      noConsumible.non_consumable_id,
+      discount_type_id
+    );
   };
 
   // Clear form
@@ -87,21 +69,11 @@ export default function InsumosDiscountModal({
       isCentered
     >
       <ModalOverlay />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <ModalContent>
-          <ModalHeader>Descontar insumo</ModalHeader>
+          <ModalHeader>Descontar noConsumible</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input
-              title="Cantidad"
-              name="quantity"
-              type="number"
-              value={formState?.quantity}
-              onChange={onInputChange}
-              inputType="secondary"
-              placeholder="Cantidad"
-            />
-
             <Select
               SelectType="secondary"
               title="Motivo de descuento"
@@ -124,7 +96,7 @@ export default function InsumosDiscountModal({
                 fontSize: '0.875rem',
               }}
               onClick={handleClearForm}
-              className={s.insumos__createInsumo__button__cancel}
+              className={s.noConsumibles__createNoConsumible__button__cancel}
             >
               Cancelar
             </Button>
@@ -134,7 +106,7 @@ export default function InsumosDiscountModal({
               style={{
                 fontSize: '0.875rem',
               }}
-              className={s.insumos__createInsumo__button__create}
+              className={s.noConsumibles__createNoConsumible__button__create}
             >
               Descontar
             </Button>

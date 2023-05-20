@@ -28,6 +28,8 @@
     }
 
     &__button {
+      padding: 0.5rem 1rem;
+
       @include mediaquery(575px) {
         width: 100%;
         font-size: 0.875rem;
@@ -100,11 +102,6 @@
     }
 
     &__button {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-
       &__create {
         width: 100%;
         font-size: 0.875rem;

@@ -19,6 +19,7 @@ import {
   onLogoutVoluntarios,
   onLogoutProveedores,
   onLogoutInsumos,
+  onLogoutNoConsumible,
 } from '@/store';
 
 // Soonner Notifications
@@ -45,6 +46,7 @@ export const useAuthStore = () => {
     dispatch(onLogoutVoluntarios());
     dispatch(onLogoutProveedores());
     dispatch(onLogoutInsumos());
+    dispatch(onLogoutNoConsumible());
 
     if (router.pathname !== '/login') {
       router.replace('/login');
@@ -81,6 +83,7 @@ export const useAuthStore = () => {
           role: roleData,
           profession: userData.profession,
           phone: userData.phone,
+          other_contact: userData.other_contact,
           img_profile: userData.img_profile,
           coverPhotoURL: userData.coverPhotoURL,
         })
@@ -131,12 +134,12 @@ export const useAuthStore = () => {
           role: roleData,
           profession: userData.profession,
           phone: userData.phone,
+          other_contact: userData.other_contact,
           img_profile: userData.img_profile,
           coverPhotoURL: userData.coverPhotoURL,
         })
       );
     } catch (error: any) {
-      console.log(error);
       startLogout();
     }
   };
@@ -159,6 +162,7 @@ export const useAuthStore = () => {
 
       setLoading(false);
     } catch (error: any) {
+      setLoading(false);
       const errData = error.response.data;
       setLoading(false);
       toast.error(errData.message);
@@ -188,7 +192,7 @@ export const useAuthStore = () => {
     } catch (error: any) {
       setLoading(false);
       const errData = error.response.data;
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -209,7 +213,7 @@ export const useAuthStore = () => {
     } catch (error: any) {
       setLoading(false);
       const errData = error.response.data;
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -240,9 +244,9 @@ export const useAuthStore = () => {
 
       router.replace('/login');
     } catch (error: any) {
+      setLoading(false);
       const errData = error.response.data;
-
-      toast.error(errData.title);
+      toast.error(errData.message);
     }
   };
 
@@ -272,9 +276,8 @@ export const useAuthStore = () => {
         description: data.message,
       });
     } catch (error: any) {
-      console.log(error);
+      setLoading(false);
       const errData = error.response.data;
-
       toast.error(errData.message);
     }
   };
