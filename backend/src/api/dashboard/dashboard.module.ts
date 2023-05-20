@@ -6,6 +6,8 @@ import { UserRepository } from '../../auth/repository/user.repository';
 import { JwtMiddleware } from '../../auth/middleware/jwt.middleware';
 import { DirectVolunteerRepository } from '../direct-volunteer/direct-volunteer.repository';
 import { SupplyCategoryRepository } from '../supply/repositories/supply-category.repository';
+import { NonConsumableRepository } from '../supply/repositories/non-consumable.repository';
+import { SupplyRepository } from '../supply/repositories/supply.repository';
 
 @Module({
   controllers: [DashboardController],
@@ -14,7 +16,9 @@ import { SupplyCategoryRepository } from '../supply/repositories/supply-category
     HandlersError,
     UserRepository,
     DirectVolunteerRepository,
-    SupplyCategoryRepository
+    SupplyCategoryRepository,
+    NonConsumableRepository,
+    SupplyRepository
   ]
 })
 export class DashboardModule implements NestModule {

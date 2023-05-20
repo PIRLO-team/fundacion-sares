@@ -3,6 +3,10 @@ import { HandlersError } from '../../shared/handlers/error.utils';
 import { UserRepository } from '../../auth/repository/user.repository';
 import { DirectVolunteerRepository } from '../direct-volunteer/direct-volunteer.repository';
 import { SupplyCategoryRepository } from '../supply/repositories/supply-category.repository';
+import { NonConsumableRepository } from '../supply/repositories/non-consumable.repository';
+import { SupplyRepository } from '../supply/repositories/supply.repository';
+import { Supply } from '../supply/entities';
+import { LessThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class DashboardService {
@@ -11,6 +15,8 @@ export class DashboardService {
     private readonly _userRepository: UserRepository,
     private readonly _directVolunteerRepository: DirectVolunteerRepository,
     private readonly _supplyCategoryRepository: SupplyCategoryRepository,
+    private readonly _nonConsumableRepository: NonConsumableRepository,
+    private readonly _supplyRepository: SupplyRepository,
   ) {}
 
   async findDataDashboard() {
@@ -18,12 +24,16 @@ export class DashboardService {
       const userCount = await this.userData();
       const volunteerCount = await this.directVolunteerData();
       const supplyCategoryData = await this.supplyCategoryData();
+      const nonConsumableData = await this.nonConsumableData();
+      const expiredSupplyData = await this.expiredSupplyData();
 
       return {
         response: {
           userCount,
           volunteerCount,
-          supplyCategoryData
+          supplyCategoryData,
+          nonConsumableData,
+          expiredSupplyData,
         },
         title: 'Información del dashboard',
         message:
@@ -69,6 +79,41 @@ export class DashboardService {
         this._supplyCategoryRepository.supplyCategoryData();
 
       return supplyCategoryData;
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+
+  async nonConsumableData() {
+    try {
+      const nonConsumableData =
+        this._nonConsumableRepository.nonConsumableData();
+
+      return nonConsumableData;
+    } catch (error) {
+      return this._handlerError.returnErrorRes({ error, debug: true });
+    }
+  }
+  async expiredSupplyData() {
+    try {
+      const expiredSupplyData: Supply[] = await this._supplyRepository
+        .createQueryBuilder('supply')
+        .select([
+          'supply.supply_id',
+          'categoryBySupply.supply_category_name',
+          'categoryBySupply.quantity',
+          'supply.expiration_date',
+        ])
+        .leftJoin('supply.categoryBySupply', 'categoryBySupply')
+        .where('supply.is_active = :isActive', { isActive: true })
+        .andWhere('supply.expiration_date <= :today', { today: new Date() })
+        .getMany();
+
+        if(!expiredSupplyData.length) {
+          return [];
+        }
+
+      return expiredSupplyData;
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
