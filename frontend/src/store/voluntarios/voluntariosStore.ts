@@ -41,11 +41,6 @@ export const voluntariosSlice = createSlice({
       state.activeVoluntario = payload || null;
     },
 
-    onUnsetActiveVoluntario: (state) => {
-      state.loading = false;
-      state.activeVoluntario = null;
-    },
-
     onAddNewVoluntario: (state, { payload }) => {
       state.loading = false;
       state.voluntarios.push(payload);
@@ -81,7 +76,6 @@ export const {
   onSetLoadingVoluntarios,
   onLoadVoluntarios,
   onSetActiveVoluntario,
-  onUnsetActiveVoluntario,
   onAddNewVoluntario,
   onUpdateVoluntario,
   onDeleteVoluntario,

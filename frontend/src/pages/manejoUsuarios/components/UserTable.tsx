@@ -188,7 +188,6 @@ export default function UserTable() {
                 onChange={(e) => {
                   setUserToShow(Number(e.target.value));
                 }}
-                // className={s.pagination__select}
                 style={{
                   width: '80px',
                 }}

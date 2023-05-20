@@ -11,10 +11,10 @@ import { withAuth } from '@/auth/withAuth';
 import { Layout, Loader } from '@/components';
 import NoConsumiblesDrawer from './components/NoConsumiblesDrawer';
 import NoConsumiblesTable from './components/NoConsumiblesTable';
+import NoConsumibleCategoryModal from './components/NoConsumibleCategoryModal';
 
 // Styles
 import s from './styles/NoConsumibles.module.scss';
-import NoConsumibleCategoryModal from './components/NoConsumibleCategoryModal';
 
 function NoConsumibles() {
   const { loading, startLoadingNoConsumible, startLoadingCategories } =

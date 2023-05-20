@@ -160,7 +160,6 @@ export default function VoluntariosDrawer() {
               />
 
               <Input
-                // disabled={!!activeVoluntario}
                 required
                 readOnly={loadingCreate}
                 inputType="secondary"

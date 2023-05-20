@@ -52,8 +52,6 @@ export default function InsumosDiscountModal({
       Number(discount_type_id)
     );
 
-    console.log(formState);
-
     onClose();
   };
 

@@ -48,7 +48,6 @@ import NoConsumiblesDiscountModal from './NoConsumiblesDiscountModal';
 import { Select, Status } from '@/components/ui';
 
 // Styles
-import s from '../styles/NoConsumibles.module.scss';
 
 // Types
 import { TNoConsumible } from '@/utils/types';

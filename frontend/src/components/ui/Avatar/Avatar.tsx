@@ -7,10 +7,14 @@ import Image from 'next/image';
 import { useDisclosure } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 
+// Hooks
+import { useAuthStore, useUsersStore } from '@/hooks';
+
+// Local Components
+import { ChangeAvatarModal } from './components/ChangeAvatarModal/ChangeAvatarModal';
+
 // Styles
 import s from './Avatar.module.scss';
-import { useAuthStore, useUsersStore } from '@/hooks';
-import { ChangeAvatarModal } from './components/ChangeAvatarModal/ChangeAvatarModal';
 
 type TAvatar = {
   name?: string | null;

@@ -66,7 +66,6 @@ export default function UserDrawer() {
 
     if (Object.values(formState).some((value) => value === '')) {
       toast.error('Todos los campos son obligatorios');
-      // console.log(formState);
       return;
     }
 

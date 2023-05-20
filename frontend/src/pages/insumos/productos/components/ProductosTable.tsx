@@ -115,7 +115,7 @@ export default function ProductosTable() {
                     {producto?.supplyCategory?.map((category, index) => {
                       return (
                         <Category
-                          key={category?.supply_category_name}
+                          key={index}
                           category_name={category?.supply_category_name}
                         />
                       );

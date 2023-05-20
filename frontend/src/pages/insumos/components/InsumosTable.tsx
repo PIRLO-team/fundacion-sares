@@ -19,7 +19,6 @@ import {
   IconButton,
   Divider,
   Tfoot,
-  Tooltip,
   useDisclosure,
   Popover,
   PopoverTrigger,
@@ -42,15 +41,14 @@ import {
 // Hooks
 import { useUiStore, useInsumosStore } from '@/hooks';
 
+// Local Components
+import InsumosDiscountModal from './InsumosDiscountModal';
+
 // UI Components
 import { Select } from '@/components/ui';
 
-// Styles
-import s from '../styles/Insumos.module.scss';
-
 // Types
 import { TInsumo } from '@/utils/types';
-import InsumosDiscountModal from './InsumosDiscountModal';
 
 export default function InsumosTable() {
   const { insumos, setActiveInsumo, startDeleteInsumo, startDiscountInsumo } =

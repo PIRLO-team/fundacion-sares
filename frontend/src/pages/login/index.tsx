@@ -106,15 +106,9 @@ function Login() {
 
         <div className={s.login__form__footer__line} />
 
-        {/* <a
-              href="https://www.uao.edu.co/wp-content/uploads/2022/01/politica-proteccion-datos-uao-4.pdf"
-              target="__blank"
-              rel="noreferrer noopener"
-            > */}
         <p className={s.login__form__footer__text}>
           Política de tratamiento de Datos Personales
         </p>
-        {/* </a> */}
 
         <p className={s.login__form__footer__text}>© 2023 PIRLO 420.</p>
       </div>

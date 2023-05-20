@@ -48,11 +48,6 @@ export const productosSlice = createSlice({
       state.activeProducto = payload || null;
     },
 
-    onUnsetActiveProducto: (state) => {
-      state.loading = false;
-      state.activeProducto = null;
-    },
-
     onAddNewProducto: (state, { payload }) => {
       state.loading = false;
       state.productos.push(payload);
@@ -89,7 +84,6 @@ export const {
   onLoadProductos,
   onLoadExpireProductos,
   onSetActiveProducto,
-  onUnsetActiveProducto,
   onAddNewProducto,
   onUpdateProducto,
   onDeleteProducto,

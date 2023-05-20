@@ -48,11 +48,6 @@ export const noConsumibleSlice = createSlice({
       state.activeNoConsumible = payload || null;
     },
 
-    onUnsetActiveNoConsumible: (state) => {
-      state.loading = false;
-      state.activeNoConsumible = null;
-    },
-
     onAddNewNoConsumible: (state, { payload }) => {
       state.loading = false;
       state.noConsumibles.push(payload);
@@ -89,7 +84,6 @@ export const {
   onLoadNoConsumibles,
   onLoadCategories,
   onSetActiveNoConsumible,
-  onUnsetActiveNoConsumible,
   onAddNewNoConsumible,
   onUpdateNoConsumible,
   onDeleteNoConsumible,

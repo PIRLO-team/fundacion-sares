@@ -5,10 +5,9 @@ import { withAuth } from '@/auth/withAuth';
 import { Layout } from '@/components';
 
 // UI Components
-// import { Avatar } from '@/components/ui';
 
 // Styles
-// import s from '@/styles/Home.module.scss';
+import s from '@/styles/Home.module.scss';
 
 function Home() {
   return (

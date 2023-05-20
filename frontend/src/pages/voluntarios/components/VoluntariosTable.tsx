@@ -181,7 +181,6 @@ export default function VoluntariosTable() {
                         Editar voluntario
                       </MenuItem>
 
-                      {/* <Link href={`/perfil/${voluntario?.voluntario_id}`}> */}
                       <MenuItem
                         icon={<ChatIcon />}
                         onClick={() => {
@@ -191,7 +190,6 @@ export default function VoluntariosTable() {
                       >
                         Hacer observaciones
                       </MenuItem>
-                      {/* </Link> */}
 
                       <Divider />
 
@@ -228,7 +226,6 @@ export default function VoluntariosTable() {
                   onChange={(e) => {
                     setNumberToShow(Number(e.target.value));
                   }}
-                  // className={s.pagination__select}
                   style={{
                     width: '80px',
                   }}
