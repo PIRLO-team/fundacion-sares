@@ -515,27 +515,50 @@ export class AuthService {
 
   async checkAuth(user: TokenDto) {
     try {
-      const userExists: User[] = await this._userRepository.find({
-        select: [
-          'user_id',
-          'first_name',
-          'last_name',
-          'email',
-          'username',
-          'img_profile',
-          'profession',
-          'phone',
-          'is_active',
-          'other_contact'
-        ],
-        where: {
-          user_id: user.user_id,
-          is_active: true,
-        },
-        relations: ['userRole', 'userFile'],
-      });
+      const userQuery: User = await this._userRepository
+        .createQueryBuilder('user')
+        .select([
+          'user.user_id',
+          'user.first_name',
+          'user.last_name',
+          'user.email',
+          'user.username',
+          'user.img_profile',
+          'user.profession',
+          'user.phone',
+          'user.is_active',
+          'user.other_contact',
+        ])
+        .leftJoinAndSelect('user.userRole', 'userRole')
+        .leftJoinAndSelect(
+          'user.userFile',
+          'userFile',
+          'userFile.is_active = :isActive',
+          { isActive: true },
+        )
+        .where('user.user_id = :userId', { userId: user.user_id })
+        .andWhere('user.is_active = :isActive', { isActive: true })
+        .getOne();
+      console.log("🚀 ~ file: auth.service.ts:542 ~ AuthService ~ checkAuth ~ userQuery:", userQuery)
 
-      if (!userExists.length) {
+      const {
+        is_active,
+        user_id,
+        first_name,
+        last_name,
+        email,
+        username,
+        new_user,
+        user_role,
+        phone,
+        img_profile,
+        profession,
+        other_contact,
+        userRole,
+        userFile: [userFile],
+      } = userQuery;
+
+      if (!userQuery) {
         return {
           response: { valid: false },
           title: '❌: Ocurrio un error!',
@@ -545,7 +568,22 @@ export class AuthService {
       }
 
       return {
-        response: userExists[0],
+        response: {
+          is_active,
+          user_id,
+          first_name,
+          last_name,
+          email,
+          username,
+          new_user,
+          user_role,
+          phone,
+          img_profile,
+          profession,
+          other_contact,
+          userRole,
+          userFile,
+        },
         message: 'Usario autenticado correctamente',
         status: HttpStatus.OK,
       };
