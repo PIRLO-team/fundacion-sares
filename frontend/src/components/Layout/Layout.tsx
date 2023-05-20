@@ -24,11 +24,11 @@ export function Layout({ children, pageTitle, roles }: TLayout) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (!roles.includes(currentUser?.role?.role_id as string)) {
+  if (currentUser.role.role_id !== undefined) {
+    if (!roles.includes(`${currentUser?.role?.role_id}`)) {
       router.replace('/');
     }
-  }, []);
+  }
 
   return (
     <div>

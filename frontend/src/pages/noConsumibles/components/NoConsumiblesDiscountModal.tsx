@@ -47,10 +47,14 @@ export default function InsumosDiscountModal({
       return;
     }
 
-    await startDiscountNoConsumible(
+    startDiscountNoConsumible(
       noConsumible.non_consumable_id,
-      discount_type_id
+      Number(discount_type_id)
     );
+
+    console.log(formState);
+
+    onClose();
   };
 
   // Clear form
