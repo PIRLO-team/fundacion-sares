@@ -39,6 +39,7 @@
 
   &__title {
     font-size: 2rem;
+    font-family: var(--font-inter);
     font-weight: 700;
     color: var(--black);
     transition: var(--main-transition);
@@ -69,10 +70,6 @@
   &__createProducto {
     width: 100%;
     transition: var(--main-transition);
-
-    &__input {
-      // font-size: 0.875rem;
-    }
 
     &__category {
       display: flex;

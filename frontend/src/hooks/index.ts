@@ -7,3 +7,4 @@ export * from './useProveedoresStore';
 export * from './useInsumosStore';
 export * from './useProductosStore';
 export * from './useNoConsumiblesStore';
+export * from './useDashboardStats';

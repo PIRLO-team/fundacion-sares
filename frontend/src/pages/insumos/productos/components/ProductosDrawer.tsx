@@ -82,8 +82,8 @@ export default function ProductosDrawer() {
     });
 
     await startLoadingProductos();
-    openCloseDrawer();
-    handleClearForm();
+    // openCloseDrawer();
+    // handleClearForm();
   };
 
   // Clear form

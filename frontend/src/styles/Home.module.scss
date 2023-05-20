@@ -1,0 +1,111 @@
+@import '@/styles/_media_queries.scss';
+
+.home {
+  &__title {
+    font-family: var(--font-inter);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 1rem;
+    transition: var(--main-transition);
+
+    @include midDeskTablet {
+      margin-top: 2rem;
+    }
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    border: 1px solid var(--accents-2);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    background-color: var(--accents-1);
+    transition: var(--main-transition);
+
+    @include midDeskTablet {
+      margin-bottom: 1rem;
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border: 1px solid var(--accents-2);
+      border-radius: var(--border-radius);
+      background-color: var(--white);
+      padding: 1rem;
+      font-family: var(--font-inter);
+      transition: var(--main-transition);
+
+      &__title {
+        font-family: var(--font-inter);
+        font-family: var(--font-inter);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--accents-5);
+        transition: var(--main-transition);
+      }
+
+      &__count {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--black);
+        transition: var(--main-transition);
+      }
+    }
+  }
+
+  &__body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0 2rem 0;
+    transition: var(--main-transition);
+
+    &__graph {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 1.5rem;
+      border: 1px solid var(--accents-2);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      font-family: var(--font-inter);
+      background-color: var(--accents-1);
+      transition: var(--main-transition);
+
+      &__title {
+        font-family: var(--font-inter);
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--black);
+        transition: var(--main-transition);
+      }
+    }
+
+    &__table {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 1.5rem;
+      height: fit-content;
+      border: 1px solid var(--accents-2);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      font-family: var(--font-inter);
+      background-color: var(--accents-1);
+      transition: var(--main-transition);
+
+      &__title {
+        font-family: var(--font-inter);
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--black);
+        transition: var(--main-transition);
+      }
+    }
+  }
+}
