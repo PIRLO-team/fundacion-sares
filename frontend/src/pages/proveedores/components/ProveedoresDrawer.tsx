@@ -58,14 +58,23 @@ export default function ProveedoresDrawer() {
       // console.log(formState);
       return;
     }
+    if (formState.nit.length > 15) {
+      toast.error('El NIT no puede tener más de 15 dígitos');
+      return;
+    }
 
-    if (formState.nit.length > 10) {
-      toast.error('El NIT no puede tener más de 10 dígitos');
+    if (formState.nit.length < 8) {
+      toast.error('El NIT no puede tener menos de 8 dígitos');
       return;
     }
 
     if (formState.phone.length > 10) {
       toast.error('El número de contacto no puede tener más de 10 dígitos');
+      return;
+    }
+
+    if (formState.phone.length > 7) {
+      toast.error('El contacto debe tener minimo 7 digitos');
       return;
     }
 
@@ -129,7 +138,7 @@ export default function ProveedoresDrawer() {
                 title="Nombre de la organizacion*"
                 name="name"
                 value={formState.name}
-                maxLength={75}
+                maxLength={45}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}
               />
@@ -141,7 +150,7 @@ export default function ProveedoresDrawer() {
                 type="email"
                 title="Correo electrónico*"
                 name="email"
-                maxLength={50}
+                maxLength={250}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}
@@ -177,7 +186,7 @@ export default function ProveedoresDrawer() {
                 type="text"
                 title="Otro contacto (opcional)"
                 name="other_contact"
-                maxLength={50}
+                maxLength={200}
                 value={formState.other_contact}
                 onChange={onInputChange}
                 className={s.proveedores__createProveedor__input}
