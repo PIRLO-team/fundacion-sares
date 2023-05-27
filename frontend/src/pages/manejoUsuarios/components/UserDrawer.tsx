@@ -167,7 +167,7 @@ export default function UserDrawer() {
                 type="email"
                 title="Correo electrónico*"
                 name="email"
-                maxLength={50}
+                maxLength={250}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}
@@ -180,7 +180,7 @@ export default function UserDrawer() {
                 type="text"
                 title="Profesión*"
                 name="profession"
-                maxLength={50}
+                maxLength={200}
                 value={formState.profession}
                 onChange={onInputChange}
                 className={s.manejoUsuarios__createUser__input}

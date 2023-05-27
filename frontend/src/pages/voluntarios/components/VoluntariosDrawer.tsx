@@ -69,13 +69,23 @@ export default function VoluntariosDrawer() {
       return;
     }
 
-    if (formState.document.toString().length > 10) {
-      toast.error('La cedula debe tener máximo 10 digitos');
+    if (formState.document.toString().length > 11) {
+      toast.error('La cedula debe tener máximo 11 digitos');
+      return;
+    }
+
+    if (formState.document.toString().length > 8) {
+      toast.error('La cedula debe tener minimo 8 digitos');
       return;
     }
 
     if (formState.phone.toString().length > 10) {
       toast.error('El contacto debe tener máximo 10 digitos');
+      return;
+    }
+
+    if (formState.phone.toString().length > 7) {
+      toast.error('El contacto debe tener minimo 7 digitos');
       return;
     }
 
@@ -166,7 +176,7 @@ export default function VoluntariosDrawer() {
                 type="email"
                 title="Correo electrónico*"
                 name="email"
-                maxLength={50}
+                maxLength={250}
                 value={formState.email}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -179,7 +189,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Profesión*"
                 name="profession"
-                maxLength={50}
+                maxLength={200}
                 value={formState.profession}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}
@@ -215,7 +225,7 @@ export default function VoluntariosDrawer() {
                 type="text"
                 title="Otro contacto (opcional)"
                 name="other_contact"
-                maxLength={50}
+                maxLength={200}
                 value={formState.other_contact}
                 onChange={onInputChange}
                 className={s.voluntarios__createVoluntario__input}

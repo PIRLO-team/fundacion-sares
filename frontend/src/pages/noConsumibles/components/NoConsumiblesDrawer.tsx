@@ -183,7 +183,7 @@ export default function InsumosDrawer() {
                   type="text"
                   title="Acuerdo de intercambio"
                   name="agreement"
-                  maxLength={50}
+                  maxLength={250}
                   value={formState?.agreement}
                   onChange={onInputChange}
                   className={s.noConsumibles__createNoConsumible__input}
