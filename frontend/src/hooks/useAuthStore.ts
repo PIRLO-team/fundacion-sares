@@ -279,6 +279,8 @@ export const useAuthStore = () => {
       toast.message(data.title, {
         description: data.message,
       });
+
+      await startLogout();
     } catch (error: any) {
       setLoading(false);
       const errData = error.response.data;
