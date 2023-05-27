@@ -288,8 +288,8 @@ function Perfil() {
               )}
             </form>
 
-            <div className={s.profile__personalInfo__security}>
-              {userID === currentUser.uid && (
+            {userID === currentUser.uid && (
+              <div className={s.profile__personalInfo__security}>
                 <>
                   <p className={s.profile__personalInfo__form__text}>
                     Seguridad
@@ -297,8 +297,8 @@ function Perfil() {
 
                   <ChangePassword />
                 </>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
