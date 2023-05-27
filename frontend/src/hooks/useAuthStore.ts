@@ -84,8 +84,9 @@ export const useAuthStore = () => {
           username: userData.username,
           role: roleData,
           profession: userData.profession,
-          phone: userData.phone,
-          other_contact: userData.other_contact,
+          phone: userData.phone ?? '',
+          document: userData.document ?? '',
+          other_contact: userData.other_contact ?? '',
           img_profile: userData.img_profile,
           coverPhotoURL: userData.coverPhotoURL,
         })
@@ -135,8 +136,9 @@ export const useAuthStore = () => {
           username: userData.username,
           role: roleData,
           profession: userData.profession,
-          phone: userData.phone,
-          other_contact: userData.other_contact,
+          phone: userData.phone ?? '',
+          document: userData.document ?? '',
+          other_contact: userData.other_contact ?? '',
           img_profile: userData.img_profile,
           coverPhotoURL: userData.coverPhotoURL,
         })

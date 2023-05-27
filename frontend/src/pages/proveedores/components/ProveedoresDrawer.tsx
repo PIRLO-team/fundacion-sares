@@ -58,23 +58,13 @@ export default function ProveedoresDrawer() {
       // console.log(formState);
       return;
     }
-    if (formState.nit.length > 15) {
-      toast.error('El NIT no puede tener más de 15 dígitos');
+    if (formState.nit.length > 15 || formState.nit.length < 8) {
+      toast.error('El NIT debe tener entre 8 y 15 digitos');
       return;
     }
 
-    if (formState.nit.length < 8) {
-      toast.error('El NIT no puede tener menos de 8 dígitos');
-      return;
-    }
-
-    if (formState.phone.length > 10) {
-      toast.error('El número de contacto no puede tener más de 10 dígitos');
-      return;
-    }
-
-    if (formState.phone.length > 7) {
-      toast.error('El contacto debe tener minimo 7 digitos');
+    if (formState.phone.length > 10 || formState.phone.length < 7) {
+      toast.error('El contacto debe tener entre 7 y 10 digitos');
       return;
     }
 

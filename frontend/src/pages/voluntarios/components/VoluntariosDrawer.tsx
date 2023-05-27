@@ -69,23 +69,13 @@ export default function VoluntariosDrawer() {
       return;
     }
 
-    if (formState.document.toString().length > 11) {
-      toast.error('La cedula debe tener máximo 11 digitos');
+    if (formState.document.length > 11 || formState.document.length < 8) {
+      toast.error('La cedula debe tener entre 8 y 11 digitos');
       return;
     }
 
-    if (formState.document.toString().length > 8) {
-      toast.error('La cedula debe tener minimo 8 digitos');
-      return;
-    }
-
-    if (formState.phone.toString().length > 10) {
-      toast.error('El contacto debe tener máximo 10 digitos');
-      return;
-    }
-
-    if (formState.phone.toString().length > 7) {
-      toast.error('El contacto debe tener minimo 7 digitos');
+    if (formState.phone.length > 10 || formState.phone.length < 7) {
+      toast.error('El contacto debe tener entre 7 y 10 digitos');
       return;
     }
 
