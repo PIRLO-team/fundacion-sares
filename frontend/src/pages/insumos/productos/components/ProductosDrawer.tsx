@@ -232,6 +232,7 @@ export default function ProductosDrawer() {
                         title="Categorias"
                         value={category}
                         onChange={onCategoryInputChange}
+                        maxLength={20}
                         className={s.productos__createProducto__input}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
