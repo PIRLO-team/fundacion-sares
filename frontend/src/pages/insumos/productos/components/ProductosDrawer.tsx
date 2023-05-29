@@ -270,6 +270,7 @@ export default function ProductosDrawer() {
                           }
                         >
                           <Category
+                            isCreated
                             category_name={category.supply_category_name}
                           />
                         </div>

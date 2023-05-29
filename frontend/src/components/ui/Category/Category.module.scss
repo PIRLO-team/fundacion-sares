@@ -1,8 +1,9 @@
 .category {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 3px 12px;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 3px 10px;
   background-color: var(--color-primary);
   border-radius: 5px;
   color: white;

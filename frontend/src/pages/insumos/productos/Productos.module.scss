@@ -79,6 +79,10 @@
       margin: 1.5rem 0;
       transition: var(--main-transition);
 
+      &__item {
+        cursor: pointer;
+      }
+
       &__button {
         font-size: 0.875rem;
       }
