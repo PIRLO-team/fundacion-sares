@@ -65,7 +65,7 @@ $ yarn run test:cov
 $ yarn run migration:generate
 
 # generate migration empty
-$ yarn run migration:run
+$ yarn run migration:empty
 
 # revert migration
 $ yarn run migration:revert
