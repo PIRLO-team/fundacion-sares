@@ -68,23 +68,16 @@ function Perfil() {
       return;
     }
 
-    if (formUserState.document.toString().length > 11) {
-      toast.error('La cedula debe tener máximo 11 digitos');
+    if (
+      formUserState.document.length > 11 ||
+      formUserState.document.length < 8
+    ) {
+      toast.error('La cedula debe tener entre 8 y 11 digitos');
       return;
     }
 
-    if (formUserState.document.toString().length > 8) {
-      toast.error('La cedula debe tener minimo 8 digitos');
-      return;
-    }
-
-    if (formUserState.phone.toString().length > 10) {
-      toast.error('El contacto debe tener máximo 10 digitos');
-      return;
-    }
-
-    if (formUserState.phone.toString().length > 7) {
-      toast.error('El contacto debe tener minimo 7 digitos');
+    if (formUserState.phone.length > 10 || formUserState.phone.length < 7) {
+      toast.error('El contacto debe tener entre 7 y 10 digitos');
       return;
     }
 
@@ -295,8 +288,8 @@ function Perfil() {
               )}
             </form>
 
-            <div className={s.profile__personalInfo__security}>
-              {userID === currentUser.uid && (
+            {userID === currentUser.uid && (
+              <div className={s.profile__personalInfo__security}>
                 <>
                   <p className={s.profile__personalInfo__form__text}>
                     Seguridad
@@ -304,8 +297,8 @@ function Perfil() {
 
                   <ChangePassword />
                 </>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}

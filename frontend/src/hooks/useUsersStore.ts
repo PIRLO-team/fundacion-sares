@@ -135,7 +135,13 @@ export const useUsersStore = () => {
     try {
       const { data } = await projectApi.get(`/api/user/${user_id}`);
 
-      dispatch(onSetActiveUser(data.response));
+      dispatch(
+        onSetActiveUser({
+          ...data.response,
+          document: data.response.document ?? '',
+          phone: data.response.phone ?? '',
+        })
+      );
       dispatch(onSetLoadingUsers(false));
     } catch (error: any) {
       dispatch(onSetLoadingUsers(false));
