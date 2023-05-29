@@ -151,7 +151,9 @@ export class UsersService {
           img_profile,
           user_role,
           phone,
+          other_contact,
         } = userExist;
+
         const {
           first_name: fName,
           last_name: lName,
@@ -161,6 +163,7 @@ export class UsersService {
           img_profile: url,
           user_role: role,
           phone: Celular,
+          other_contact: otherContact,
         } = updateUserDto;
 
         const updateUserData = await this._userRepository.update(user_id, {
@@ -171,19 +174,20 @@ export class UsersService {
           profession: pro || profession,
           img_profile: url || img_profile,
           user_role: role || user_role,
+          other_contact: otherContact || other_contact,
           last_updated_by: id,
         });
 
         return {
           response: updateUserData,
-          title: `✅ Se actualizó la información`,
+          title: `✅: Se actualizó la información`,
           message: `Hemos actualizado la información del usuario ${user_id}`,
           status: HttpStatus.OK,
         };
       } else {
         return {
           response: { valid: false },
-          title: `❌ Ocurrio un error`,
+          title: `❌: Ocurrio un error`,
           message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
           status: HttpStatus.UNAUTHORIZED,
         };

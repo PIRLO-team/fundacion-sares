@@ -9,4 +9,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     is_active: boolean;
     new_password: string;
     comfirm_password: string;
+    other_contact: string;
 }
