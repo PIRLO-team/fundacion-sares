@@ -57,12 +57,6 @@ function ChangePassword() {
       return;
     }
 
-    //  Alert if passwords are not equal
-    if (new_password !== comfirm_password) {
-      toast.error('Las nuevas contraseñas no coinciden');
-      return;
-    }
-
     await startUpdatePassword({
       user_id: currentUser?.uid as string,
       password,
@@ -89,7 +83,15 @@ function ChangePassword() {
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form
+          onSubmit={handleSubmit}
+          autoComplete="off"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          }}
+        >
           <ModalContent>
             <ModalHeader>Actualiza tu contraseña</ModalHeader>
             <ModalCloseButton />
