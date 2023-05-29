@@ -15,11 +15,11 @@ export class UsersService {
     private readonly _handlerError: HandlersError,
     private readonly _bcryp: BcryptPasswordEncoder,
     private readonly _newPasswordSnippet: PasswordGeneratorService,
-  ) { }
+  ) {}
 
   async findAllUsers(user: TokenDto) {
     try {
-      const role: number = user.user_role
+      const role: number = user.user_role;
       if (+role === 1) {
         const allUsers: User[] = await this._userRepository.find({
           select: [
@@ -32,20 +32,18 @@ export class UsersService {
             'is_active',
             'created_date',
             'document',
-            'img_profile'
+            'img_profile',
           ],
-          relations: [
-            'userRole',
-            'userFile'
-          ]
+          relations: ['userRole', 'userFile'],
         });
 
         return {
           response: allUsers,
           title: '✅ Todos los usuarios',
-          message: 'Listado de todos los usuarios registrados en el aplicativo para admin',
-          status: HttpStatus.OK
-        }
+          message:
+            'Listado de todos los usuarios registrados en el aplicativo para admin',
+          status: HttpStatus.OK,
+        };
       } else {
         const allUsers: User[] = await this._userRepository.find({
           select: [
@@ -56,27 +54,24 @@ export class UsersService {
             'email',
             'profession',
             'created_date',
-            'document'
+            'document',
           ],
-          relations: [
-            'userRole',
-            'userFile'
-          ],
+          relations: ['userRole', 'userFile'],
           where: {
             is_active: true,
             user_role: Not(1),
             userFile: {
-              is_active: true
-            }
-          }
+              is_active: true,
+            },
+          },
         });
 
         return {
           response: allUsers,
           title: '✅ Todos los usuarios',
           message: 'Listado de todos los usuarios registrados en el aplicativo',
-          status: HttpStatus.OK
-        }
+          status: HttpStatus.OK,
+        };
       }
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
@@ -96,16 +91,14 @@ export class UsersService {
           'created_date',
           'img_profile',
           'phone',
-          'document'
+          'document',
+          'other_contact',
         ],
-        relations: [
-          'userRole',
-          'userFile'
-        ],
+        relations: ['userRole', 'userFile'],
         where: {
           is_active: true,
-          user_id: user_id
-        }
+          user_id: user_id,
+        },
       });
 
       if (!userById?.length) {
@@ -113,22 +106,26 @@ export class UsersService {
           response: { valid: false },
           title: '❌ Ocurrio un error',
           message: 'El usuario que buscas no se encuentra registrado',
-          status: HttpStatus.NOT_FOUND
-        }
+          status: HttpStatus.NOT_FOUND,
+        };
       }
 
       return {
         response: userById[0],
         title: '✅ Todos los usuarios',
         message: 'Listado de todos los usuarios registrados en el aplicativo',
-        status: HttpStatus.OK
-      }
+        status: HttpStatus.OK,
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async updateUserData(user: TokenDto, user_id: number, updateUserDto: UpdateUserDto) {
+  async updateUserData(
+    user: TokenDto,
+    user_id: number,
+    updateUserDto: UpdateUserDto,
+  ) {
     const userExist: User = await this._userRepository.findOneBy({ user_id });
 
     if (!userExist) {
@@ -136,8 +133,8 @@ export class UsersService {
         response: { valid: false },
         title: `❌ Ocurrio un error`,
         message: `El usuario que buscas no existe`,
-        status: HttpStatus.NOT_FOUND
-      }
+        status: HttpStatus.NOT_FOUND,
+      };
     }
 
     try {
@@ -145,9 +142,29 @@ export class UsersService {
       const r: number = user.user_role;
       const query_user_id: number = userExist.user_id;
       if (+id === query_user_id || +r === 1) {
+        const {
+          first_name,
+          last_name,
+          email,
+          document,
+          profession,
+          img_profile,
+          user_role,
+          phone,
+          other_contact,
+        } = userExist;
 
-        const { first_name, last_name, email, document, profession, img_profile, user_role, phone } = userExist;
-        const { first_name: fName, last_name: lName, email: mail, document: doc, profession: pro, img_profile: url, user_role: role, phone: Celular } = updateUserDto;
+        const {
+          first_name: fName,
+          last_name: lName,
+          email: mail,
+          document: doc,
+          profession: pro,
+          img_profile: url,
+          user_role: role,
+          phone: Celular,
+          other_contact: otherContact,
+        } = updateUserDto;
 
         const updateUserData = await this._userRepository.update(user_id, {
           first_name: fName || first_name,
@@ -157,41 +174,47 @@ export class UsersService {
           profession: pro || profession,
           img_profile: url || img_profile,
           user_role: role || user_role,
+          other_contact: otherContact || other_contact,
           last_updated_by: id,
         });
 
         return {
           response: updateUserData,
-          title: `✅ Se actualizó la información`,
+          title: `✅: Se actualizó la información`,
           message: `Hemos actualizado la información del usuario ${user_id}`,
-          status: HttpStatus.OK
-        }
+          status: HttpStatus.OK,
+        };
       } else {
         return {
           response: { valid: false },
-          title: `❌ Ocurrio un error`,
+          title: `❌: Ocurrio un error`,
           message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
-          status: HttpStatus.UNAUTHORIZED
-        }
+          status: HttpStatus.UNAUTHORIZED,
+        };
       }
-
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async resetPassword(user: TokenDto, user_id: number, updateUserDto: UpdateUserDto) {
+  async resetPassword(
+    user: TokenDto,
+    user_id: number,
+    updateUserDto: UpdateUserDto,
+  ) {
     try {
       const { user_id: id } = user;
-      const userExists = await this._userRepository.findOneBy({ user_id: user_id });
+      const userExists = await this._userRepository.findOneBy({
+        user_id: user_id,
+      });
 
       if (!userExists) {
         return {
           response: { valid: false },
           title: `❌ Ocurrio un error`,
           message: `El usuario que buscas no existe`,
-          status: HttpStatus.NOT_FOUND
-        }
+          status: HttpStatus.NOT_FOUND,
+        };
       }
 
       if (id !== userExists.user_id) {
@@ -199,42 +222,53 @@ export class UsersService {
           response: { valid: false },
           title: `❌ Ocurrio un error`,
           message: `No eres el propietario de esta cuenta, no puedes modificar el usuario`,
-          status: HttpStatus.UNAUTHORIZED
-        }
+          status: HttpStatus.UNAUTHORIZED,
+        };
       }
 
       const { password, new_password, comfirm_password } = updateUserDto;
 
+      const duplicated: boolean = this._bcryp.matches(
+        userExists.password,
+        password,
+      );
+
+      if (duplicated) {
+        return {
+          response: { valid: false },
+          title: `❌: Ocurrio un error`,
+          message: `La contraseña nueva no puede ser igual a la anterior`,
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
+
       if (!new_password || !comfirm_password) {
         return {
           response: { valid: false },
-          title: `❌ Ocurrio un error`,
+          title: `❌: Ocurrio un error`,
           message: `Por favor ingresa las contraseña nueva o la confirmación`,
-          status: HttpStatus.BAD_REQUEST
-        }
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
       if (new_password.length < 7) {
         return {
           response: { valid: false },
-          title: `❌ Ocurrio un error`,
+          title: `❌: Ocurrio un error`,
           message: `La contrarseña debe contener al menos 7 caracteres`,
-          status: HttpStatus.BAD_REQUEST
-        }
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
-      const valid: boolean = this._bcryp.matches(
-        userExists.password,
-        password
-      );
+      const valid: boolean = this._bcryp.matches(userExists.password, password);
 
       if (!valid) {
         return {
           response: { valid: false },
-          title: `❌ Ocurrio un error`,
+          title: `❌: Ocurrio un error`,
           message: `Credenciales invalidas, por favor verifica tu contraseña`,
-          status: HttpStatus.BAD_REQUEST
-        }
+          status: HttpStatus.BAD_REQUEST,
+        };
       }
 
       const hashedPassword = this._bcryp.encode(new_password);
@@ -247,14 +281,18 @@ export class UsersService {
         response: { valid: true },
         title: `✅ Se actualizó la información`,
         message: `Haz actualizado tu contraseña ${userExists.first_name}`,
-        status: HttpStatus.OK
-      }
+        status: HttpStatus.OK,
+      };
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
 
-  async inactiveUser(user: TokenDto, user_id: number, updateUserDto: UpdateUserDto) {
+  async inactiveUser(
+    user: TokenDto,
+    user_id: number,
+    updateUserDto: UpdateUserDto,
+  ) {
     const userExist: User = await this._userRepository.findOneBy({ user_id });
 
     if (!userExist) {
@@ -262,8 +300,8 @@ export class UsersService {
         response: { valid: false },
         title: `❌ Ocurrio un error`,
         message: `El usuario que buscas no existe`,
-        status: HttpStatus.NOT_FOUND
-      }
+        status: HttpStatus.NOT_FOUND,
+      };
     }
 
     try {
@@ -277,23 +315,22 @@ export class UsersService {
           last_updated_by: id,
         });
 
-
         return {
           response: inactiveUser,
           title: `🚫 Se inactivo el usuario`,
-          message: `El usuario ${userExist.first_name + ' ' + userExist.last_name} fue desactivado, no tiene acceso al aplicativo`,
-          status: HttpStatus.ACCEPTED
-        }
+          message: `El usuario ${
+            userExist.first_name + ' ' + userExist.last_name
+          } fue desactivado, no tiene acceso al aplicativo`,
+          status: HttpStatus.ACCEPTED,
+        };
       } else {
         return {
           response: { valid: false },
           title: `❌ Ocurrio un error`,
           message: `No puedes modificar el usuario`,
-          status: HttpStatus.UNAUTHORIZED
-        }
+          status: HttpStatus.UNAUTHORIZED,
+        };
       }
-
-
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
@@ -304,7 +341,7 @@ export class UsersService {
       response: { valid: true },
       title: `🗑️ Se eliminó el usuario`,
       message: `El usuario ${id} fue eliminado correctamente`,
-      status: HttpStatus.ACCEPTED
-    }
+      status: HttpStatus.ACCEPTED,
+    };
   }
 }

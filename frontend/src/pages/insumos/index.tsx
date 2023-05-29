@@ -34,7 +34,7 @@ function Insumos() {
   return (
     <Layout pageTitle="Insumos" roles={['1', '2', '4', '5']}>
       <div className={s.insumos}>
-        <h1 className={s.insumos__title}>Insumos</h1>
+        <h1 className={s.insumos__title}>Insumos consumibles</h1>
 
         <div className={s.insumos__header}>
           <InsumosHeader />

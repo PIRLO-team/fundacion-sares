@@ -140,6 +140,7 @@ export const useUsersStore = () => {
           ...data.response,
           document: data.response.document ?? '',
           phone: data.response.phone ?? '',
+          other_contact: data.response.other_contact ?? '',
         })
       );
       dispatch(onSetLoadingUsers(false));

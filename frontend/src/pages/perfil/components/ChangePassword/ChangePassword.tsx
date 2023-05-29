@@ -57,6 +57,18 @@ function ChangePassword() {
       return;
     }
 
+    //  Alert if passwords are not equal
+    if (new_password !== comfirm_password) {
+      toast.error('Las nuevas contraseñas no coinciden');
+      return;
+    }
+
+    // Alert if password is equal to new password
+    if (password === new_password) {
+      toast.error('La nueva contraseña no puede ser igual a la actual');
+      return;
+    }
+
     await startUpdatePassword({
       user_id: currentUser?.uid as string,
       password,
