@@ -174,6 +174,15 @@ export class NonConsumableService {
           },
         });
 
+      if (nonConsumableCategoryExist) {
+        return {
+          response: { valid: false },
+          title: '⚠: Error al crear la categoria deinsumo No Consumible',
+          message: 'La categoria de insumo No Consumible ya existe',
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
+
       const newNonConsumableCategory: NonConsumableCategory =
         await this._nonConsumableCategoryRepository.save({
           non_consumable_category_supply_name,
