@@ -111,6 +111,10 @@ export class ProviderService {
       const provider = await this._providerRepository.findOne({
         where: { provider_id: id },
       });
+      console.log(
+        '🚀 ~ file: provider.service.ts:114 ~ ProviderService ~ delete ~ provider:',
+        provider,
+      );
 
       if (!provider) {
         return {
@@ -121,26 +125,21 @@ export class ProviderService {
         };
       }
 
-      await this._providerRepository
-        .remove(provider)
-        .then(() => {
-          return {
-            response: { valid: true },
-            title: `✅ El proveedor ${provider.name} ha sido eliminado correctamente`,
-            message: `Se ha eliminado correctamente el proveedor con id ${id}`,
-            status: HttpStatus.ACCEPTED,
-          };
-        })
-        .catch((error) => {
-          return {
-            response: { valid: false },
-            title: `❌ No se pudo eliminar el proveedor ${provider.name}`,
-            message: `No se ha podido eliminar el proveedor, ya que tiene productos asociados`,
-            status: HttpStatus.BAD_REQUEST,
-          };
-        });
+      await this._providerRepository.remove(provider);
+
+      return {
+        response: { valid: true },
+        title: `✅ El proveedor ${provider.name} ha sido eliminado correctamente`,
+        message: `Se ha eliminado correctamente el proveedor con id ${id}`,
+        status: HttpStatus.ACCEPTED,
+      };
     } catch (error) {
-      return this._handlerError.returnErrorRes({ error, debug: true });
+      return {
+        response: { valid: false },
+        title: `❌: No se pudo eliminar el proveedor`,
+        message: `No se ha podido eliminar el proveedor, ya que tiene productos asociados`,
+        status: HttpStatus.BAD_REQUEST,
+      };
     }
   }
 }
