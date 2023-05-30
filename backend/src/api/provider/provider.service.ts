@@ -10,7 +10,7 @@ export class ProviderService {
   constructor(
     private readonly _handlerError: HandlersError,
     private readonly _providerRepository: ProviderRepository,
-  ) { }
+  ) {}
 
   async findAll() {
     try {
@@ -28,7 +28,9 @@ export class ProviderService {
 
   async findById(id: number) {
     try {
-      const provider = await this._providerRepository.findOne({ where: { provider_id: id } });
+      const provider = await this._providerRepository.findOne({
+        where: { provider_id: id },
+      });
       if (!provider) {
         return {
           response: null,
@@ -50,13 +52,7 @@ export class ProviderService {
 
   async create(providerData: CreateProviderDto) {
     try {
-      const {
-        name,
-        email,
-        nit,
-        phone,
-        other_contact,
-      } = providerData
+      const { name, email, nit, phone, other_contact } = providerData;
 
       const savedProvider = await this._providerRepository.save({
         name,
@@ -79,7 +75,9 @@ export class ProviderService {
 
   async update(id: number, providerData: UpdateProviderDto) {
     try {
-      const provider = await this._providerRepository.findOne({ where: { provider_id: id } });
+      const provider = await this._providerRepository.findOne({
+        where: { provider_id: id },
+      });
       if (!provider) {
         return {
           response: null,
@@ -110,35 +108,39 @@ export class ProviderService {
 
   async delete(id: number) {
     try {
-      const provider = await this._providerRepository.findOne({ where: { provider_id: id } });
+      const provider = await this._providerRepository.findOne({
+        where: { provider_id: id },
+      });
 
       if (!provider) {
         return {
           response: { valid: false },
           title: `❌ No se encontro el proveedor con id: ${id}`,
           message: `No se ha encontrado el proveedor, por favor intenta más tarde`,
-          status: HttpStatus.NOT_FOUND
+          status: HttpStatus.NOT_FOUND,
         };
       }
 
-      await this._providerRepository.remove(provider).then(() => {
-        return {
-          response: { valid: true },
-          title: `✅ El proveedor ${provider.name} ha sido eliminado correctamente`,
-          message: `Se ha eliminado correctamente el proveedor con id ${id}`,
-          status: HttpStatus.ACCEPTED,
-        };
-      }).catch((error) => {
-        return {
-          response: { valid: false },
-          title: `❌ No se pudo eliminar el proveedor ${provider.name}`,
-          message: `No se ha podido eliminar el proveedor, ya que tiene productos asociados`,
-        }
-      });
-      
+      await this._providerRepository
+        .remove(provider)
+        .then(() => {
+          return {
+            response: { valid: true },
+            title: `✅ El proveedor ${provider.name} ha sido eliminado correctamente`,
+            message: `Se ha eliminado correctamente el proveedor con id ${id}`,
+            status: HttpStatus.ACCEPTED,
+          };
+        })
+        .catch((error) => {
+          return {
+            response: { valid: false },
+            title: `❌ No se pudo eliminar el proveedor ${provider.name}`,
+            message: `No se ha podido eliminar el proveedor, ya que tiene productos asociados`,
+            status: HttpStatus.BAD_REQUEST,
+          };
+        });
     } catch (error) {
       return this._handlerError.returnErrorRes({ error, debug: true });
     }
   }
-
 }
